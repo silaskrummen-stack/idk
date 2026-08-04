@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dokumente - Portfolio{% endblock %}
+
+{% block body %}
+    <section class="hero" style="padding-bottom: 24px;">
+        <span class="hero__eyebrow">ls ./documents</span>
+        <h1 class="hero__title" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">Dokumente</h1>
+        <p class="hero__subtitle" style="margin-bottom: 0;">Zeugnisse und Zertifikate — zum Öffnen anklicken.</p>
+    </section>
+
+    <div class="container" style="padding-bottom: 80px;">
+        <div class="doc-layout">
+            <ul class="doc-list">
+                {% for document in documents %}
+                    <li>
+                        <button
+                            type="button"
+                            class="doc-list__item{{ loop.first ? ' is-active' : '' }}"
+                            data-file="/documents/{{ document.file }}"
+                        >
+                            <span class="doc-list__title">{{ document.title }}</span>
+                        </button>
+                    </li>
+                {% else %}
+                    <li class="doc-list__empty">Noch keine Dokumente hinterlegt.</li>
+                {% endfor %}
+            </ul>
+
+            <div class="doc-viewer">
+                {% if documents|length > 0 %}
+                    <iframe id="doc-frame" src="/documents/{{ documents[0].file }}" title="Dokumentvorschau"></iframe>
+                {% else %}
+                    <p class="about-card__text">Sobald Dokumente hinterlegt sind, erscheinen sie hier.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.querySelectorAll('.doc-list__item').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.doc-list__item').forEach(function (b) {
+                    b.classList.remove('is-active');
+                });
+                btn.classList.add('is-active');
+                document.getElementById('doc-frame').src = btn.dataset.file;
+            });
+        });
+    </script>
+{% endblock %}

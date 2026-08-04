@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Portfolio{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<nav class="site-nav">
+    <a href="{{ path('homepage') }}" class="site-nav__logo">system.log</a>
+    <ul class="site-nav__links">
+        <li><a href="{{ path('homepage') }}">Start</a></li>
+        <li><a href="{{ path('about_me') }}">Über mich</a></li>
+        <li><a href="{{ path('project_dashboard') }}">Projekte</a></li>
+        <li><a href="{{ path('documents') }}">Dokumente</a></li>
+        <li><a href="{{ path('contact') }}">Kontakt</a></li>
+    </ul>
+</nav>
+
+{% block body %}{% endblock %}
+
+<footer class="site-footer">
+     &copy; {{ "now"|date("Y") }} — An einem Wochenende programmiert mit 
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: -2px;">
+        <path d="M12 21s-6.716-4.35-9.428-8.14C.55 10.29 1.1 6.5 4.5 5.1 7 4.06 9.5 5 12 8c2.5-3 5-3.94 7.5-2.9 3.4 1.4 3.95 5.19 1.928 7.76C18.716 16.65 12 21 12 21z"/>
+    </svg>
+</footer>
+
+{% block javascripts %}{% endblock %}
+</body>
+
+<script>
+
+    document.querySelectorAll('[data-project-toggle]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const card = btn.closest('[data-project-card]');
+            const isOpen = card.classList.toggle('is-open');
+
+            btn.setAttribute('aria-expanded', String(isOpen));
+            btn.querySelector('[data-label-open]').hidden = isOpen;
+            btn.querySelector('[data-label-close]').hidden = !isOpen;
+        });
+    });
+</script>
+</html>

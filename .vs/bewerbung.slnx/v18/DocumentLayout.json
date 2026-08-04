@@ -1,0 +1,258 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\packages\\security.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:config\\packages\\security.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\services.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:config\\services.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\packages\\framework.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:config\\packages\\framework.yaml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\public\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:public\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\security\\login.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:templates\\security\\login.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Controller\\SecurityController.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Controller\\SecurityController.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\docker\\nginx.conf||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:docker\\nginx.conf||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Controller\\HomeController.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Controller\\HomeController.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Domain\\Document\\Controller\\DocumentController.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Domain\\Document\\Controller\\DocumentController.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Domain\\Document\\lib\\documents.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Domain\\Document\\lib\\documents.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\home\\index.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:templates\\home\\index.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\documents\\documents.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:templates\\documents\\documents.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\about-me\\about-me.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:templates\\about-me\\about-me.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\base.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:templates\\base.html.twig||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "nginx.conf",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\docker\\nginx.conf",
+              "RelativeDocumentMoniker": "docker\\nginx.conf",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\docker\\nginx.conf",
+              "RelativeToolTip": "docker\\nginx.conf",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-03T14:49:30.78Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "services.yaml",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\services.yaml",
+              "RelativeDocumentMoniker": "config\\services.yaml",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\services.yaml",
+              "RelativeToolTip": "config\\services.yaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2026-08-03T14:46:50.452Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "framework.yaml",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\packages\\framework.yaml",
+              "RelativeDocumentMoniker": "config\\packages\\framework.yaml",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\packages\\framework.yaml",
+              "RelativeToolTip": "config\\packages\\framework.yaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2026-08-03T14:43:04.898Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "login.html.twig",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\security\\login.html.twig",
+              "RelativeDocumentMoniker": "templates\\security\\login.html.twig",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\security\\login.html.twig",
+              "RelativeToolTip": "templates\\security\\login.html.twig",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-03T14:39:47.268Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SecurityController.php",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Controller\\SecurityController.php",
+              "RelativeDocumentMoniker": "src\\Controller\\SecurityController.php",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Controller\\SecurityController.php",
+              "RelativeToolTip": "src\\Controller\\SecurityController.php",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
+              "WhenOpened": "2026-08-03T14:39:17.728Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "security.yaml",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\packages\\security.yaml",
+              "RelativeDocumentMoniker": "config\\packages\\security.yaml",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\config\\packages\\security.yaml",
+              "RelativeToolTip": "config\\packages\\security.yaml",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAswBsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2026-08-03T14:29:03.108Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "app.css",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\public\\css\\app.css",
+              "RelativeDocumentMoniker": "public\\css\\app.css",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\public\\css\\app.css",
+              "RelativeToolTip": "public\\css\\app.css",
+              "ViewState": "AgIAABsDAAAAAAAAAAAcwCMDAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-08-03T14:12:31.256Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "about-me.html.twig",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\about-me\\about-me.html.twig",
+              "RelativeDocumentMoniker": "templates\\about-me\\about-me.html.twig",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\about-me\\about-me.html.twig",
+              "RelativeToolTip": "templates\\about-me\\about-me.html.twig",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-03T13:41:45.938Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "documents.html.twig",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\documents\\documents.html.twig",
+              "RelativeDocumentMoniker": "templates\\documents\\documents.html.twig",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\documents\\documents.html.twig",
+              "RelativeToolTip": "templates\\documents\\documents.html.twig",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-03T13:41:31.164Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DocumentController.php",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Domain\\Document\\Controller\\DocumentController.php",
+              "RelativeDocumentMoniker": "src\\Domain\\Document\\Controller\\DocumentController.php",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Domain\\Document\\Controller\\DocumentController.php",
+              "RelativeToolTip": "src\\Domain\\Document\\Controller\\DocumentController.php",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
+              "WhenOpened": "2026-08-03T13:35:56.627Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "index.html.twig",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\home\\index.html.twig",
+              "RelativeDocumentMoniker": "templates\\home\\index.html.twig",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\home\\index.html.twig",
+              "RelativeToolTip": "templates\\home\\index.html.twig",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-03T13:34:57.379Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "HomeController.php",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Controller\\HomeController.php",
+              "RelativeDocumentMoniker": "src\\Controller\\HomeController.php",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Controller\\HomeController.php",
+              "RelativeToolTip": "src\\Controller\\HomeController.php",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
+              "WhenOpened": "2026-08-03T13:21:49.911Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "base.html.twig",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\base.html.twig",
+              "RelativeDocumentMoniker": "templates\\base.html.twig",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\templates\\base.html.twig",
+              "RelativeToolTip": "templates\\base.html.twig",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-03T13:15:12.516Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "documents.php",
+              "DocumentMoniker": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Domain\\Document\\lib\\documents.php",
+              "RelativeDocumentMoniker": "src\\Domain\\Document\\lib\\documents.php",
+              "ToolTip": "C:\\Users\\silas\\PhpstormProjects\\bewerbung\\src\\Domain\\Document\\lib\\documents.php",
+              "RelativeToolTip": "src\\Domain\\Document\\lib\\documents.php",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
+              "WhenOpened": "2026-08-03T13:07:53.709Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

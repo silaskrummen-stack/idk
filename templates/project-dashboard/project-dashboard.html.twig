@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projekte — Portfolio{% endblock %}
+
+{% block body %}
+    <section class="hero" style="padding-bottom: 24px;">
+        <span class="hero__eyebrow">projects --status</span>
+        <h1 class="hero__title" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">Projekt-Log</h1>
+        <p class="hero__subtitle" style="margin-bottom: 0;">
+           Hier sind alle Projekte, die entweder länger als eine Woche gedauert haben, oder die ich aus anderen Gründen andersweitig stolz drauf bin.
+        </p>
+    </section>
+
+    <div class="status-feed">
+        {% for project in projects %}
+            <article class="status-card {{ project.category == 'privat' ? 'status-card--private' : '' }}" data-project-card>
+                <div class="status-card__thumb">
+                    <img src="{{ project.thumbnail|default('/images/projects/placeholder.jpg') }}"
+                         alt="{{ project.title }}" loading="lazy">
+                </div>
+
+                <div class="status-card__body">
+                    <div class="status-card__meta">
+                        <span class="status-card__id">SYS-{{ '%02d'|format(loop.index) }}</span>
+                        <span class="status-card__badge">
+                        <span class="status-card__dot"></span>
+                        {{ project.category }}
+                    </span>
+                    </div>
+
+                    <h3 class="status-card__title">{{ project.title }}</h3>
+
+                    <p class="status-card__desc status-card__desc--preview">{{ project.description }}</p>
+
+                    <div class="status-card__panel">
+                        <div class="status-card__panel-inner">
+                            <p class="status-card__desc status-card__desc--full">{{ project.description }}</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="status-card__toggle" data-project-toggle aria-expanded="false">
+                        <span data-label-open>Mehr anzeigen</span>
+                        <span data-label-close hidden>Weniger anzeigen</span>
+                    </button>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% endblock %}

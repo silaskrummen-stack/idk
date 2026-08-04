@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<section class="hero">
+    <div class="about-card">
+        <h1>Portfolio Access</h1>
+
+       {% if error %}
+    <p class="login-error">
+        Falsches Kennwort. Bitte prüfen Sie das Passwort in den Bewerbungsunterlagen.
+    </p>
+{% endif %}
+
+      <form method="post" action="{{ path('portfolio_login') }}">
+    <input type="hidden" name="_username" value="portfolio_guest">
+
+    <div class="password-field">
+        <input
+            type="password"
+            name="_password"
+            placeholder="Kennwort"
+            required
+        >
+
+        <span class="tooltip">
+            ?
+            <span class="tooltip__text">
+                Das Passwort ist auf dem Anschreiben oder Lebenslauf zu finden
+            </span>
+        </span>
+    </div>
+
+    <button class="btn btn--primary" type="submit">
+        Einloggen
+    </button>
+</form>
+    </div>
+</section>
+{% endblock %}

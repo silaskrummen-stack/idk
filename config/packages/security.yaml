@@ -1,0 +1,32 @@
+# config/packages/security.yaml
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        portfolio_gate:
+            memory:
+                users:
+                    portfolio_guest:
+                        password: '$2y$13$8cdB57OY311FzeI8p.S3LeHsbXMCuZ28KcK1Wr0LMFTFZgz8El1KO'
+                        roles: ['ROLE_PORTFOLIO_VIEWER']
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: portfolio_gate
+            form_login:
+                login_path: portfolio_login
+                check_path: portfolio_login
+                default_target_path: homepage
+            logout:
+                path: portfolio_logout
+
+    access_control:
+    - { path: ^/portfolio/login, roles: PUBLIC_ACCESS }
+    - { path: ^/portfolio/logout, roles: PUBLIC_ACCESS }
+    - { path: ^/, roles: ROLE_PORTFOLIO_VIEWER }

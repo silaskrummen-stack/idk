@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+class SecurityController extends AbstractController
+{
+    #[Route('/portfolio/login', name: 'portfolio_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        return $this->render('security/login.html.twig', [
+            'error' => $authenticationUtils->getLastAuthenticationError(),
+        ]);
+    }
+
+    #[Route('/portfolio/logout', name: 'portfolio_logout')]
+    public function logout(): void
+    {
+        // intercepted by the firewall, this stays empty
+    }
+}

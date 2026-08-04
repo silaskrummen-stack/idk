@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Portfolio{% endblock %}
+
+{% block body %}
+<section class="hero">
+    <p class="hero__eyebrow">whoami</p>
+    <h1 class="hero__title">Moin, ich bin Silas.</h1>
+    <p class="hero__subtitle">
+        Ich baue Dinge für das Web, von kleinen Tools über Nebenprojekte
+        bis hin zu größeren Anwendungen. Hier findest du eine Auswahl
+        meiner Projekte, ein paar Infos zu mir und Dokumente zum Download.
+    </p>
+    <div class="hero__actions">
+        <a href="{{ path('project_dashboard') }}" class="hero__button hero__button--primary">Projekte ansehen</a>
+        <a href="{{ path('about_me') }}" class="hero__button hero__button--secondary">Über mich</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,489 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Über mich — Portfolio{% endblock %}
+
+{% block body %}
+    <section class="hero" style="padding-bottom: 24px;">
+        <span class="hero__eyebrow">whoami --verbose</span>
+        <h1 class="hero__title" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">Etwas über mich</h1>
+        <p class="hero__subtitle">
+            Software- und Systementwickler. Ich baue am liebsten Dinge, die danach auch
+            wirklich laufen, von CRM-Integrationen über IoT-Hardware bis zu CI/CD-Pipelines.
+        </p>
+    </section>
+
+    <div class="container" style="padding-bottom: 80px;">
+
+        <!-- Profil-Metadaten -->
+        <dl class="profile-meta">
+            <div class="profile-meta__row">
+                <dt>Alter</dt>
+                <dd>24</dd>
+            </div>
+            <div class="profile-meta__row">
+                <dt>Aktueller Wohnort</dt>
+                <dd>Lingen (Ems)</dd>
+            </div>
+            <div class="profile-meta__row">
+                <dt>Rolle</dt>
+                <dd>Full-Stack Web-Developer</dd>
+            </div>
+        </dl>
+
+        <!-- Werdegang / Narrative -->
+        <div class="about-card about-card--with-photo" style="margin-bottom: 20px;">
+            <span class="about-card__label">werdegang</span>
+
+            <div class="werdegang-layout">
+                <div class="werdegang-photo">
+                    <img src="/pictures/Silas-6.png" alt="Silas Krummen">
+                </div>
+
+                    <p class="about-card__text">
+                        Aufgewachsen bin ich in Lingen (Ems), wo auch meine Begeisterung für Technik entstanden ist. Angefangen hat alles mit kleinen Bastelprojekten und dem Interesse daran, zu verstehen, wie Computer und Software funktionieren. Mit der Zeit wurden daraus immer anspruchsvollere Projekte, die meinen beruflichen Weg geprägt haben.
+                    </p>
+                    <p class="about-card__text" style="margin-top: 12px;">
+                        Nach meinem Realschulabschluss entschied ich mich für ein Fachabitur mit Schwerpunkt Informatik. Dort konnte ich meine ersten fundierten Kenntnisse in Softwareentwicklung und IT vertiefen. Dort wurde mir klar, dass ich meine berufliche Zukunft im Bereich der Softwareentwicklung sehe und bei der Digitalisierung im Emsland mitwirken wollte.
+                    </p>
+                    <p class="about-card__text" style="margin-top: 12px;">
+                        Im Anschluss begann ich ein Studium der Wirtschaftsinformatik an der Hochschule Osnabrück. Während der sechs Semester konnte ich einen Großteil der Module erfolgreich absolvieren und sowohl technische als auch betriebswirtschaftliche Grundlagen aufbauen. Aus privaten Gründen entschied ich mich dazu, das Studium vorzeitig zu beenden und einen praxisorientierten Weg einzuschlagen.
+                    </p>
+                    <p class="about-card__text" style="margin-top: 12px;">
+                        Mit der Ausbildung zum Fachinformatiker für Anwendungsentwicklung bei der Geocapture GmbH fand ich genau den Einstieg, den ich gesucht hatte. Dort arbeitete ich an realen Kundenprojekten und konnte meine Kenntnisse in der Webentwicklung, Datenbanken und modernen Entwicklungsprozessen kontinuierlich erweitern.
+                    </p>
+            </div>
+
+           <div class="werdegang-timeline" id="werdegangTimeline">
+    <div class="werdegang-timeline__track">
+        <button type="button" class="timeline-item" data-index="0">
+            <span class="timeline-item__year">2013</span>
+            <span class="timeline-item__title">Antoniusschule Thuine</span>
+            <span class="timeline-item__panel">
+                <span class="timeline-item__panel-inner">
+                    <p class="timeline-item__text">Damals habe ich einen qualifizierten Realschulabschluss mit einem Durchschnitt von 2,4 absolviert</p>
+                </span>
+            </span>
+        </button>
+        <button type="button" class="timeline-item" data-index="1">
+            <span class="timeline-item__year">2018</span>
+            <span class="timeline-item__title">Bockmeyer Zaun & Tor Systeme</span>
+            <span class="timeline-item__panel">
+                <span class="timeline-item__panel-inner">
+                    <p class="timeline-item__text">Ein 960h Praktikum im Einzelhandel und Landschaftsbau</p>
+                </span>
+            </span>
+        </button>
+        <button type="button" class="timeline-item" data-index="2">
+            <span class="timeline-item__year">2019</span>
+            <span class="timeline-item__title">BBS Lingen Wirtschaft</span>
+            <span class="timeline-item__panel">
+                <span class="timeline-item__panel-inner">
+                    <p class="timeline-item__text">Der Abschluss meines Fachabiturs mit Schwerpunkt auf Informatik und einem Durchschnitt von 2,3 Notenpunkten</p>
+                </span>
+            </span>
+        </button>
+        <button type="button" class="timeline-item" data-index="3">
+            <span class="timeline-item__year">2020</span>
+            <span class="timeline-item__title">Hochschule Osnabrück</span>
+            <span class="timeline-item__panel">
+                <span class="timeline-item__panel-inner">
+                    <p class="timeline-item__text">Ein Studium im Bereich Wirtschaftsinformatik für 6 Semester. Trotz &gt;75% abgeschlossener Module, vorzeitiger Abbruch aus privaten Gründen</p>
+                </span>
+            </span>
+        </button>
+        <button type="button" class="timeline-item" data-index="4">
+            <span class="timeline-item__year">2024</span>
+            <span class="timeline-item__title">Geocapture GmbH</span>
+            <span class="timeline-item__panel">
+                <span class="timeline-item__panel-inner">
+                    <p class="timeline-item__text">Eine Ausbildung zum Fachinformatiker für Anwendungsentwicklung mit dem Prüfungszeugnis 2 und einem schulischen Durchschnitt von 2,2</p>
+                </span>
+            </span>
+        </button>
+        <button type="button" class="timeline-item is-selected" data-index="5">
+            <span class="timeline-item__year">Heute</span>
+            <span class="timeline-item__title">Full-Stack Web-Developer</span>
+            <span class="timeline-item__panel">
+                <span class="timeline-item__panel-inner">
+                    <p class="timeline-item__text">Nun bin ich ein ausgelernter Entwickler, der gespannt ist, was die Zukunft so bietet</p>
+                </span>
+            </span>
+        </button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var track = document.querySelector('.werdegang-timeline__track');
+    if (!track) return;
+    var items = track.querySelectorAll('.timeline-item');
+
+    function selectItem(item, smooth) {
+        items.forEach(function (i) { i.classList.remove('is-selected'); });
+        item.classList.add('is-selected');
+        item.scrollIntoView({
+            behavior: smooth ? 'smooth' : 'auto',
+            inline: 'center',
+            block: 'nearest'
+        });
+    }
+
+    items.forEach(function (item) {
+        item.addEventListener('click', function () {
+            selectItem(item, true);
+        });
+    });
+
+    var initial = track.querySelector('.timeline-item.is-selected') || items[items.length - 1];
+    // slight delay so layout is settled before we scroll
+    requestAnimationFrame(function () {
+        selectItem(initial, false);
+    });
+});
+</script>
+
+        <div class="about-grid" style="margin-top: 20px;">
+            <div class="about-card">
+                <span class="about-card__label">stack</span>
+                <div class="tag-list">
+                    <span class="tag">PHP / Symfony</span>
+                    <span class="tag">C# / .NET</span>
+                    <span class="tag">Angular</span>
+                    <span class="tag">Docker</span>
+                    <span class="tag">LoRaWAN / IoT</span>
+                    <span class="tag">CI/CD</span>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <span class="about-card__label">fokus</span>
+                <p class="about-card__text">
+                    Am meisten Spaß macht mir die Stelle zwischen Hardware, Infrastruktur und
+                    Business-Logik - Systeme, die selbst laufen müssen, nicht nur einmal
+                    präsentiert werden.
+                </p>
+            </div>
+
+            <div class="about-card">
+                <span class="about-card__label">motivation</span>
+                <p class="about-card__text">
+                    Das was mich heute auch noch am meisten erfüllt ist es langfristige digitale Lösungen für kritische Arbeitsprozesse zu finden diue auch wirklich benutzt werden.
+                </p>
+            </div>
+        </div>
+
+         <!-- Frameworks -->
+<div class="about-card" style="margin-top: 20px;">
+    <span class="about-card__label">DEVOPS</span>
+
+    <div class="framework-grid">
+        <a href="https://www.docker.com"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/docker.png" alt="Docker">
+            <span>Docker</span>
+        </a>
+
+        <a href="https://about.gitlab.com/de-de/"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/gitlab.png" alt="GitLab">
+            <span>GitLab</span>
+        </a>
+
+        <a href="https://www.redhat.com/de/topics/devops/what-is-ci-cd"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/cicd.png" alt="CI/CD">
+            <span>CI/CD</span>
+        </a>
+    </div>
+</div>
+
+        <!-- Hobbies -->
+        <div class="about-card" style="margin-top: 20px;">
+            <span class="about-card__label">abseits vom code</span>
+            <div class="hobby-list">
+                <div class="hobby-item">
+                    <span class="hobby-item__title">Tabletop-RPG</span>
+                    <p class="about-card__text">
+                        Ich leite regelmäßig Tabletop-Abende mit Freunden als Dungeon Master —
+                        inklusive eigenem Infotainment-Setup mit Musik, Licht und Notizen zur
+                        Story sowie eine lineare Narrative.
+                    </p>
+                </div>
+                <div class="hobby-item">
+                    <span class="hobby-item__title">Godot &amp; Gamedev</span>
+                    <p class="about-card__text">
+                        Wenn ich mal nicht selber Videospiele spiele, entwickel ich auch mal an einem eignene 2D Spiel. Dies ist ein
+                        persönliches Herzensprojekt, an dem ich ab und zu weiterarbeite.
+                    </p>
+                </div>
+                <div class="hobby-item">
+                    <span class="hobby-item__title">Kanu Fahren</span>
+                    <p class="about-card__text">
+                        Falls mal gutes Wetter ist, nehme ich oft mein Kanu für Touren an der Ems oder der Hase raus. Das ist auch oft verbunden mit Campen und Wandern.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+         <!-- Frameworks -->
+<div class="about-card" style="margin-top: 20px;">
+    <span class="about-card__label">Medienbearbeitung</span>
+
+    <div class="framework-grid">
+        <a href="https://www.audacityteam.org"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/audacity.png" alt="Audacity">
+            <span>Audacity</span>
+        </a>
+        <a href="https://www.gimp.org"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/gimp.png" alt="Gimp">
+            <span>Gimp</span>
+        </a>
+        <a href="https://inkscape.org"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/inkscape.png" alt="Inkscape">
+            <span>Inkscape</span>
+        </a>
+         <a href="https://www.blackmagicdesign.com/de/products/davinciresolve/"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/davinciresolve.png" alt="Davinci Resolve">
+            <span>Davinci Resolve</span>
+        </a>
+    </div>
+</div>
+
+        <!-- Fremdsprachen & Stärken -->
+        <div class="about-grid" style="margin-top: 20px;">
+            <div class="about-card">
+                <span class="about-card__label">fremdsprachen</span>
+                <ul class="lang-list">
+                    <li class="lang-item">
+                        <span class="lang-item__name">Deutsch</span>
+                        <span class="lang-item__level">C2 / Native Tongue</span>
+                    </li>
+                    <li class="lang-item">
+                        <span class="lang-item__name">Englisch</span>
+                        <span class="lang-item__level">C2 / Master Proficency</span>
+                    </li>
+                    <li class="lang-item">
+                        <span class="lang-item__name">Spanisch</span>
+                        <span class="lang-item__level">A2 / Elementary</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="about-card">
+                <span class="about-card__label">stärken</span>
+                <div class="tag-list">
+                    <span class="tag">Hilfsbereitschaft</span>
+                    <span class="tag">Analytisches Denken</span>
+                    <span class="tag">Flexibilität</span>
+                    <span class="tag">Kundenorientierung</span>
+                    <span class="tag">Kreativität</span>
+                    <span class="tag">Lernbereitschaft</span>
+                    <span class="tag">Kommunikationsfähigkeit</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kompetenzen -->
+        <div class="about-card" style="margin-top: 20px;">
+            <span class="about-card__label">kompetenzen</span>
+
+            <div class="skill-group">
+                <span class="skill-group__title">Backend</span>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-item__name">PHP</span>
+                        <span class="skill-item__dots" aria-label="3 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">SQL</span>
+                        <span class="skill-item__dots" aria-label="3 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">C#</span>
+                        <span class="skill-item__dots" aria-label="1 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <span class="skill-group__title">Frontend</span>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-item__name">Java/-TypeScript</span>
+                        <span class="skill-item__dots" aria-label="2 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">HTML / CSS</span>
+                        <span class="skill-item__dots" aria-label="2 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">Twig</span>
+                        <span class="skill-item__dots" aria-label="2 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <span class="skill-group__title">Datenhandling</span>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-item__name">MySQL</span>
+                        <span class="skill-item__dots" aria-label="3 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">GraphQL</span>
+                        <span class="skill-item__dots" aria-label="1 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">SPSS</span>
+                        <span class="skill-item__dots" aria-label="1 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <span class="skill-group__title">Sonstiges</span>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-item__name">Microsoft Office</span>
+                        <span class="skill-item__dots" aria-label="3 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">Docker</span>
+                        <span class="skill-item__dots" aria-label="2 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-item__name">GitLab & CI/CD</span>
+                        <span class="skill-item__dots" aria-label="2 von 5">
+                            <span class="dot is-filled"></span>
+                            <span class="dot is-filled"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Frameworks -->
+<div class="about-card" style="margin-top: 20px;">
+    <span class="about-card__label">frameworks</span>
+
+    <div class="framework-grid">
+        <a href="https://symfony.com"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/symfony.png" alt="Symfony">
+            <span>Symfony</span>
+        </a>
+
+        <a href="https://angular.dev"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/angular.png" alt="Angular">
+            <span>Angular</span>
+        </a>
+
+        <a href="https://react.dev"
+           class="framework-item"
+           target="_blank"
+           rel="noopener noreferrer">
+            <img src="/pictures/about-me/react.png" alt="React">
+            <span>React</span>
+        </a>
+    </div>
+</div>
+
+        <div class="hero__actions" style="margin-top: 40px;">
+            <a href="mailto:silas.krummen@web.de.de" class="btn btn--primary">Kontakt aufnehmen</a>
+            <a href="{{ path('project_dashboard') }}" class="btn btn--ghost">Projekte ansehen</a>
+        </div>
+    </div>
+{% endblock %}
