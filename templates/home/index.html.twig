@@ -7,13 +7,15 @@
     <p class="hero__eyebrow">whoami</p>
     <h1 class="hero__title">Moin, ich bin Silas.</h1>
     <div style="display: flex; gap: 12px; align-items: flex-start;">
-        <img src="/pictures/me.png" alt="Ich" style="max-width: 30%; border-radius: 12px; border-style: solid; border-color: #00e5a0; transform: scaleX(1.02); transform-origin: left;">
+        <div class="hero__portrait">
+            <img src="/pictures/me.png" alt="Ich" style="max-width: 30%; border-radius: 12px; border-style: solid; border-color: #00e5a0; transform-origin: left;">
+        </div>
         <div style="display: flex; gap: 12px; flex-direction: column;">
             <p class="hero__subtitle" style="margin-left: 12px; flex-direction:column;">
-            Ich bin Entwickler mit Schwerpunkt auf modernen Webanwendungen. Ich entwickle saubere, performante Lösungen, von kleinen Tools und privaten Experimenten bis hin zu größeren Full-Stack-Projekten. Dabei arbeite ich gerne mit aktuellen Technologien und lege Wert auf verständlichen Code, gute Benutzererfahrung und kontinuierliches Lernen.
+                Ich bin Entwickler mit Schwerpunkt auf modernen Webanwendungen. Ich entwickle saubere, performante Lösungen, von kleinen Tools und privaten Experimenten bis hin zu größeren Full-Stack-Projekten. Dabei arbeite ich gerne mit aktuellen Technologien und lege Wert auf verständlichen Code, gute Benutzererfahrung und kontinuierliches Lernen.
             </p>
             <p class="hero__subtitle" style="margin-left: 12px;">
-            Auf dieser Seite findest du eine Auswahl meiner Projekte, Informationen über meinen Werdegang sowie Dokumente und weitere Einblicke in meine Arbeit.
+                Auf dieser Seite findest du eine Auswahl meiner Projekte, Informationen über meinen Werdegang sowie Dokumente und weitere Einblicke in meine Arbeit.
             </p>
             <div class="hero__actions" style="margin-top: 8px; justify-content: center;">
                 <a href="{{ path('project_dashboard') }}" class="btn btn--primary">Meine Projekte</a>
