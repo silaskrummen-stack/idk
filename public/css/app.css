@@ -1043,7 +1043,7 @@ a {
 
 .hero__portrait {
     flex: 0 0 auto;
-    width: 220px;
+    width: 30%;
     aspect-ratio: 3 / 4;   /* pick whatever ratio matches your photo */
     border-radius: 12px;
     overflow: hidden;
