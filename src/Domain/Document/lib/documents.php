@@ -2,15 +2,19 @@
 
 return [
    [
-        'title' => 'Ausbildung Zeugnis',
-        'file' => 'ausbildung-zeugnis.pdf',
+        'title' => 'Ausbildung Zeugnis Betrieb',
+        'file' => 'ausbildung-zeugnis-betrieb.pdf',
     ],
     [
-        'title' => 'IHK Zeugnis',
+        'title' => 'Ausbildung Zeugnis Schule',
+        'file' => 'ausbildung-zeugnis-schule.pdf',
+    ],
+    [
+        'title' => 'Ausbildung Zeugnis IHK',
         'file' => 'ihk-zeugnis.pdf',
     ],
     [
-        'title' => 'Leistungsübersicht Studium',
+        'title' => 'Studium Leistungsübersicht',
         'file' => 'leistungsuebersicht.pdf',
     ],
     [
