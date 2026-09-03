@@ -17,4 +17,7 @@ class ProjectDashboardController extends AbstractController
             'projects' => $projects,
         ]);
     }
+    /*
+    docker compose -f compose.yml -f compose.prod.yml up -d
+    */
 }
