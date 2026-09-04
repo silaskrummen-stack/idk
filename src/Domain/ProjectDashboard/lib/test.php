@@ -37,7 +37,7 @@ return [
     [
         'title' => 'Raumverwaltung',
         'category' => 'produktiv',
-        'thumbnail' => '/pictures/projects/rooms.png',
+        'thumbnail' => '/pictures/projects/rooms.jpg',
         'description' => 'Ein Raumverwaltungsystem gekoppelt mit E-Ink Displays.',
         'content' => [
             [
@@ -78,7 +78,7 @@ return [
     [
         'title' => 'Klimasensor',
         'category' => 'privat',
-        'thumbnail' => '/pictures/projects/klima.png',
+        'thumbnail' => '/pictures/projects/klima.jpg',
         'description' => 'Ein Klimasensor mit Serveranbindung und historischer Datenspeicherung + GPS Ortung.',
         'content' => [
             [
@@ -111,7 +111,7 @@ return [
     [
         'title' => 'Unity VR Rageroom',
         'category' => 'privat',
-        'thumbnail' => '/pictures/projects/rage.png',
+        'thumbnail' => '/pictures/projects/rage.jpg',
         'description' => 'Ein Unity Rageroom-Konzept, in dem sich Objekte per Hand oder mit Werkzeugen zerstören lassen. Fokus auf taktilem- und Audio-Feedback',
         'content' => [],
     ],
@@ -266,7 +266,7 @@ return [
     [
         'title' => 'Tabletop Infotainment-System',
         'category' => 'privat',
-        'thumbnail' => '/pictures/projects/dg.png',
+        'thumbnail' => '/pictures/projects/dg.jpg',
         'description' => 'Als "Dungeon Master ist es wichtig, meinen Spielern eine narrative anzubieten. Dafür habe ich ein Infotainment System mit  Licht Musik und Notizen erschaffen.',
         'content' => [],
     ],
@@ -328,7 +328,7 @@ return [
     [
         'title' => 'Passwort-Handling',
         'category' => 'produktiv',
-        'thumbnail' => '/pictures/projects/key.png',
+        'thumbnail' => '/pictures/projects/key.jpg',
         'description' => 'Ich habe den bestehenden Passwort-Reiter um ein paar Funktionen erweitert. Sicherheit war hier besonders wichtig.',
         'content' => [],
     ],
