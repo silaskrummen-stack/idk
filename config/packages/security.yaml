@@ -10,6 +10,11 @@ security:
                     portfolio_guest:
                         password: '$2y$13$8cdB57OY311FzeI8p.S3LeHsbXMCuZ28KcK1Wr0LMFTFZgz8El1KO'
                         roles: ['ROLE_PORTFOLIO_VIEWER']
+                    # Spielleitung für den CIV-Abend (civ-admin.silas-krummen.de).
+                    # Neues Passwort setzen: php bin/console security:hash-password  → Hash hier eintragen
+                    civ_admin:
+                        password: '$2y$13$sxsvw.92ojFVTo1JqroO.emYE97rzpDm9guV0PMeVbuH/24cABOBK'
+                        roles: ['ROLE_PORTFOLIO_VIEWER', 'ROLE_CIV_ADMIN']
 
     firewalls:
         dev:
@@ -28,5 +33,8 @@ security:
 
     access_control:
     - { path: ^/portfolio/login, roles: PUBLIC_ACCESS }
+    # CIV-Abend: Login-Prüfung für nginx (antwortet selbst mit 204/401) und Admin-Weiterleitung (prüft selbst)
+    - { path: ^/portfolio/civ-auth/, roles: PUBLIC_ACCESS }
+    - { path: ^/portfolio/civ/admin$, roles: PUBLIC_ACCESS }
     - { path: ^/portfolio/logout, roles: PUBLIC_ACCESS }
     - { path: ^/, roles: ROLE_PORTFOLIO_VIEWER }

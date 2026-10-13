@@ -8,3 +8,20 @@ services:
       - ./public:/var/www/html/public
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+
+  # Login gilt auch für die CIV-Subdomains
+  php:
+    environment:
+      SESSION_COOKIE_DOMAIN: .silas-krummen.de
+
+  # CIV-Abend: liegt auf dem Server neben diesem Projekt (../civ-abend), siehe CIV-DEPLOY.md.
+  # Kein eigener Port – erreichbar nur über nginx (civ.… / civ-admin.…).
+  civ:
+    build: ${CIV_DIR:-../civ-abend}
+    volumes:
+      - ${CIV_DIR:-../civ-abend}/data:/data
+      - ${CIV_DIR:-../civ-abend}/src:/var/www/app
+    environment:
+      ADMIN_TOKEN: ""                          # ?gm=…-Hintertür online abgeschaltet
+      ADMIN_HOSTS: civ-admin.silas-krummen.de  # Spielleitung nur über diese Subdomain
+    restart: unless-stopped

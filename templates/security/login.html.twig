@@ -1,18 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+{# ?as=civ → Login für die Spielleitung des CIV-Abends, sonst der normale Portfolio-Zugang #}
+{% set civ_login = app.request.query.get('as') == 'civ' or last_username|default('') == 'civ_admin' %}
 <section class="hero">
     <div class="about-card">
-        <h1>Portfolio Access</h1>
+        <h1>{{ civ_login ? 'Spielleitung' : 'Portfolio Access' }}</h1>
 
        {% if error %}
     <p class="login-error">
-        Falsches Kennwort. Bitte prüfen Sie das Passwort in den Bewerbungsunterlagen.
+        {% if civ_login %}Falsches Kennwort.{% else %}Falsches Kennwort. Bitte prüfen Sie das Passwort in den Bewerbungsunterlagen.{% endif %}
     </p>
 {% endif %}
 
       <form method="post" action="{{ path('portfolio_login') }}">
-    <input type="hidden" name="_username" value="portfolio_guest">
+    <input type="hidden" name="_username" value="{{ civ_login ? 'civ_admin' : 'portfolio_guest' }}">
 
     <div class="password-field">
         <input
@@ -22,12 +24,14 @@
             required
         >
 
+        {% if not civ_login %}
         <span class="tooltip">
             ?
             <span class="tooltip__text">
                 Das Passwort ist auf dem Anschreiben oder Lebenslauf zu finden
             </span>
         </span>
+        {% endif %}
     </div>
 
     <button class="btn btn--primary" type="submit">

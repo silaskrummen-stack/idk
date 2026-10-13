@@ -3,7 +3,13 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        # Eigener Name, damit sich das Cookie nicht mit alten PHPSESSID-Cookies in die Quere kommt
+        name: PORTFOLIOSESSID
+        # In Produktion ".silas-krummen.de", damit der Login auch für die CIV-Subdomains gilt (lokal leer)
+        cookie_domain: '%env(default::SESSION_COOKIE_DOMAIN)%'
+        # Bildschirm/Handy der Spielleitung sollen nicht nach 24 Minuten ohne Klick rausfliegen
+        gc_maxlifetime: 43200
 
     #esi: true
     #fragments: true

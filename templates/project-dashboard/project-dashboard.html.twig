@@ -17,6 +17,7 @@
             <article
                 class="status-card {{ project.category == 'privat' ? 'status-card--private' : '' }}"
                 data-project-card
+                {% if project.clickLinks is defined %}data-click-links="{{ project.clickLinks|json_encode|e('html_attr') }}"{% endif %}
             >
                 <div class="status-card__thumb">
                     <img
@@ -106,4 +107,26 @@
 
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Mehrfachklick auf eine Projektkarte (z. B. 3× / 5×) führt zu einer hinterlegten Adresse.
+    // Gezählt wird, bis 700 ms lang nicht mehr geklickt wurde.
+    document.querySelectorAll('[data-click-links]').forEach((card) => {
+        const links = JSON.parse(card.dataset.clickLinks);
+        let count = 0, timer = null;
+        card.style.userSelect = 'none';
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('button, a, dialog')) return; // "Mehr anzeigen" etc. normal lassen
+            count++;
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const url = links[count];
+                count = 0;
+                if (url) window.location.href = url;
+            }, 700);
+        });
+    });
+</script>
 {% endblock %}

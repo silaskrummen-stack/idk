@@ -2,6 +2,58 @@
 
 return [
     [
+        'title' => 'CIV-Abend Spielleitung',
+        'category' => 'privat',
+        'thumbnail' => '/pictures/projects/civ.jpg',
+        'description' => 'Ein Live-Punktestand mit Ären, Gipfelregeln und Events für einen Civilization-Abend mit acht Spielern – gesteuert unbemerkt vom Handy aus.',
+        // Mehrfachklick auf die Karte: 3× öffnet den Bildschirm, 5× die Spielleitung (siehe CivController)
+        'clickLinks' => [3 => '/portfolio/civ/display', 5 => '/portfolio/civ/admin'],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Für einen Civilization-VI-Abend mit acht Spielern habe ich eine Anzeige gebaut, die den ganzen Abend auf einem großen Bildschirm läuft: Punktestand aller Spieler, die aktuelle Ära mit ihrem Gipfel und die Regeln, die in dieser Ära gelten.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Gesteuert wird alles über ein separates Admin-Panel, das für das Handy optimiert ist. Punkte, Ären und Regeln lassen sich live ändern, ohne dass auf dem Bildschirm etwas davon zu sehen ist.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/civ-board.jpg',
+                'alt' => 'Punktestand und Gipfelregeln',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Events & Inszenierung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Über Knöpfe im Admin-Panel lassen sich Ereignisse auslösen – etwa ein Kriegsalarm, ein Weltkongress, die Krönung des aktuell Führenden oder Errungenschaften wie die erste Weltumrundung. Jedes Event hat eine eigene Animation; Sirenen, Fanfaren und Krönungsmusik werden über die Web Audio API direkt im Browser erzeugt, eigene Audiodateien haben Vorrang.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/civ-events.jpg',
+                'alt' => 'Events und Admin-Panel',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Technische Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Anwendung läuft als eigener Docker-Container mit PHP 8.3 und Apache, das Frontend ist bewusst ohne Framework in Vanilla JavaScript und CSS umgesetzt. Der Spielstand liegt als JSON-Datei mit Datei-Lock vor, Bildschirm und Admin-Panel synchronisieren sich per Polling.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Online hängt der Container hinter demselben nginx wie dieses Portfolio. Der Zugriff auf die beiden Subdomains wird per auth_request gegen den Symfony-Login dieser Seite geprüft – der Bildschirm und die Spielleitung haben dabei getrennte Rollen.',
+            ],
+        ],
+    ],
+    [
         'title' => 'LoRaWAN',
         'category' => 'produktiv',
         'thumbnail' => '/pictures/projects/lorawan.png',
