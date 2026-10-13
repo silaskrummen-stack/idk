@@ -48,6 +48,16 @@ docker run --rm \
 docker compose -f compose.yml -f compose.prod.yml exec nginx nginx -s reload
 ```
 
+## Abstimmung per QR-Code
+
+Die Handys der Mitspieler öffnen `https://civ.silas-krummen.de/abstimmen/` **ohne Login** (Ausnahme in `docker/nginx.prod.conf`).
+Dort kann man nur für die gerade laufende Abstimmung eine Stimme abgeben – Spielstand, Bildschirm und Spielleitung bleiben geschützt.
+Nach einer Änderung an `docker/nginx.prod.conf`: `git pull` und dann
+
+```bash
+docker compose -f compose.yml -f compose.prod.yml exec nginx nginx -s reload
+```
+
 ## Passwort der Spielleitung ändern
 
 ```bash
