@@ -58,6 +58,12 @@ Nach einer Änderung an `docker/nginx.prod.conf`: `git pull` und dann
 docker compose -f compose.yml -f compose.prod.yml exec nginx nginx -s reload
 ```
 
+## Verbindung zu Civ VI (Mod + Watcher)
+
+Der Mod `civ-mod/CivAbendBridge` schreibt Spielereignisse ins `Lua.log`, das Skript `civ-mod/civ-bridge.ps1`
+schickt sie an `https://civ.silas-krummen.de/bridge.php` – **ohne Login** (Ausnahme in `docker/nginx.prod.conf`),
+geschützt über den Schlüssel aus dem Admin (Sonstiges → Verbindung zum Spiel). Ohne Schlüssel nimmt `bridge.php` nichts an.
+
 ## Passwort der Spielleitung ändern
 
 ```bash
