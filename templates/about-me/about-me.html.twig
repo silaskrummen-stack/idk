@@ -335,30 +335,30 @@
             </div>
         </section>
 
-        <!-- Statement zu KI -->
+        <!-- Benutzung von KI -->
         <section class="about-section">
-            <h2 class="about-section__title">Statement zu KI</h2>
+            <h2 class="about-section__title">Benutzung von KI</h2>
 
             <div class="about-ai">
-                <div class="about-ai__tools">
-                    <h3 class="about-ai__label">Ausgiebig genutzt</h3>
-                    <ul class="about-ai__list">
-                        <li class="tool-item">
-                            <img src="/pictures/about-me/claude.png" alt="">
-                            <span>Claude</span>
-                        </li>
-                        <li class="tool-item">
-                            <img src="/pictures/about-me/copilot.png" alt="">
-                            <span>Microsoft Copilot</span>
-                        </li>
-                        <li class="tool-item">
-                            <img src="/pictures/about-me/manus.png" alt="">
-                            <span>Manus</span>
-                        </li>
-                    </ul>
+                <div class="about-ai__list" role="tablist" aria-label="Benutzung von KI" aria-orientation="vertical">
+                    <button type="button" class="tool-item about-ai__tab" role="tab" id="ai-tab-statement" aria-controls="ai-panel-statement" aria-selected="true">
+                        <span>Statement</span>
+                    </button>
+                    <button type="button" class="tool-item about-ai__tab" role="tab" id="ai-tab-claude" aria-controls="ai-panel-claude" aria-selected="false" tabindex="-1">
+                        <img src="/pictures/about-me/claude.png" alt="" onerror="this.remove()">
+                        <span>Claude</span>
+                    </button>
+                    <button type="button" class="tool-item about-ai__tab" role="tab" id="ai-tab-copilot" aria-controls="ai-panel-copilot" aria-selected="false" tabindex="-1">
+                        <img src="/pictures/about-me/copilot.png" alt="" onerror="this.remove()">
+                        <span>Microsoft Copilot</span>
+                    </button>
+                    <button type="button" class="tool-item about-ai__tab" role="tab" id="ai-tab-chatgpt" aria-controls="ai-panel-chatgpt" aria-selected="false" tabindex="-1">
+                        <img src="/pictures/about-me/chatgpt.png" alt="" onerror="this.remove()">
+                        <span>ChatGPT</span>
+                    </button>
                 </div>
 
-                <div class="about-essay">
+                <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-statement" aria-labelledby="ai-tab-statement" tabindex="0">
                     <p>
                         Ich sehe die zunehmende Verbreitung von KI im Berufs- und Privatleben mit klaren ethischen
                         Bedenken und engagiere mich politisch für mehr Regulierung vor allem im kreativen Bereich. Sprachmodelle erzeugen im eigentlichen Sinne nichts Neues: Sie Re-Hashen rechtlich dubios ergatterte Trainingssets. Deshalb tendieren
@@ -368,7 +368,7 @@
                     </p>
                     <p>
                         Beruflich halte ich eine komplette Ablehnung trotzdem nicht für tragbar, erst recht nicht in
-                        der IT. Ende 2025 ist mir klar geworden, dass Ignoranz keine nachhaltige Haltung ist: Unternehmen die nicht mitziehen, werden durch die ersetzt, die es tun. Genau da sehe ich meine Arbeit: Unternehmen Helfen im technologischen Rennen mitzuhalten. Begeistern kann ich mich für Einsätze, die der Gemeinschaft nützen und repetitive,
+                        der IT. Ende 2025 ist mir klar geworden, dass Ignoranz keine nachhaltige Haltung ist: Unternehmen, die nicht mitziehen, werden durch die ersetzt, die es tun. Genau da sehe ich meine Arbeit: Unternehmen dabei helfen, im technologischen Rennen mitzuhalten. Begeistern kann ich mich für Einsätze, die der Gemeinschaft nützen und repetitive,
                         fehleranfällige Arbeit abnehmen.
                     </p>
                     <p>
@@ -379,13 +379,55 @@
                         und wird schwer wartbar.
                     </p>
                     <p>
-                        Ein Thema, dass aus meiner Sicht noch unterschätzt wird, ist Token-Management. Viele
+                        Ein Thema, das aus meiner Sicht noch unterschätzt wird, ist Token-Management. Viele
                         mittelständische Unternehmen bauen ihre Prozesse gerade auf den heutigen Preisen auf, und ich
                         gehe fest davon aus, dass diese steigen werden. Dann wird jeder unbedachte Agenten-Workflow
                         zum laufenden Kostenfaktor. Wer KI einführt, sollte deshalb den Verbrauch pro Prozess messen,
                         für jede Aufgabe das kleinste ausreichende Modell wählen und Prozesse so bauen, dass sie nicht
                         von einem einzigen Anbieter abhängen. Sonst entstehen technische Altlasten, wie ich sie in
                         meiner Karriere schon mehrmals erlebt habe.
+                    </p>
+                </div>
+                <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-claude" aria-labelledby="ai-tab-claude" tabindex="0" hidden>
+                    <p>
+                        Claude und Claude Code nutze ich vor allem für professionelle Arbeit, also überall dort, wo das Ergebnis wirklich zählt. Claude versteht gut, was ich eigentlich will, auch wenn ich es nicht bis ins letzte Detail ausformuliere. Die Codequalität ist sehr gut, nur bei Konventionen und Standards braucht es klare Vorgaben.
+                    </p>
+                    <p>
+                        Auffällig ist, wie viel Claude mitdenkt. Fallbacks und Randfälle baut es von sich aus ein, und wenn eine Änderung Stellen im Code betrifft, die ich selbst gar nicht im Blick hatte, findet es diese und passt sie gleich mit an.
+                    </p>
+                    <p>
+                        Stark ist es auch beim Testen: Entweder baut es sich eine eigene Testumgebung auf, oder es nutzt die, die ich ihm vorgebe, und prüft seine Änderungen, bevor es sie als fertig meldet.
+                    </p>
+                    <p>
+                        Ich nutze Claude mit dem Pro-Plan für sehr viele Aufgaben und bin dabei bisher nie an die Nutzungsgrenzen gestoßen. Über die Zeit habe ich mir eigene Skills aufgebaut, zum Beispiel für SEO, für rechtliche Anforderungen an Websites wie Impressum und Datenschutz und um schwache Formulierungen in Texten zu finden.
+                    </p>
+                    <p>
+                        Privat habe ich mit Claude ganze Spiele nach meinen Wünschen gemoddet, Spiele nachträglich um einen Mehrspielermodus erweitert und alte Spiele aus der Zeit um 2010 dekompiliert, damit sie auf moderner Hardware laufen, für mich selbst und für unsere LAN-Partys.
+                    </p>
+                </div>
+                <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-copilot" aria-labelledby="ai-tab-copilot" tabindex="0" hidden>
+                    <p>
+                        Microsoft Copilot ist mir in verschiedenen Unternehmen immer wieder begegnet. Wirklich überzeugt hat es mich aber nur innerhalb einer Microsoft-365-Umgebung.
+                    </p>
+                    <p>
+                        Dort spielt es seine größte Stärke aus: den Zugriff auf den Kontext des Unternehmens. Copilot kennt E-Mails, Teams-Besprechungen und Dokumente in SharePoint und OneDrive. Darauf aufbauend fasst es Besprechungen zusammen, schreibt Entwürfe in Word oder wertet Tabellen in Excel aus, und zwar innerhalb der Berechtigungen, die im Unternehmen ohnehin gelten.
+                    </p>
+                    <p>
+                        Besonders gut ist es bei Problemen mit Microsoft selbst. Fragen zu Excel-Formeln, Teams-Einstellungen, Power Automate oder Fehlermeldungen in Windows beantwortet es oft schneller und treffender als andere Assistenten.
+                    </p>
+                    <p>
+                        Außerhalb dieses Ökosystems verliert es für mich deutlich an Wert. Für Unternehmen ist Copilot deshalb vor allem eine strategische Entscheidung: Wer bereit ist, sich langfristig an Microsoft zu binden, bekommt ein wirklich nützliches Werkzeug, das sich nahtlos in die bestehende Arbeit einfügt. Wer Wert auf Unabhängigkeit legt, sollte diese Abhängigkeit vorher bewusst abwägen.
+                    </p>
+                </div>
+                <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-chatgpt" aria-labelledby="ai-tab-chatgpt" tabindex="0" hidden>
+                    <p>
+                        ChatGPT nutze ich vor allem für Kommunikation und für Privates. Beruflich formuliere ich damit E-Mails um und lasse mir Nachrichten an Kunden gegenlesen, bevor ich sie abschicke: Passt der Ton, ist die Kernaussage klar, könnte etwas missverstanden werden?
+                    </p>
+                    <p>
+                        Privat ist es mein Werkzeug für fast alles Alltägliche, vom Kochen bis zur Recherche zu Themen, die keine wissenschaftliche Tiefe brauchen.
+                    </p>
+                    <p>
+                        Für besonders klug halte ich ChatGPT nicht, bei komplexen technischen Aufgaben greife ich zu Claude. Dafür ist es freundlich, einfach zu bedienen, kostet in der Basisversion praktisch nichts und nennt bei Recherchen seine Quellen, sodass ich Aussagen selbst überprüfen kann. Für die meisten Alltagsfragen ist genau das wichtiger als maximale Intelligenz.
                     </p>
                 </div>
             </div>
@@ -425,6 +467,38 @@ document.addEventListener('DOMContentLoaded', function () {
     // slight delay so layout is settled before we scroll
     requestAnimationFrame(function () {
         selectItem(initial, false);
+    });
+});
+
+// KI-Bereich: links gewählter Eintrag bestimmt den Text rechts
+document.addEventListener('DOMContentLoaded', function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.about-ai__tab'));
+    if (!tabs.length) return;
+
+    function selectTab(tab, focus) {
+        tabs.forEach(function (t) {
+            var isSelected = t === tab;
+            t.setAttribute('aria-selected', String(isSelected));
+            t.tabIndex = isSelected ? 0 : -1;
+            document.getElementById(t.getAttribute('aria-controls')).hidden = !isSelected;
+        });
+        if (focus) tab.focus();
+    }
+
+    tabs.forEach(function (tab, index) {
+        tab.addEventListener('click', function () {
+            selectTab(tab, false);
+        });
+        tab.addEventListener('keydown', function (e) {
+            var next = null;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = tabs[(index + 1) % tabs.length];
+            if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = tabs[(index - 1 + tabs.length) % tabs.length];
+            if (e.key === 'Home') next = tabs[0];
+            if (e.key === 'End') next = tabs[tabs.length - 1];
+            if (!next) return;
+            e.preventDefault();
+            selectTab(next, true);
+        });
     });
 });
 </script>
