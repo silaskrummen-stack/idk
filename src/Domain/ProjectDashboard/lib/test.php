@@ -618,7 +618,7 @@ return [
     [
         'title' => 'Adress-Auswertungstool',
         'category' => 'produktiv'
-        'date' => '08/2025',,
+        'date' => '08/2025',
         'thumbnail' => '/pictures/projects/auswertung.png',
         'description' => 'Damit der Vertrieb eigenständig Auswertungen zu Adressdaten erstellen kann, habe ich ein Tool mit konfigurierbaren Filtern und frei wählbaren Ausgabeformaten entwickelt.',
         'content' => [],
