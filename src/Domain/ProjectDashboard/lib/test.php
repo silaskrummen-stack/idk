@@ -4,6 +4,7 @@ return [
     [
         'title' => 'LAN-Party Moderation',
         'category' => 'privat',
+        'date' => '10/2026',
         'thumbnail' => '/pictures/projects/lan.jpg',
         'description' => 'Ein interaktiver Punktestand für meine LAN-Partys: zwei Teams, Spiele, Quiz und Abstimmungen live auf dem großen Bildschirm, moderiert über ein Admin-Panel, mitgespielt am Handy.',
         'content' => [
@@ -92,7 +93,8 @@ return [
     ],
     [
         'title' => 'CIV-Abend Spielleitung',
-        'category' => 'privat',
+        'category' => 'produktiv',
+        'date' => '09/2026',
         'thumbnail' => '/pictures/projects/civ.jpg',
         'description' => 'Mein erster Versuch mit Vibecoding: ein Live-Punktestand für den Strategieklassiker Sid Meier’s Civilization VI mit acht Spielern.',
         // Mehrfachklick auf die Karte: 3× öffnet den Bildschirm, 5× die Spielleitung (siehe CivController)
@@ -228,8 +230,9 @@ return [
     [
         'title' => 'krummen.de',
         'category' => 'privat',
+        'date' => '09/2026',
         'thumbnail' => '/pictures/projects/krummen.jpg',
-        'description' => 'Die neue Website für Eventservice & Fotostudio Krummen in Lingen – in zwei Wochen vor der Hochzeitsmesse mit WordPress bei IONOS umgesetzt.',
+        'description' => 'Die neue Website für Eventservice & Fotostudio Krummen in Lingen. In zwei Wochen vor der Hochzeitsmesse mit WordPress bei IONOS umgesetzt.',
         'content' => [
             [
                 'type' => 'heading',
@@ -237,7 +240,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Eventservice & Fotostudio Krummen in Lingen brauchte eine neue Website, wollte dabei aber bei IONOS bleiben. Gebucht war der Tarif MyWebsite, der sich vor allem an kleine Unternehmen richtet, die überhaupt erst einmal online sichtbar sein wollen. Den visuellen Editor dort empfanden sie trotzdem als anstrengend und verwirrend.',
+                'text' => 'Eventservice & Fotostudio Krummen in Lingen brauchte eine neue Website, wollte dabei aber im IONOS-Ökosystem bleiben. Gebucht war der Tarif MyWebsite, der sich vor allem an kleine Unternehmen richtet, die überhaupt erst einmal online sichtbar sein wollen. Den visuellen Editor dort empfanden sie trotzdem als anstrengend und verwirrend.',
             ],
             [
                 'type' => 'text',
@@ -254,7 +257,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Wir haben uns entschieden, auf dem bestehenden MyWebsite-Tarif auf WordPress umzusteigen. So blieb alles bei IONOS, und die Inhalte lassen sich langfristig weiterhin mit einem visuellen Builder selbst pflegen. Für mich war es das erste Projekt mit WordPress, und gerade die Grenzen eines solchen Baukastens haben mir überraschend viel Spaß gemacht.',
+                'text' => 'Wir haben uns entschieden, auf auf WordPress umzusteigen. So blieb alles bei IONOS, und die Inhalte lassen sich langfristig weiterhin mit einem visuellen Builder selbst pflegen. Für mich war es das erste Projekt mit WordPress, und gerade die Grenzen eines solchen Baukastens haben mir überraschend viel Spaß gemacht.',
             ],
             [
                 'type' => 'heading',
@@ -301,7 +304,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Gemeinsam haben wir eine Corporate Identity entwickelt, die zu ihnen passt. Sie zeigt sich heute in den Visuals, in der Preisgestaltung und im gesamten Online-Auftritt.',
+                'text' => 'Gemeinsam haben wir eine Corporate Identity entwickelt, die zu ihnen passt. Sie zeigt sich heute in den Visuals, in der Preisgestaltung und solgansam auch im gesamten Online-Auftritt.',
             ],
             [
                 'type' => 'image',
@@ -324,17 +327,18 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Ich musste lernen, etwas nach den Wünschen von Kunden umzusetzen und nicht nur nach meinem eigenen Plan. Dazu gehörte auch, ehrliches Feedback zu geben, wie Besucher eine Seite wahrscheinlich benutzen werden, selbst wenn das nicht immer die Antwort war, die man hören wollte.',
+                'text' => 'Ich musste lernen, etwas nach den Wünschen von Kunden umzusetzen und nicht nur nach meinem eigenen Plan. Dazu gehörte auch, ehrliches Feedback zu geben, wie Besucher eine Seite wahrscheinlich benutzen werden, selbst wenn das nicht immer die Antwort war, die man hören wollte. Gerade ein Fotostudio muss allgemeine Medienkompetenz beweisen weil auch das Teil des Image ist.',
             ],
             [
                 'type' => 'text',
-                'text' => 'Außerdem habe ich viel darüber gelernt, eine Erzählung aufzubauen: hundert verschiedene Ideen und Stile zu sammeln und sie trotzdem in eine einheitliche Website zu bringen.',
+                'text' => 'Außerdem habe ich viel darüber gelernt, eine Erzählung aufzubauen: hundert verschiedene Ideen und Stile zu sammeln und sie trotzdem in eine einheitliche Website zu bringen. Die Webseite wird auch weiterhin noch ein bisschen Liebe und Zuneigung brauchen.',
             ],
         ],
     ],
     [
         'title' => 'LoRaWAN',
         'category' => 'produktiv',
+        'date' => '07/2026',
         'thumbnail' => '/pictures/projects/lorawan.png',
         'description' => 'Entwicklung einer LoRaWAN Kampagne und allgemeinen Strategie.',
         'content' => [
@@ -348,7 +352,7 @@ return [
                 ],
                 [
                     'type' => 'text',
-                    'text' => 'Dabei ging es nicht nur um die eigentliche Kommunikation zwischen Geräten und Netzwerk, sondern um das gesamte Ökosystem – von den Endgeräten über Gateways und Network Server bis hin zur Integration in unsere bestehenden Systeme.',
+                    'text' => 'Dabei ging es nicht nur um die eigentliche Kommunikation zwischen Geräten und Netzwerk, sondern um das gesamte Ökosystem, von den Endgeräten über Gateways und Network Server bis hin zur Integration in unsere bestehenden Systeme.',
                 ],
                 [
                     'type' => 'heading',
@@ -368,6 +372,7 @@ return [
     [
         'title' => 'Raumverwaltung',
         'category' => 'produktiv',
+        'date' => '06/2026',
         'thumbnail' => '/pictures/projects/rooms.jpg',
         'description' => 'Ein Raumverwaltungsystem gekoppelt mit E-Ink Displays.',
         'content' => [
@@ -409,6 +414,7 @@ return [
     [
         'title' => 'Klimasensor',
         'category' => 'privat',
+        'date' => '04/2026',
         'thumbnail' => '/pictures/projects/klima.jpg',
         'description' => 'Ein Klimasensor mit Serveranbindung und historischer Datenspeicherung + GPS Ortung.',
         'content' => [
@@ -442,6 +448,7 @@ return [
     [
         'title' => 'Unity VR Rageroom',
         'category' => 'privat',
+        'date' => '04/2026',
         'thumbnail' => '/pictures/projects/rage.jpg',
         'description' => 'Ein Unity Rageroom-Konzept, in dem sich Objekte per Hand oder mit Werkzeugen zerstören lassen. Fokus auf taktilem- und Audio-Feedback',
         'content' => [],
@@ -449,6 +456,7 @@ return [
     [
         'title' => 'Godot 2D Planeten-Sumo',
         'category' => 'privat',
+        'date' => '03/2026',
         'thumbnail' => '/pictures/projects/2d.png',
         'description' => 'In meiner Freizeit entwickle ich ein 2D-Spiel in Godot, bei dem man abstrakte Planeten in einem Sonnensystem steuert und versucht, die Gegner aus dem Sonnensystem zu knocken.',
         'content' => [],
@@ -456,6 +464,7 @@ return [
     [
         'title' => 'Webinar',
         'category' => 'produktiv',
+        'date' => '02/2026',
         'thumbnail' => '/pictures/projects/webinar.png',
         'description' => 'Ein System um Interaktionen, Anwesenheit und Engagement von Webinaren zu analysieren.',
         'content' => [
@@ -497,6 +506,7 @@ return [
     [
         'title' => 'Werbekampagnen Leads Auswertung',
         'category' => 'produktiv',
+        'date' => '02/2026',
         'thumbnail' => '/pictures/projects/leads.png',
         'description' => 'Eine Grundlage zur internen Auswertung von Leads und Werbekampgnen',
         'content' => [
@@ -542,13 +552,15 @@ return [
     [
         'title' => 'Flottenmanagement-Software',
         'category' => 'privat',
+        'date' => '10/2025',
         'thumbnail' => '/pictures/projects/fleet.png',
-        'description' => 'Mittlerweile inkative Software für einen lokalen Eventservice-Dienst. Kern war eine vereinfachte Kommunikation zwischen Planer und Fahrer',
+        'description' => 'Mittlerweile inkative Software für einen lokalen mobilen Gastronomie-Dienst. Kern war eine vereinfachte Kommunikation zwischen Planer und Fahrer',
         'content' => [],
     ],
     [
         'title' => 'Finanzbuchhaltung-Anbindung',
         'category' => 'produktiv',
+        'date' => '01/2026',
         'thumbnail' => '/pictures/projects/select.png',
         'description' => 'Für Wartungsverträge und Finanzbuchhaltung verwenden wir Selectline. Ich musste die Selectline-Datenbank enger in unser CRM integrieren.',
         'content' => [],
@@ -556,6 +568,7 @@ return [
     [
         'title' => 'Kanban-App',
         'category' => 'privat',
+        'date' => '11/2025',
         'thumbnail' => '/pictures/projects/kanban.png',
         'description' => 'Ein kleiner Versuch eine eigene kleine Kanban App für eine fiktives Unternehmen zu entwickeln.',
         'content' => [
@@ -597,13 +610,15 @@ return [
     [
         'title' => 'Tabletop Infotainment-System',
         'category' => 'privat',
+        'date' => '09/2025',
         'thumbnail' => '/pictures/projects/dg.jpg',
         'description' => 'Als "Dungeon Master ist es wichtig, meinen Spielern eine narrative anzubieten. Dafür habe ich ein Infotainment System mit  Licht Musik und Notizen erschaffen.',
         'content' => [],
     ],
     [
         'title' => 'Adress-Auswertungstool',
-        'category' => 'produktiv',
+        'category' => 'produktiv'
+        'date' => '08/2025',,
         'thumbnail' => '/pictures/projects/auswertung.png',
         'description' => 'Damit der Vertrieb eigenständig Auswertungen zu Adressdaten erstellen kann, habe ich ein Tool mit konfigurierbaren Filtern und frei wählbaren Ausgabeformaten entwickelt.',
         'content' => [],
@@ -611,6 +626,7 @@ return [
     [
         'title' => 'GitLab-Anbindung',
         'category' => 'produktiv',
+        'date' => '01/2026',
         'thumbnail' => '/pictures/projects/gitlab.png',
         'description' => 'Tickets im Kanban-Board sollten basierend auf GitLab-Merge-Requests automatisch ihren Status ändern.',
         'content' => [],
@@ -618,6 +634,7 @@ return [
     [
         'title' => 'Adress-Cluster',
         'category' => 'produktiv',
+        'date' => '02/2026',
         'thumbnail' => '/pictures/projects/cluster.png',
         'description' => 'Ein Tool zur Management von Beziehungen zwischen Adressen und Netzen',
         'content' => [
@@ -652,6 +669,7 @@ return [
     [
         'title' => 'GitLab Pipeline',
         'category' => 'privat',
+        'date' => '03/2026',
         'thumbnail' => '/pictures/projects/cicd.png',
         'description' => 'Eine eigene Pipeline von Development bis Deployment',
         'content' => [],
@@ -659,8 +677,9 @@ return [
     [
         'title' => 'Passwort-Handling',
         'category' => 'produktiv',
+        'date' => '05/2025',
         'thumbnail' => '/pictures/projects/key.jpg',
-        'description' => 'Ich habe den bestehenden Passwort-Reiter um ein paar Funktionen erweitert. Sicherheit war hier besonders wichtig.',
+        'description' => 'Ich habe den bestehenden Passwort-Reiter bei Geocapture um ein paar Funktionen erweitert. Sicherheit war hier besonders wichtig.',
         'content' => [],
     ],
 ];
