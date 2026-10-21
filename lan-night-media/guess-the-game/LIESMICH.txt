@@ -1,0 +1,27 @@
+GUESS THE GAME – Bilder
+=======================
+
+Ein Ordner pro Spiel, in der Reihenfolge der Spiele-Liste im Admin-Panel
+(LAN Night → Guess the Game → "Spiele & Einstellungen"):
+
+  1/  Fallout: New Vegas
+  2/  Frostpunk 2
+  3/  Grand Theft Auto: Vice City
+  4/  Dead by Daylight
+  5/  The Witcher 3
+
+In jeden Ordner bis zu 5 Bilder legen (jpg, png, webp, gif, avif).
+Gezeigt werden sie nach Dateiname sortiert – also am besten so benennen:
+
+  1.jpg  → schwerstes Bild, kommt zuerst
+  2.jpg
+  3.jpg
+  4.jpg
+  5.jpg  → leichtestes Bild, kommt zuletzt
+
+Die Dateinamen sieht niemand: Die Bilder liegen bewusst außerhalb von public/
+und werden erst ausgeliefert, wenn sie gerade auf dem Bildschirm sind.
+Kein Neustart nötig – einfach reinlegen. Im Admin-Panel steht, wie viele Bilder pro Spiel gefunden wurden.
+
+Online (Server): Ordner per scp/WinSCP nach ~/bewerbung/lan-night-media/guess-the-game/ kopieren,
+falls die Bilder nicht mit ins Git sollen.

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>LAN Night · Spielleitung</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ lan_asset('lan.css') }}">
+    <link rel="stylesheet" href="{{ lan_asset('admin.css') }}">
+</head>
+<body class="admin">
+
+<header class="ahead">
+    <div class="ahead__title">
+        <span class="ahead__eyebrow">LAN Night</span>
+        <strong>Spielleitung</strong>
+    </div>
+    <span class="status" id="displayStatus"><span class="status__dot"></span><span id="displayStatusText">Bildschirm …</span></span>
+</header>
+
+<div class="toast" id="toast" hidden></div>
+
+<main class="amain">
+
+    {# ---------- Punktestand (immer oben) ---------- #}
+    <section class="card card--scores">
+        <div class="scores" id="scores"></div>
+    </section>
+
+    {# ---------- Bildschirm ---------- #}
+    <section class="card">
+        <h2 class="card__title">Bildschirm</h2>
+        <div class="seg" id="screens">
+            <button class="lbtn" data-screen="title">Titel</button>
+            <button class="lbtn" data-screen="scoreboard">Punktestand</button>
+            <button class="lbtn" data-screen="game">Spiel</button>
+            <button class="lbtn" data-screen="pause">Pause</button>
+            <button class="lbtn" data-screen="quiz">Quiz</button>
+            <button class="lbtn" data-screen="guess">Guess the Game</button>
+            <button class="lbtn" data-screen="price">Guess the Price</button>
+            <button class="lbtn" data-screen="awards">Awards</button>
+            <button class="lbtn" data-screen="finale">Finale 🏆</button>
+        </div>
+    </section>
+
+    {# ---------- Segmente: immer nur eins sichtbar (Reiter folgt dem Bildschirm) ---------- #}
+    <section class="card card--tabs">
+        <div class="seg-tabs" id="segTabs" role="tablist">
+            <button class="seg-tab" role="tab" data-tab="quiz">Quiz</button>
+            <button class="seg-tab" role="tab" data-tab="guess">Guess the Game</button>
+            <button class="seg-tab" role="tab" data-tab="price">Guess the Price</button>
+            <button class="seg-tab" role="tab" data-tab="awards">Awards</button>
+        </div>
+    </section>
+
+    {# ---------- Quiz ---------- #}
+    <section class="card card--quiz card--segment" data-segment="quiz">
+        <h2 class="card__title">Quiz <span class="card__live" id="quizLive"></span></h2>
+        <div class="seg" id="quizCtl"></div>
+        <div class="quiz-now" id="quizNow"></div>
+
+        <details class="add">
+            <summary class="lbtn lbtn--ghost">Fragen &amp; Einstellungen</summary>
+            <form class="form" id="quizForm">
+                <label class="field">Fragen
+                    <textarea class="linput quiz-source" name="source" rows="14" spellcheck="false"></textarea>
+                </label>
+                <p class="hint">Format: erste Zeile = Titel, „Regeln: …“, dann je „Frage 1: …“, „A) …“ bis „D) …“ und „Richtige Antwort: X)“.</p>
+                <div class="form__pair">
+                    <label class="field">Sekunden pro Frage <input class="linput" name="seconds" type="number" min="5" max="300"></label>
+                    <label class="field">Punkte für den Quiz-Sieg <input class="linput" name="points" type="number" min="0" max="50"></label>
+                </div>
+                <div class="seg">
+                    <button class="lbtn lbtn--primary" type="submit">Speichern</button>
+                    <button class="lbtn lbtn--danger" type="button" id="quizReset">Quiz zurücksetzen</button>
+                </div>
+            </form>
+        </details>
+        <p class="hint">Handys: <a href="{{ path('lan_phone') }}" target="_blank">{{ url('lan_phone') }}</a> (QR-Code steht auf dem Bildschirm)</p>
+    </section>
+
+    {# ---------- Guess the Game ---------- #}
+    <section class="card card--quiz card--segment" data-segment="guess" hidden>
+        <h2 class="card__title">Guess the Game <span class="card__live" id="ggLive"></span></h2>
+        <div class="seg" id="ggCtl"></div>
+        <div class="gg-now" id="ggNow"></div>
+        <div class="gg-games" id="ggGames"></div>
+
+        <details class="add">
+            <summary class="lbtn lbtn--ghost">Spiele &amp; Einstellungen</summary>
+            <form class="form" id="ggForm">
+                <label class="field">Ein Spiel pro Zeile: Name | Variante, Variante, …
+                    <textarea class="linput quiz-source" name="source" rows="7" spellcheck="false"></textarea>
+                </label>
+                <p class="hint">Groß/klein, Satzzeichen, „The“, römische Zahlen und kleine Tippfehler sind automatisch egal – Varianten nur für ganz andere Schreibweisen (z. B. „GTA VC“).</p>
+                <div class="form__pair">
+                    <label class="field">Sekunden pro Bild <input class="linput" name="seconds" type="number" min="5" max="120"></label>
+                    <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="0" max="50"></label>
+                </div>
+                <div class="seg">
+                    <button class="lbtn lbtn--primary" type="submit">Speichern</button>
+                    <button class="lbtn lbtn--danger" type="button" id="ggReset">Zurücksetzen</button>
+                </div>
+            </form>
+        </details>
+        <p class="hint">Bilder: Ordner <code>lan-night-media/guess-the-game/1/</code> bis <code>5/</code> im Projekt (je bis zu 5, sortiert nach Dateiname, siehe LIESMICH.txt dort).</p>
+    </section>
+
+    {# ---------- Guess the Price ---------- #}
+    <section class="card card--quiz card--segment" data-segment="price" hidden>
+        <h2 class="card__title">Guess the Price <span class="card__live" id="prLive"></span></h2>
+        <div class="seg" id="prCtl"></div>
+        <div class="pr-now" id="prNow"></div>
+        <div class="gg-games" id="prItems"></div>
+
+        <details class="add">
+            <summary class="lbtn lbtn--ghost">Gegenstände &amp; Einstellungen</summary>
+            <form class="form" id="prForm">
+                <label class="field">Ein Gegenstand pro Zeile: Name | Preis
+                    <textarea class="linput quiz-source" name="source" rows="7" spellcheck="false"></textarea>
+                </label>
+                <div class="form__pair">
+                    <label class="field">Sekunden pro Runde <input class="linput" name="seconds" type="number" min="5" max="180"></label>
+                    <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="0" max="50"></label>
+                </div>
+                <div class="seg">
+                    <button class="lbtn lbtn--primary" type="submit">Speichern</button>
+                    <button class="lbtn lbtn--danger" type="button" id="prReset">Zurücksetzen</button>
+                </div>
+            </form>
+        </details>
+        <p class="hint">Bilder: <code>lan-night-media/guess-the-price/1.png</code> bis <code>5.png</code> im Projekt (siehe LIESMICH.txt dort). Näher dran gewinnt die Runde, egal ob drüber oder drunter.</p>
+    </section>
+
+    {# ---------- Awards ---------- #}
+    <section class="card card--quiz card--segment" data-segment="awards" hidden>
+        <h2 class="card__title">Awards <span class="card__live" id="awLive"></span></h2>
+        <div class="seg" id="awCtl"></div>
+        <div class="aw-now" id="awNow"></div>
+
+        <details class="add">
+            <summary class="lbtn lbtn--ghost">Kategorien</summary>
+            <form class="form" id="awForm">
+                <label class="field">Eine pro Zeile, Emoji vorne
+                    <textarea class="linput quiz-source" name="source" rows="7" spellcheck="false"></textarea>
+                </label>
+                <div class="seg">
+                    <button class="lbtn lbtn--primary" type="submit">Speichern</button>
+                    <button class="lbtn lbtn--danger" type="button" id="awReset">Stimmen löschen</button>
+                </div>
+            </form>
+        </details>
+        <p class="hint">Zur Wahl stehen alle Spieler aus „Teams“. Gleicher QR-Code wie beim Quiz. Awards geben keine Punkte.</p>
+    </section>
+
+    {# ---------- Spiele ---------- #}
+    <section class="card">
+        <h2 class="card__title">Spiele <span class="card__hint">am ⠿ ziehen zum Sortieren</span></h2>
+        <ol class="games" id="games"></ol>
+
+        <details class="add">
+            <summary class="lbtn lbtn--ghost">+ Spiel hinzufügen</summary>
+            <form class="form" id="addGame">
+                <input class="linput" name="name" placeholder="Name, z. B. Rocket League" required maxlength="50">
+                <textarea class="linput" name="description" placeholder="Regeln / Beschreibung (für den Bildschirm)" maxlength="300"></textarea>
+                <div class="form__pair">
+                    <label class="field">Startzeit <input class="linput" name="time" type="time"></label>
+                    <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="3"></label>
+                </div>
+                <button class="lbtn lbtn--primary" type="submit">Hinzufügen</button>
+            </form>
+        </details>
+    </section>
+
+    {# ---------- Timer ---------- #}
+    <section class="card">
+        <h2 class="card__title">Timer <span class="card__live" id="timerLive"></span></h2>
+        <form class="form form--row" id="timerForm">
+            <input class="linput" name="label" placeholder="Beschriftung (optional)" maxlength="40">
+            <input class="linput linput--short" name="minutes" type="number" min="0.5" step="0.5" value="10" aria-label="Minuten">
+            <span class="unit">Min</span>
+        </form>
+        <div class="seg">
+            <button class="lbtn" data-timer="5">5 Min</button>
+            <button class="lbtn" data-timer="10">10 Min</button>
+            <button class="lbtn" data-timer="15">15 Min</button>
+            <button class="lbtn lbtn--mint" form="timerForm" type="submit">Start</button>
+            <button class="lbtn lbtn--danger" id="timerStop">Stopp</button>
+        </div>
+    </section>
+
+    {# ---------- Durchsage ---------- #}
+    <section class="card">
+        <h2 class="card__title">Durchsage <span class="card__live" id="announceLive"></span></h2>
+        <form class="form" id="announceForm">
+            <input class="linput" name="text" placeholder="z. B. Pizza ist da! 🍕" maxlength="200">
+            <div class="seg">
+                <button class="lbtn lbtn--primary" type="submit">Einblenden</button>
+                <button class="lbtn lbtn--danger" type="button" id="announceClear">Ausblenden</button>
+            </div>
+        </form>
+    </section>
+
+    {# ---------- Glücksrad ---------- #}
+    <section class="card">
+        <h2 class="card__title">Glücksrad <span class="card__live" id="wheelLive"></span></h2>
+        <label class="check"><input type="checkbox" id="wheelFresh"> Schon Gezogene erst wieder, wenn alle dran waren</label>
+        <div class="seg">
+            <button class="lbtn lbtn--primary" id="wheelSpin">🎡 Drehen</button>
+            <button class="lbtn lbtn--danger" id="wheelHide">Ausblenden</button>
+        </div>
+        <p class="hint" id="wheelResult">Zieht aus jedem Team zufällig einen Spieler – zwei Räder groß auf dem Bildschirm.</p>
+    </section>
+
+    {# ---------- Teams ---------- #}
+    <section class="card">
+        <h2 class="card__title">Teams</h2>
+        <div class="teams-edit" id="teamsEdit"></div>
+    </section>
+
+    {# ---------- Verlauf ---------- #}
+    <section class="card">
+        <h2 class="card__title">Verlauf</h2>
+        <ul class="log" id="log"></ul>
+    </section>
+
+    {# ---------- Sonstiges ---------- #}
+    <section class="card">
+        <h2 class="card__title">Sonstiges</h2>
+        <form class="form" id="settingsForm">
+            <label class="field">Titel <input class="linput" name="title" maxlength="40"></label>
+            <label class="field">Untertitel (Titelbild) <input class="linput" name="subtitle" maxlength="80" placeholder="z. B. 18. Oktober · Keller bei Silas"></label>
+            <button class="lbtn" type="submit">Speichern</button>
+        </form>
+        <div class="seg seg--danger">
+            <button class="lbtn lbtn--danger" id="resetScores">Neuer Abend (Punkte &amp; Ergebnisse löschen)</button>
+            <button class="lbtn lbtn--danger" id="resetAll">Alles auf Standard</button>
+        </div>
+        <p class="hint">
+            Bildschirm: <a href="{{ path('lan_display') }}" target="_blank">{{ url('lan_display') }}</a> (F11 für Vollbild) ·
+            <a href="{{ path('portfolio_logout') }}">Abmelden</a>
+        </p>
+    </section>
+</main>
+
+<script src="{{ lan_asset('admin.js') }}"></script>
+</body>
+</html>

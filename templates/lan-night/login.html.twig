@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>LAN Night · Spielleitung</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ lan_asset('lan.css') }}">
+</head>
+<body>
+<main class="lan-login">
+    <form class="lan-login__card" method="post" action="{{ path('portfolio_login') }}">
+        <p class="lan-login__eyebrow">LAN Night</p>
+        <h1 class="lan-login__title">Spielleitung</h1>
+
+        {% if error %}
+            <p class="lan-login__error">Falsches Kennwort.</p>
+        {% endif %}
+
+        <input type="hidden" name="_username" value="lan_admin">
+        <input class="linput" type="password" name="_password" placeholder="Kennwort" autocomplete="current-password" required autofocus>
+        <button class="lbtn lbtn--primary" type="submit">Einloggen</button>
+    </form>
+</main>
+</body>
+</html>

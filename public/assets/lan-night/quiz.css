@@ -1,0 +1,365 @@
+/* ===== LAN Night – Quiz am Handy ===== */
+/* Antwortfarben --ans-0 … --ans-3 stehen in lan.css */
+
+.phone {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(255, 202, 34, 0.12), transparent 45%),
+        radial-gradient(circle at 100% 100%, rgba(91, 254, 196, 0.10), transparent 50%),
+        var(--lan-bg);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.phead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--lan-border);
+}
+
+.phead__title {
+    font: 700 0.95rem var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--lan-yellow);
+}
+
+.phead__team {
+    font: 700 0.85rem var(--font-display);
+    color: var(--c);
+    background: transparent;
+    border: 1px solid var(--c);
+    border-radius: 99px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.pmain {
+    flex: 1;
+    display: flex;
+    padding: 20px 16px calc(24px + env(safe-area-inset-bottom));
+}
+
+.view {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.view--center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.view__eyebrow {
+    font: 600 0.8rem var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--lan-mint);
+    margin: 0;
+}
+
+.view__title {
+    font-size: 1.7rem;
+    line-height: 1.2;
+}
+
+.view__text {
+    color: var(--lan-text-muted);
+    margin: 0;
+}
+
+/* Team wählen */
+.team-pick {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.team-pick button {
+    font: 700 1.5rem var(--font-display);
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 12%, var(--lan-bg-deep));
+    border: 2px solid var(--c);
+    border-radius: 16px;
+    padding: 28px 16px;
+    cursor: pointer;
+}
+
+.team-pick button small {
+    display: block;
+    font: 400 0.85rem var(--font-body);
+    color: var(--lan-text-muted);
+    margin-top: 6px;
+}
+
+/* Warten */
+.spinner {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.12);
+    border-top-color: var(--lan-yellow);
+    animation: spin 1s linear infinite;
+    margin-bottom: 8px;
+}
+
+.view--center.is-result .spinner {
+    display: none;
+}
+
+.result-icon {
+    font-size: 4rem;
+    line-height: 1;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Frage */
+.qhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.qtimer {
+    font: 700 1.6rem var(--font-display);
+    font-variant-numeric: tabular-nums;
+    color: var(--lan-mint);
+}
+
+.qtimer.is-low {
+    color: var(--lan-red);
+}
+
+.qbar {
+    height: 6px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    margin-top: -6px;
+}
+
+.qbar__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--lan-mint), var(--lan-yellow));
+    transform-origin: left;
+}
+
+.qtext {
+    font-size: 1.35rem;
+    line-height: 1.3;
+}
+
+.qanswers {
+    display: grid;
+    gap: 10px;
+}
+
+.qanswer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    text-align: left;
+    font: 600 1.05rem var(--font-display);
+    color: var(--lan-text);
+    background: var(--lan-bg-deep);
+    border: 2px solid color-mix(in srgb, var(--a) 45%, transparent);
+    border-radius: 14px;
+    padding: 14px;
+    min-height: 64px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.qanswer:active {
+    transform: scale(0.98);
+}
+
+.qanswer__letter {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--a);
+    color: var(--lan-bg-deep);
+    font-size: 1.2rem;
+}
+
+.qanswer.is-mine {
+    border-color: var(--a);
+    background: color-mix(in srgb, var(--a) 22%, var(--lan-bg-deep));
+    box-shadow: 0 0 0 2px var(--a);
+}
+
+.qanswer:disabled {
+    cursor: default;
+    opacity: 0.55;
+}
+
+.qanswer.is-mine:disabled,
+.qanswer.is-team:disabled {
+    opacity: 1;
+}
+
+.qanswer.is-correct:disabled {
+    opacity: 1;
+    border-color: var(--lan-mint);
+    background: color-mix(in srgb, var(--lan-mint) 25%, var(--lan-bg-deep));
+}
+
+.qanswer__tag {
+    margin-left: auto;
+    font: 600 0.72rem var(--font-body);
+    color: var(--lan-text-muted);
+    white-space: nowrap;
+}
+
+.qlock {
+    min-height: 56px;
+    font-size: 1.1rem;
+    animation: lock-in 0.3s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+@keyframes lock-in {
+    from { transform: scale(0.9); opacity: 0; }
+}
+
+/* Guess the Game */
+.gpic {
+    width: 100%;
+    max-height: 38vh;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #0d0828;
+}
+
+.gpic:not([src]) {
+    display: none;
+}
+
+.gform {
+    display: grid;
+    gap: 10px;
+}
+
+.gform .linput {
+    font-size: 1.1rem;
+    min-height: 52px;
+}
+
+.gform .lbtn {
+    min-height: 52px;
+    font-size: 1.05rem;
+}
+
+/* Guess the Price */
+.ppic {
+    width: 100%;
+    max-height: 30vh;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+}
+
+.ppic:not([src]) {
+    display: none;
+}
+
+.ppreview {
+    margin: -2px 0 0;
+    font: 700 1.1rem var(--font-display);
+    color: var(--lan-yellow);
+    min-height: 1.4em;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.ppreview.is-bad {
+    color: var(--lan-red);
+    font-size: 0.9rem;
+}
+
+/* Awards */
+.aw-list {
+    display: grid;
+    gap: 14px;
+}
+
+.aw-cat {
+    background: var(--lan-bg-deep);
+    border: 1px solid var(--lan-border);
+    border-radius: 14px;
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+}
+
+.aw-cat.is-done {
+    border-color: rgba(91, 254, 196, 0.5);
+}
+
+.aw-cat__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: 700 1.05rem var(--font-display);
+}
+
+.aw-cat__emoji {
+    font-size: 1.6rem;
+}
+
+.aw-cat__check {
+    margin-left: auto;
+    color: var(--lan-mint);
+    font-size: 0.85rem;
+}
+
+.aw-players {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.aw-player {
+    font: 600 0.92rem var(--font-display);
+    color: var(--lan-text);
+    background: var(--lan-bg);
+    border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+    border-radius: 99px;
+    padding: 9px 14px;
+    min-height: 40px;
+    cursor: pointer;
+}
+
+.aw-player.is-mine {
+    background: var(--c);
+    border-color: var(--c);
+    color: var(--lan-bg-deep);
+}
+
+.qnote {
+    margin: 0;
+    text-align: center;
+    color: var(--lan-text-muted);
+    font-size: 0.92rem;
+    min-height: 1.4em;
+}
+
+.qnote b {
+    color: var(--lan-yellow);
+}

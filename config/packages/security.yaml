@@ -15,6 +15,10 @@ security:
                     civ_admin:
                         password: '$2y$13$sxsvw.92ojFVTo1JqroO.emYE97rzpDm9guV0PMeVbuH/24cABOBK'
                         roles: ['ROLE_PORTFOLIO_VIEWER', 'ROLE_CIV_ADMIN']
+                    # Spielleitung der LAN-Night (/lan-night/admin) – bewusst OHNE Portfolio-Zugriff
+                    lan_admin:
+                        password: '$2y$13$tKt2ZLwmu/35RSlRKWZH9.pDLLzw7Y91FTIjFRIWh3chbWOmmXaQG'
+                        roles: ['ROLE_LAN_ADMIN']
 
     firewalls:
         dev:
@@ -30,11 +34,17 @@ security:
                 default_target_path: homepage
             logout:
                 path: portfolio_logout
+            # Eingeloggt, aber ohne Portfolio-Rolle (z. B. lan_admin) → Portfolio-Login statt "Access Denied"
+            access_denied_handler: App\Security\PortfolioAccessDeniedHandler
 
     access_control:
+    # Öffentliche Startseite (verrät nichts), alles andere bleibt hinter dem Login
+    - { path: ^/$, roles: PUBLIC_ACCESS }
     - { path: ^/portfolio/login, roles: PUBLIC_ACCESS }
     # CIV-Abend: Login-Prüfung für nginx (antwortet selbst mit 204/401) und Admin-Weiterleitung (prüft selbst)
     - { path: ^/portfolio/civ-auth/, roles: PUBLIC_ACCESS }
     - { path: ^/portfolio/civ/admin$, roles: PUBLIC_ACCESS }
     - { path: ^/portfolio/logout, roles: PUBLIC_ACCESS }
+    # LAN-Night: Bildschirm & Stand öffentlich, Admin und Aktionen prüft der Controller selbst
+    - { path: ^/lan-night(/|$), roles: PUBLIC_ACCESS }
     - { path: ^/, roles: ROLE_PORTFOLIO_VIEWER }

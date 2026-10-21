@@ -1,0 +1,18 @@
+GUESS THE PRICE – Bilder
+========================
+
+Ein Bild pro Gegenstand, benannt nach der Nummer in der Liste
+(LAN Night → Guess the Price → "Gegenstände & Einstellungen"):
+
+  1.png  UVP GeForce RTX 5080
+  2.png  Karambit | Case Hardened (Factory New)
+  3.png  Leviathan – die Yacht von Gabe Newell
+  4.png  Gesamtumsatz Electronic Arts 2025
+  5.png  UVP Logitech G502 Maus
+
+Erlaubt: png, jpg, jpeg, webp, gif, avif (Groß/klein egal).
+Transparente PNGs sehen am besten aus – sie stehen frei auf dem lila Hintergrund mit leichtem Schein.
+Ein Gegenstand ohne Bild geht auch, dann wird nur der Name gezeigt.
+
+Die Bilder liegen bewusst außerhalb von public/ und werden erst ausgeliefert, wenn der Gegenstand dran ist.
+Kein Neustart nötig – einfach reinlegen. Im Admin-Panel steht, für welche Gegenstände ein Bild gefunden wurde.

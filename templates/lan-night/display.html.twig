@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>LAN Night</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ lan_asset('lan.css') }}">
+    <link rel="stylesheet" href="{{ lan_asset('display.css') }}">
+</head>
+<body class="display" data-quiz-url="{{ url('lan_phone') }}">
+<div class="bg" aria-hidden="true"><div class="bg__grid"></div></div>
+
+<header class="topbar" id="topbar">
+    <span class="topbar__title" id="topTitle">LAN Night</span>
+    <span class="topbar__right">
+        <span class="timer-pill" id="timerPill" hidden></span>
+        <span class="topbar__clock" id="clock"></span>
+    </span>
+</header>
+
+{# ---------- Titel ---------- #}
+<section class="screen screen--title" data-screen="title">
+    <h1 class="logo" id="logo"><span>LAN</span><span>Night</span></h1>
+    <p class="logo__sub" id="subtitle"></p>
+    <div class="versus" id="titleTeams"></div>
+    <div class="next" id="nextTitle" hidden><span class="next__label">Nächstes Spiel</span><span class="next__name"></span><span class="next__time"></span></div>
+</section>
+
+{# ---------- Punktestand ---------- #}
+<section class="screen screen--scoreboard" data-screen="scoreboard">
+    <div class="board" id="board"></div>
+    <div class="next" id="nextBoard" hidden><span class="next__label">Nächstes Spiel</span><span class="next__name"></span><span class="next__time"></span></div>
+    <ol class="track" id="track"></ol>
+</section>
+
+{# ---------- Aktuelles Spiel ---------- #}
+<section class="screen screen--game" data-screen="game">
+    <p class="eyebrow" id="gameEyebrow"></p>
+    <h1 class="game__name" id="gameName"></h1>
+    <p class="game__desc" id="gameDesc"></p>
+    <div class="big-timer" id="gameTimer" hidden></div>
+    <div class="minibar" id="gameScores"></div>
+</section>
+
+{# ---------- Pause ---------- #}
+<section class="screen screen--pause" data-screen="pause">
+    <p class="eyebrow">Kurze Pause</p>
+    <h1 class="pause__title">Gleich geht's weiter</h1>
+    <div class="next next--big" id="nextPause" hidden><span class="next__label">Nächstes Spiel</span><span class="next__name"></span><span class="next__time"></span></div>
+    <div class="big-timer" id="pauseTimer" hidden></div>
+    <div class="minibar" id="pauseScores"></div>
+</section>
+
+{# ---------- Quiz ---------- #}
+<section class="screen screen--quiz" data-screen="quiz">
+    <div class="quiz-main" id="quizMain"></div>
+    <div class="quiz-foot" id="quizFoot"></div>
+</section>
+
+{# ---------- Guess the Game ---------- #}
+<section class="screen screen--guess" data-screen="guess">
+    <div id="ggIntro" hidden></div>
+    <div class="gg" id="ggPlay" hidden>
+        <div class="quiz-q__head">
+            <span class="eyebrow" id="ggLabel"></span>
+            <span class="quiz-timer" id="ggTimer"></span>
+        </div>
+        <div class="quiz-bar"><div class="quiz-bar__fill" id="ggBar"></div></div>
+        <div class="gg__body">
+            <div class="gg__pic">
+                <img id="ggImg" alt="">
+                <div class="gg__answer" id="ggAnswer" hidden></div>
+            </div>
+            <div class="gg__side" id="ggSide"></div>
+        </div>
+    </div>
+    <div id="ggDone" hidden></div>
+</section>
+
+{# ---------- Guess the Price ---------- #}
+<section class="screen screen--price" data-screen="price">
+    <div id="prIntro" hidden></div>
+    <div class="pr" id="prPlay" hidden>
+        <div class="quiz-q__head">
+            <span class="eyebrow" id="prLabel"></span>
+            <span class="quiz-timer" id="prTimer"></span>
+        </div>
+        <div class="quiz-bar"><div class="quiz-bar__fill" id="prBar"></div></div>
+        <div class="pr__body">
+            <div class="pr__stage">
+                <div class="pr__glow" aria-hidden="true"></div>
+                <img id="prImg" alt="">
+                <h1 class="pr__name" id="prName"></h1>
+            </div>
+            <div class="pr__side">
+                <div class="pr__price" id="prPrice"></div>
+                <div class="pr__teams" id="prTeams"></div>
+            </div>
+        </div>
+    </div>
+    <div id="prDone" hidden></div>
+</section>
+
+{# ---------- Awards ---------- #}
+<section class="screen screen--awards" data-screen="awards">
+    <div class="awards" id="awardsMain"></div>
+</section>
+
+{# ---------- Finale ---------- #}
+<section class="screen screen--finale" data-screen="finale">
+    <p class="eyebrow" id="finaleEyebrow">Und die LAN Night gewinnt …</p>
+    <h1 class="finale__winner" id="finaleWinner"></h1>
+    <p class="finale__score" id="finaleScore"></p>
+    <canvas class="confetti" id="confetti"></canvas>
+</section>
+
+{# ---------- Overlays ---------- #}
+<div class="flash" id="flash" hidden>
+    <div class="flash__card" id="flashCard">
+        <p class="flash__label" id="flashLabel"></p>
+        <p class="flash__delta" id="flashDelta"></p>
+        <p class="flash__team" id="flashTeam"></p>
+    </div>
+</div>
+
+{# Glücksrad: liegt über jedem Bildschirm #}
+<div class="wheel-overlay" id="wheels" hidden>
+    <p class="wheel-overlay__title">🎡 Das Glücksrad entscheidet …</p>
+    <div class="wheels">
+        {% for i in 0..1 %}
+        <div class="wheel-col" data-w="{{ i }}">
+            <div class="wheel-col__team"></div>
+            <div class="wheel">
+                <div class="wheel__pointer"></div>
+                <svg class="wheel__svg" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+                <div class="wheel__hub"></div>
+            </div>
+            <div class="wheel-col__pick"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="announce" id="announce" hidden>
+    <span class="announce__tag">Durchsage</span>
+    <span class="announce__text" id="announceText"></span>
+</div>
+
+<script src="{{ lan_asset('qrcode.js') }}"></script>
+<script src="{{ lan_asset('display.js') }}"></script>
+</body>
+</html>
