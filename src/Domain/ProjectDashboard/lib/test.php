@@ -506,7 +506,53 @@ return [
         'date' => '04/2026',
         'thumbnail' => '/pictures/projects/rage.jpg',
         'description' => 'Ein Unity-Rageroom-Konzept, in dem sich Objekte per Hand oder mit Werkzeugen zerstören lassen. Der Fokus liegt auf taktilem und akustischem Feedback.',
-        'content' => [],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der VR-Rageroom ist ein Konzept in Unity: ein Raum voller Geschirr, Flaschen, Möbel und alter Elektronik, den man in VR mit bloßen Händen oder mit Werkzeugen wie Hammer und Baseballschläger auseinandernehmen darf. Das Ziel war nicht möglichst viel Inhalt, sondern dass sich jeder einzelne Schlag richtig anfühlt.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Zerstörung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Jedes zerstörbare Objekt liegt zusätzlich als vorab zerlegte Version mit einzelnen Bruchstücken vor. Trifft ein Schlag stark genug, wird das ganze Objekt gegen seine Bruchstücke ausgetauscht, die die Wucht des Treffers übernehmen. Ob etwas bricht, hängt von der Geschwindigkeit und dem Gewicht des Werkzeugs ab, sodass ein Hammer anders wirkt als die flache Hand.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Taktiles und akustisches Feedback',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Controller vibrieren abhängig von der Stärke des Aufpralls, und jedes Material hat eigene Geräusche für Glas, Holz, Keramik und Metall. Damit zwanzig zerbrochene Teller nicht zwanzigmal gleich klingen, variieren Tonhöhe und Lautstärke bei jedem Treffer leicht. Gerade dieses Zusammenspiel aus Vibration und Klang macht den Unterschied zwischen einem Effekt und einem Gefühl.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/rage.png',
+                'alt' => 'VR-Rageroom in Unity',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Herausforderungen',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'In VR gibt es keine echten Widerstände. Damit Werkzeuge trotzdem Gewicht haben, folgen sie der Hand über physikalische Gelenke, statt direkt an ihr zu kleben. Ein schwerer Hammer schwingt so etwas nach. Außerdem braucht VR eine konstant hohe Bildrate, sonst wird einem schnell schlecht. Bruchstücke verschwinden deshalb nach einiger Zeit wieder, damit die Physik auch nach einer ausgiebigen Zerstörungsorgie flüssig bleibt.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Fazit',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Das Projekt ist bisher ein Konzept, hat mir aber gezeigt, wie sehr das Spielgefühl an kleinen Details hängt: einem kurzen Ruckeln im Controller, einem leicht anderen Klang oder ein paar Millisekunden Verzögerung.',
+            ],
+        ],
     ],
     [
         'title' => 'Godot 2D Planeten-Sumo',
@@ -514,7 +560,53 @@ return [
         'date' => '03/2026',
         'thumbnail' => '/pictures/projects/2d.png',
         'description' => 'In meiner Freizeit entwickle ich ein 2D-Spiel in Godot, bei dem man abstrakte Planeten in einem Sonnensystem steuert und versucht, die Gegner aus dem Sonnensystem zu knocken.',
-        'content' => [],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Planeten-Sumo ist ein lokales Mehrspieler-Spiel in Godot. Jeder Spieler steuert einen abstrakten Planeten in einem Sonnensystem und versucht, die anderen aus dem System zu stoßen. Wer als Letzter übrig bleibt, gewinnt die Runde.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Gravitation als Spielmechanik',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Sonne in der Mitte zieht alle Planeten an, und man kann nie einfach stehen bleiben. Wer nicht aufpasst, wird in eine enge Umlaufbahn gezogen oder schießt aus dem System hinaus. Bei Zusammenstößen zählen Masse und Geschwindigkeit: Ein schneller kleiner Planet kann einen großen aus der Bahn werfen, wenn er im richtigen Moment trifft.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Steuerung und Fähigkeiten',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Neben der normalen Steuerung hat jeder Planet einen kräftigen Schub mit Abklingzeit und kann sich kurzzeitig schwerer machen, um einen Treffer abzufangen. Dazu kommen Ereignisse wie Kometen, die quer durch das System fliegen, und ein Asteroidengürtel, der Planeten abbremst.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/2d.png',
+                'alt' => 'Planeten-Sumo in Godot',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Technische Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Das Spiel ist in Godot 4 mit GDScript umgesetzt. Die Planeten sind Physikkörper, auf die in jedem Physik-Schritt eine selbst berechnete Anziehungskraft der Sonne wirkt. Bis zu vier Spieler spielen gleichzeitig an einem Bildschirm, jeder mit eigenem Controller.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Stand',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Planeten-Sumo ist ein Herzensprojekt, an dem ich immer wieder weiterarbeite. Getestet wird auf unseren LAN-Partys, wo sich schnell zeigt, welche Mechanik Spaß macht und welche nur frustriert.',
+            ],
+        ],
     ],
     [
         'title' => 'Webinar',
@@ -626,7 +718,53 @@ return [
         'date' => '10/2025',
         'thumbnail' => '/pictures/projects/fleet.png',
         'description' => 'Mittlerweile inaktive Software für einen lokalen mobilen Gastronomie-Dienst. Kern war eine vereinfachte Kommunikation zwischen Planer und Fahrer.',
-        'content' => [],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Für einen lokalen mobilen Gastronomie-Dienst habe ich eine Software entwickelt, die die Planung der Fahrzeuge und die Kommunikation zwischen Planer und Fahrern vereinfacht. Vorher lief vieles über Anrufe und Chatnachrichten, und wichtige Informationen gingen zwischen den Einsätzen verloren.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Planung und Touren',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Planer legt Touren an und bestimmt Fahrzeug, Fahrer, Einsatzort, Zeiten und was geladen werden muss. Die Fahrer sehen auf dem Handy nur ihre eigenen Touren mit allen Informationen, die sie unterwegs brauchen, inklusive Adresse und Ansprechpartner vor Ort.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Kommunikation unterwegs',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Mit einem Tipp melden die Fahrer ihren Status: losgefahren, angekommen, fertig oder ein Problem. Notizen und Fotos, etwa von einer schwierigen Zufahrt, bleiben an der Tour hängen und stehen beim nächsten Einsatz am selben Ort wieder zur Verfügung. Der Planer sieht so jederzeit, wo welches Fahrzeug gerade ist, ohne anrufen zu müssen.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/fleet.png',
+                'alt' => 'Flottenmanagement-Software',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Technische Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Software ist eine für das Handy optimierte Webanwendung, die ohne App-Store und Installation funktioniert. Gerade für die Fahrer war mir wichtig, dass alles mit großen Schaltflächen und wenigen Schritten bedienbar ist, denn unterwegs hat niemand Zeit, sich durch Menüs zu klicken.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Fazit',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Software ist inzwischen nicht mehr im Einsatz. Für mich war sie trotzdem ein wichtiges Projekt, weil ich zum ersten Mal komplett für Menschen entwickelt habe, die mit Software eigentlich nichts zu tun haben wollen, und dabei viel über einfache Bedienung gelernt habe.',
+            ],
+        ],
     ],
     [
         'title' => 'Finanzbuchhaltung-Anbindung',
@@ -634,7 +772,49 @@ return [
         'date' => '01/2026',
         'thumbnail' => '/pictures/projects/select.png',
         'description' => 'Für Wartungsverträge und Finanzbuchhaltung verwenden wir Selectline. Ich musste die Selectline-Datenbank enger in unser CRM integrieren.',
-        'content' => [],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Wartungsverträge und Finanzbuchhaltung laufen bei uns über Selectline, Kundendaten und Vertrieb über unser CRM. Wer mit einem Kunden telefonierte, wusste deshalb oft nicht, ob noch Rechnungen offen sind oder ein Wartungsvertrag bald ausläuft. Meine Aufgabe war es, die Selectline-Datenbank enger in unser CRM zu integrieren.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Selectline speichert seine Daten in einer SQL-Server-Datenbank. Über einen eigenen Datenbankbenutzer mit reinen Leserechten fragt das CRM Verträge, Laufzeiten und offene Posten ab und ordnet sie über die Kundennummer den passenden Kunden zu. Im CRM erscheinen diese Informationen direkt beim Kunden.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'In die Buchhaltung schreibt das CRM bewusst nicht zurück. Änderungen an Verträgen und Rechnungen passieren weiterhin in Selectline, damit die Buchhaltung die einzige verbindliche Quelle bleibt und keine zwei Systeme gegeneinander arbeiten.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Performance',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Direkte Abfragen bei jedem Seitenaufruf hätten die Buchhaltung unnötig belastet. Stammdaten wie Verträge werden deshalb regelmäßig synchronisiert, nur offene Posten werden beim Öffnen eines Kunden live nachgeladen, weil sie sich am häufigsten ändern.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/select.png',
+                'alt' => 'Selectline-Anbindung im CRM',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Ergebnis',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Vertrieb sieht vor jedem Gespräch, ob es offene Rechnungen gibt oder ein Vertrag ausläuft. Auslaufende Wartungsverträge erscheinen außerdem rechtzeitig als Erinnerung im CRM, sodass Verlängerungen nicht mehr durchrutschen.',
+            ],
+        ],
     ],
     [
         'title' => 'Kanban-App',
@@ -741,7 +921,53 @@ return [
         'date' => '08/2025',
         'thumbnail' => '/pictures/projects/auswertung.png',
         'description' => 'Damit der Vertrieb eigenständig Auswertungen zu Adressdaten erstellen kann, habe ich ein Tool mit konfigurierbaren Filtern und frei wählbaren Ausgabeformaten entwickelt.',
-        'content' => [],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Vertrieb brauchte regelmäßig Auswertungen zu Adressdaten, zum Beispiel alle Kunden einer Region mit einem bestimmten Produkt oder alle Interessenten, die seit einem Jahr nicht mehr kontaktiert wurden. Bisher landete jede dieser Anfragen in der Entwicklung, und bis zur fertigen Liste vergingen oft Tage.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Konfigurierbare Filter',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Mit dem Tool stellt sich der Vertrieb seine Auswertungen selbst zusammen. Filter wie Postleitzahlbereich, Branche, Produkte, Vertragsstatus oder letzter Kontakt lassen sich frei kombinieren. Häufig genutzte Auswertungen können als Vorlage gespeichert und jederzeit mit aktuellen Daten neu erzeugt werden.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Ausgabeformate',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Welche Spalten im Ergebnis stehen, ist frei wählbar. Ausgegeben wird als Excel-Datei, als CSV für andere Systeme oder als druckfertige Liste. So passt das Ergebnis direkt zu dem, was als Nächstes damit passieren soll, ob Telefonliste, Serienbrief oder Import in ein anderes Werkzeug.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/auswertung.png',
+                'alt' => 'Adress-Auswertungstool',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Sicherheit und Datenschutz',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Das Tool erzeugt alle Abfragen selbst aus den gewählten Filtern, freie Datenbankabfragen sind nicht möglich. Jeder sieht nur die Felder, die seine Rolle auch sonst sehen darf, und jeder Export wird protokolliert.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Ergebnis',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Vertrieb ist bei Auswertungen jetzt unabhängig, und die Entwicklung hat wieder mehr Zeit für ihre eigentlichen Aufgaben.',
+            ],
+        ],
     ],
     [
         'title' => 'GitLab-Anbindung',
@@ -829,7 +1055,53 @@ return [
         'date' => '03/2026',
         'thumbnail' => '/pictures/projects/cicd.png',
         'description' => 'Eine eigene Pipeline von der Entwicklung bis zum Deployment.',
-        'content' => [],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Für meine Kanban-App wollte ich nicht nur Code schreiben, sondern den kompletten Weg bis zur laufenden Anwendung selbst aufbauen. Daraus ist eine eigene GitLab-Pipeline entstanden, die jede Änderung automatisch baut, testet und bereitstellt.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Aufbau der Pipeline',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Pipeline läuft in vier Stufen. Zuerst wird ein Docker-Image der Anwendung gebaut und in der Container Registry von GitLab abgelegt. Danach laufen die Tests in genau diesem Image, zusammen mit einer eigenen Testdatenbank, die für jeden Durchlauf frisch erzeugt wird. Anschließend prüft eine statische Codeanalyse typische Fehler und den Codestil. Erst wenn alles grün ist, folgt das Deployment.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Halbautomatisches Deployment',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Jede Änderung auf dem Hauptzweig landet automatisch auf einer Testumgebung. Der Schritt in die Produktion ist bewusst ein Knopfdruck in GitLab, damit ich vorher selbst noch einmal draufschauen kann. Jedes Image trägt den Commit-Hash als Tag. Ein Rollback bedeutet deshalb nur, das vorherige Image erneut auszurollen.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/cicd.png',
+                'alt' => 'GitLab-Pipeline der Kanban-App',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Zugangsdaten',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Kanban-App spricht mit der OpenAI-API. Der API-Schlüssel und die Datenbankpasswörter liegen deshalb nie im Repository, sondern als geschützte und maskierte Variablen in GitLab. Sie tauchen weder im Code noch in den Logs der Pipeline auf.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Was ich gelernt habe',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Eine Pipeline ist nur so gut wie ihr Feedback. Durch Caching der Abhängigkeiten und eine sinnvolle Reihenfolge der Stufen bricht sie bei Fehlern früh ab und ist insgesamt deutlich schneller geworden. Die Erfahrungen daraus fließen heute in meine Arbeit mit GitLab im Beruf ein.',
+            ],
+        ],
     ],
     [
         'title' => 'Passwort-Handling',
@@ -837,6 +1109,44 @@ return [
         'date' => '05/2025',
         'thumbnail' => '/pictures/projects/key.jpg',
         'description' => 'Ich habe den bestehenden Passwort-Reiter bei Geocapture um ein paar Funktionen erweitert. Sicherheit war hier besonders wichtig.',
-        'content' => [],
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Im CRM bei Geocapture gibt es einen Reiter, in dem Zugangsdaten zu Kundensystemen und Geräten hinterlegt sind. Ich habe diesen Bereich um mehrere Funktionen erweitert. Weil dort sensible Daten liegen, stand Sicherheit bei jeder Entscheidung an erster Stelle.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Neue Funktionen',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Passwörter werden nicht mehr direkt angezeigt, sondern erst auf Klick und nur für kurze Zeit. Sie lassen sich mit einem Klick kopieren, ohne sie überhaupt sichtbar zu machen. Ein integrierter Generator erzeugt starke Passwörter direkt beim Anlegen eines neuen Zugangs.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Sicherheit',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Passwörter liegen verschlüsselt in der Datenbank und werden erst entschlüsselt, wenn jemand sie gezielt abruft. Bis dahin stehen sie auch nicht im Quelltext der Seite. Wer welches Passwort wann angesehen oder kopiert hat, wird protokolliert, und der Zugriff richtet sich nach den Rollen im CRM. In Logs oder Fehlermeldungen tauchen Passwörter nie auf.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/key.png',
+                'alt' => 'Passwortverwaltung im CRM',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Ergebnis',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Zugangsdaten müssen nicht mehr in Excel-Listen oder Notizen gepflegt werden, und im Ernstfall ist nachvollziehbar, wer auf welche Daten zugegriffen hat.',
+            ],
+        ],
     ],
 ];
