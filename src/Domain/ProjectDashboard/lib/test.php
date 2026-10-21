@@ -3,6 +3,7 @@
 return [
     [
         'title' => 'LAN-Party Moderation',
+        'featured' => true,
         'category' => 'privat',
         'date' => '10/2026',
         'thumbnail' => '/pictures/projects/lan.jpg',
@@ -93,6 +94,7 @@ return [
     ],
     [
         'title' => 'CIV-Abend Spielleitung',
+        'featured' => true,
         'category' => 'privat',
         'date' => '09/2026',
         'thumbnail' => '/pictures/projects/civ.jpg',
@@ -229,6 +231,7 @@ return [
     ],
     [
         'title' => 'krummen.de',
+        'featured' => true,
         'category' => 'produktiv',
         'date' => '09/2026',
         'thumbnail' => '/pictures/projects/krummen.jpg',

@@ -2,111 +2,133 @@
 
 {% block title %}Projekte — Portfolio{% endblock %}
 
+{% macro project_card(project, id, variant) %}
+    {% set has_content = project.content|default([])|length > 0 %}
+
+    <article
+        class="status-card status-card--{{ variant }} {{ project.category == 'privat' ? 'status-card--private' : '' }}"
+        data-project-card
+        {% if project.clickLinks is defined %}data-click-links="{{ project.clickLinks|json_encode|e('html_attr') }}"{% endif %}
+    >
+        <div class="status-card__thumb">
+            <img
+                src="{{ project.thumbnail|default('/images/projects/placeholder.jpg') }}"
+                alt="{{ project.title }}"
+                loading="{{ variant == 'lead' ? 'eager' : 'lazy' }}"
+            >
+        </div>
+
+        <div class="status-card__body">
+            <div class="status-card__meta">
+                <span class="status-card__id">
+                    {{ project.date|default('') }}
+                </span>
+
+                <span class="status-card__badge">
+                    <span class="status-card__dot"></span>
+                    {{ project.category }}
+                </span>
+            </div>
+
+            {% if variant == 'compact' %}
+                <h3 class="status-card__title">{{ project.title }}</h3>
+            {% else %}
+                <h2 class="status-card__title">{{ project.title }}</h2>
+            {% endif %}
+
+            <p class="status-card__desc">
+                {{ project.description }}
+            </p>
+
+            {% if has_content %}
+                <button
+                    type="button"
+                    class="status-card__toggle"
+                    onclick="document.getElementById('{{ id }}').showModal()"
+                >
+                    {{ variant == 'compact' ? 'Mehr anzeigen' : 'Projekt ansehen' }}
+                </button>
+            {% endif %}
+        </div>
+    </article>
+
+    {% if has_content %}
+        <dialog id="{{ id }}" class="project-modal">
+            <div class="project-modal__header">
+                <div>
+                    <small>{{ project.category }}</small>
+                    <h2>{{ project.title }}</h2>
+                </div>
+
+                <button
+                    type="button"
+                    onclick="this.closest('dialog').close()"
+                >
+                    ×
+                </button>
+            </div>
+
+            <div class="project-modal__content">
+                {% for item in project.content %}
+
+                    {% if item.type == 'heading' %}
+                        <h3>{{ item.text }}</h3>
+
+                    {% elseif item.type == 'text' %}
+                        <p>{{ item.text }}</p>
+
+                    {% elseif item.type == 'image' %}
+                        <img
+                            src="{{ item.src }}"
+                            alt="{{ item.alt|default('') }}"
+                        >
+
+                    {% elseif item.type == 'video' %}
+                        <video controls>
+                            <source src="{{ item.src }}" type="video/mp4">
+                            Dein Browser unterstützt dieses Videoformat nicht.
+                         </video>
+
+                    {% elseif item.type == 'pdf' %}
+                        <iframe src="{{ item.src }}"></iframe>
+                    {% endif %}
+
+                {% endfor %}
+            </div>
+        </dialog>
+    {% endif %}
+{% endmacro %}
+
 {% block body %}
+    {% set featured = projects|filter(p => p.featured|default(false)) %}
+    {% set others = projects|filter(p => not p.featured|default(false)) %}
+
     <section class="hero" style="padding-bottom: 24px;">
         <span class="hero__eyebrow">projects --status</span>
         <h1 class="hero__title" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">Projekt-Log</h1>
         <p class="hero__subtitle" style="margin-bottom: 0;">
-            Hier sind alle Projekte, die entweder länger als eine Woche gedauert haben, oder auf die ich aus anderen Gründen andersweitig stolz drauf bin.
+            Hier sind alle Projekte, die entweder länger als eine Woche gedauert haben, oder auf die ich aus anderen Gründen besonders stolz bin.
         </p>
     </section>
 
-    <div class="status-feed">
-        {% for project in projects %}
+    {% if featured|length > 0 %}
+        <section class="project-section">
+            <div class="project-featured">
+                {% for project in featured %}
+                    {{ _self.project_card(project, 'project-featured-' ~ loop.index, loop.first ? 'lead' : 'feature') }}
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
 
-            <article
-                class="status-card {{ project.category == 'privat' ? 'status-card--private' : '' }}"
-                data-project-card
-                {% if project.clickLinks is defined %}data-click-links="{{ project.clickLinks|json_encode|e('html_attr') }}"{% endif %}
-            >
-                <div class="status-card__thumb">
-                    <img
-                        src="{{ project.thumbnail|default('/images/projects/placeholder.jpg') }}"
-                        alt="{{ project.title }}"
-                        loading="lazy"
-                    >
-                </div>
-
-                <div class="status-card__body">
-                    <div class="status-card__meta">
-                        <span class="status-card__id">
-                            {{ project.date|default('') }}
-                        </span>
-
-                        <span class="status-card__badge">
-                            <span class="status-card__dot"></span>
-                            {{ project.category }}
-                        </span>
-                    </div>
-
-                    <h3 class="status-card__title">
-                        {{ project.title }}
-                    </h3>
-
-                    <p class="status-card__desc">
-                        {{ project.description }}
-                    </p>
-
-                    {% if project.content|default([])|length > 0 %}
-                        <button
-                            type="button"
-                            class="status-card__toggle"
-                            onclick="document.getElementById('project-{{ loop.index }}').showModal()"
-                        >
-                            Mehr anzeigen
-                        </button>
-                    {% endif %}
-                </div>
-            </article>
-
-            {% if project.content|default([])|length > 0 %}
-                <dialog id="project-{{ loop.index }}" class="project-modal">
-                    <div class="project-modal__header">
-                        <div>
-                            <small>{{ project.category }}</small>
-                            <h2>{{ project.title }}</h2>
-                        </div>
-
-                        <button
-                            type="button"
-                            onclick="this.closest('dialog').close()"
-                        >
-                            ×
-                        </button>
-                    </div>
-
-                    <div class="project-modal__content">
-                        {% for item in project.content %}
-
-                            {% if item.type == 'heading' %}
-                                <h3>{{ item.text }}</h3>
-
-                            {% elseif item.type == 'text' %}
-                                <p>{{ item.text }}</p>
-
-                            {% elseif item.type == 'image' %}
-                                <img
-                                    src="{{ item.src }}"
-                                    alt="{{ item.alt|default('') }}"
-                                >
-
-                            {% elseif item.type == 'video' %}
-                                <video controls>
-                                    <source src="{{ item.src }}" type="video/mp4">
-                                    Dein Browser unterstützt dieses Videoformat nicht.
-                                 </video>
-
-                            {% elseif item.type == 'pdf' %}
-                                <iframe src="{{ item.src }}"></iframe>
-                            {% endif %}
-
-                        {% endfor %}
-                    </div>
-                </dialog>
-            {% endif %}
-
-        {% endfor %}
-    </div>
+    <section class="project-section">
+        <h2 class="project-section__title">Weitere Projekte <span>{{ others|length }}</span></h2>
+        <div class="status-feed status-feed--compact">
+            {% for project in others %}
+                {{ _self.project_card(project, 'project-' ~ loop.index, 'compact') }}
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascripts %}
