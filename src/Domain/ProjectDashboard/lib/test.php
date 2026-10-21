@@ -112,7 +112,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Das Projekt war mein erster Versuch mit Vibecoding. Weil ich es wirklich stresstesten wollte, habe ich kein Framework vorgegeben und allgemein sehr hands-off gearbeitet. Meine Vorgaben beschränkten sich auf das Styling, den Docker-Container und die Infrastruktur sowie eine Erläuterung, der Regeln von CIV, den Rest habe ich der KI überlassen.',
+                'text' => 'Das Projekt war mein erster Versuch mit Vibecoding. Weil ich es wirklich stresstesten wollte, habe ich kein Framework vorgegeben und allgemein sehr hands-off gearbeitet. Meine Vorgaben beschränkten sich auf das Styling, den Docker-Container und die Infrastruktur sowie eine Erläuterung der Regeln von CIV. Den Rest habe ich der KI überlassen.',
             ],
             [
                 'type' => 'image',
@@ -260,7 +260,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Wir haben uns entschieden, auf auf WordPress umzusteigen. So blieb alles bei IONOS, und die Inhalte lassen sich langfristig weiterhin mit einem visuellen Builder selbst pflegen. Für mich war es das erste Projekt mit WordPress, und gerade die Grenzen eines solchen Baukastens haben mir überraschend viel Spaß gemacht.',
+                'text' => 'Wir haben uns entschieden, auf WordPress umzusteigen. So blieb alles bei IONOS, und die Inhalte lassen sich langfristig weiterhin mit einem visuellen Builder selbst pflegen. Für mich war es das erste Projekt mit WordPress, und gerade die Grenzen eines solchen Baukastens haben mir überraschend viel Spaß gemacht.',
             ],
             [
                 'type' => 'heading',
@@ -307,7 +307,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Gemeinsam haben wir eine Corporate Identity entwickelt, die zu ihnen passt. Sie zeigt sich heute in den Visuals, in der Preisgestaltung und solgansam auch im gesamten Online-Auftritt.',
+                'text' => 'Gemeinsam haben wir eine Corporate Identity entwickelt, die zu ihnen passt. Sie zeigt sich heute in den Visuals, in der Preisgestaltung und nach und nach auch im gesamten Online-Auftritt.',
             ],
             [
                 'type' => 'image',
@@ -330,7 +330,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Ich musste lernen, etwas nach den Wünschen von Kunden umzusetzen und nicht nur nach meinem eigenen Plan. Dazu gehörte auch, ehrliches Feedback zu geben, wie Besucher eine Seite wahrscheinlich benutzen werden, selbst wenn das nicht immer die Antwort war, die man hören wollte. Gerade ein Fotostudio muss allgemeine Medienkompetenz beweisen weil auch das Teil des Image ist.',
+                'text' => 'Ich musste lernen, etwas nach den Wünschen von Kunden umzusetzen und nicht nur nach meinem eigenen Plan. Dazu gehörte auch, ehrliches Feedback zu geben, wie Besucher eine Seite wahrscheinlich benutzen werden, selbst wenn das nicht immer die Antwort war, die man hören wollte. Gerade ein Fotostudio muss allgemeine Medienkompetenz beweisen, weil auch das Teil seines Images ist.',
             ],
             [
                 'type' => 'text',
@@ -343,33 +343,65 @@ return [
         'category' => 'produktiv',
         'date' => '07/2026',
         'thumbnail' => '/pictures/projects/lorawan.png',
-        'description' => 'Entwicklung einer LoRaWAN Kampagne und allgemeinen Strategie.',
+        'description' => 'Einführung von LoRaWAN in unser Produktportfolio: von der Technologie-Evaluierung über Hardwaretests bis zur Anbindung der Sensordaten und einer Kampagne für unsere Kunden.',
         'content' => [
-                [
-                    'type' => 'heading',
-                    'text' => 'Projektüberblick',
-                ],
-                [
-                    'type' => 'text',
-                    'text' => 'LoRaWAN war eines der größeren Projekte, bei denen ich mich zunächst intensiv mit der Technologie auseinandergesetzt und anschließend die Einführung in unser Produktportfolio begleitet habe.',
-                ],
-                [
-                    'type' => 'text',
-                    'text' => 'Dabei ging es nicht nur um die eigentliche Kommunikation zwischen Geräten und Netzwerk, sondern um das gesamte Ökosystem, von den Endgeräten über Gateways und Network Server bis hin zur Integration in unsere bestehenden Systeme.',
-                ],
-                [
-                    'type' => 'heading',
-                    'text' => 'Technische Umsetzung',
-                ],
-                [
-                    'type' => 'text',
-                    'text' => 'Ein Schwerpunkt lag auf der Frage, wie sich LoRaWAN sinnvoll in unsere bestehende Infrastruktur integrieren lässt. Dazu gehörten unter anderem Tests mit verschiedenen Sensoren, die Auswahl geeigneter Hardware und die Anbindung an unsere Backend-Systeme.',
-                ],
-                [
-                    'type' => 'image',
-                    'src' => '/pictures/projects/lorawan.png',
-                    'alt' => 'LoRaWAN Projekt',
-                ],
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'LoRaWAN war eines der größeren Projekte, bei denen ich mich zunächst intensiv mit der Technologie auseinandergesetzt und anschließend die Einführung in unser Produktportfolio begleitet habe.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Dabei ging es nicht nur um die eigentliche Kommunikation zwischen Geräten und Netzwerk, sondern um das gesamte Ökosystem, von den Endgeräten über Gateways und Network Server bis hin zur Integration in unsere bestehenden Systeme.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Warum LoRaWAN',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'LoRaWAN überträgt sehr kleine Datenmengen über große Entfernungen und braucht dafür kaum Energie. Ein Sensor, der alle paar Minuten einen Zählerstand, einen Füllstand oder das Raumklima meldet, läuft so jahrelang mit einer Batterie. Gerade im ländlichen Emsland, wo Mobilfunk nicht überall zuverlässig ist, und in großen Gebäuden ohne Netzwerkanschluss an jeder Ecke ist das ein echter Vorteil.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Technische Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Ein Schwerpunkt lag auf der Frage, wie sich LoRaWAN sinnvoll in unsere bestehende Infrastruktur integrieren lässt. Dazu gehörten unter anderem Tests mit verschiedenen Sensoren, die Auswahl geeigneter Hardware und die Anbindung an unsere Backend-Systeme.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Jeder Hersteller kodiert seine Messwerte anders. Für die getesteten Sensoren habe ich deshalb Payload-Decoder geschrieben, die die Rohdaten in einheitliche Messwerte übersetzen. Ein eigener Endpunkt nimmt die Daten vom Network Server per Webhook entgegen, prüft sie und ordnet sie den passenden Geräten und Kunden im CRM zu.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/lorawan.png',
+                'alt' => 'LoRaWAN-Projekt',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Erkenntnisse aus den Tests',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Praxis sah teilweise anders aus als das Datenblatt. In Gebäuden mit Stahlbeton sinkt die Reichweite deutlich, und die Platzierung des Gateways war oft wichtiger als die Wahl des Sensors. Außerdem muss man bei jedem Gerät zwischen Sendeintervall und Batterielaufzeit abwägen. Weil das Frequenzband in Europa nur eine begrenzte Sendezeit erlaubt, sind Nachrichten zurück an die Geräte knapp und müssen gut geplant werden.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Strategie & Kampagne',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Neben der Technik habe ich die Strategie mitentwickelt, mit der wir LoRaWAN unseren Kunden anbieten: welche Anwendungsfälle wir zuerst angehen, welche Hardware wir empfehlen und wie wir die Lösung erklären, ohne dass Kunden sich mit Funktechnik beschäftigen müssen. Daraus ist eine Kampagne mit Infomaterial und konkreten Beispielen aus der Praxis entstanden.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der erste interne Anwendungsfall war die Raumverwaltung mit E-Ink-Displays, die ohne jede Verkabelung an den Türen hängen.',
+            ],
         ],
     ],
     [
@@ -377,7 +409,7 @@ return [
         'category' => 'produktiv',
         'date' => '06/2026',
         'thumbnail' => '/pictures/projects/rooms.jpg',
-        'description' => 'Ein Raumverwaltungsystem gekoppelt mit E-Ink Displays.',
+        'description' => 'Ein Raumverwaltungssystem mit E-Ink-Displays an den Türen, die per LoRaWAN ohne Verkabelung den aktuellen Buchungsstatus aus Microsoft Teams anzeigen.',
         'content' => [
             [
                 'type' => 'heading',
@@ -393,11 +425,23 @@ return [
             ],
             [
                 'type' => 'heading',
+                'text' => 'Warum E-Ink',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'E-Ink-Displays brauchen nur Strom, wenn sich ihr Inhalt ändert, und sind auch ohne Hintergrundbeleuchtung gut lesbar. Zusammen mit LoRaWAN halten die Batterien dadurch viele Monate. Weil LoRaWAN nur wenige Bytes an ein Gerät schicken kann, sende ich keine fertigen Bilder, sondern einen kompakten Datensatz mit Status, Zeitfenster und Ansprechpartner. Das Display füllt damit eine feste Vorlage und wird nur aktualisiert, wenn sich wirklich etwas ändert.',
+            ],
+            [
+                'type' => 'heading',
                 'text' => 'Automatisierte Synchronisation',
             ],
             [
                 'type' => 'text',
-                'text' => 'Ein selbst entwickelter Job ruft regelmäßig die Raumbuchungen aus Microsoft Teams ab und synchronisiert diese mit der Raumverwaltung. Änderungen an bestehenden Buchungen werden dadurch automatisch auf den Displays berücksichtigt.',
+                'text' => 'Ein selbst entwickelter Job ruft regelmäßig die Raumbuchungen aus Microsoft Teams über die Microsoft Graph API ab und synchronisiert sie mit der Raumverwaltung. Änderungen an bestehenden Buchungen werden dadurch automatisch auf den Displays berücksichtigt.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die eigentlichen Stolpersteine waren dabei nicht die normalen Termine, sondern abgesagte Besprechungen, verschobene Einzeltermine aus Serien und Buchungen, die kurzfristig verlängert werden. Für diese Fälle gleicht der Job nicht nur neue Termine ab, sondern auch, was seit dem letzten Lauf weggefallen ist.',
             ],
             [
                 'type' => 'heading',
@@ -405,12 +449,20 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Zusätzlich zur Synchronisation mit Microsoft Teams habe ich eine manuelle Buchungsfunktion direkt im CRM integriert. Dadurch können Räume auch für Anwendungsfälle reserviert werden, die nicht über die normale Kalenderverwaltung abgebildet werden.',
+                'text' => 'Zusätzlich zur Synchronisation mit Microsoft Teams habe ich eine manuelle Buchungsfunktion direkt im CRM integriert. Dadurch können Räume auch für Anwendungsfälle reserviert werden, die nicht über die normale Kalenderverwaltung abgebildet werden. Überschneidungen mit bestehenden Buchungen werden vor dem Speichern geprüft.',
             ],
             [
                 'type' => 'image',
                 'src' => '/pictures/projects/rooms.png',
                 'alt' => 'Raumverwaltung',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Ergebnis',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Ausgedruckte Raumpläne an den Türen sind überflüssig geworden. Wer über den Flur geht, sieht sofort, ob ein Raum frei ist und an wen man sich wenden kann, und spontane Besprechungen landen nicht mehr in bereits gebuchten Räumen.',
             ],
         ],
     ],
@@ -453,7 +505,7 @@ return [
         'category' => 'privat',
         'date' => '04/2026',
         'thumbnail' => '/pictures/projects/rage.jpg',
-        'description' => 'Ein Unity Rageroom-Konzept, in dem sich Objekte per Hand oder mit Werkzeugen zerstören lassen. Fokus auf taktilem- und Audio-Feedback',
+        'description' => 'Ein Unity-Rageroom-Konzept, in dem sich Objekte per Hand oder mit Werkzeugen zerstören lassen. Der Fokus liegt auf taktilem und akustischem Feedback.',
         'content' => [],
     ],
     [
@@ -469,7 +521,7 @@ return [
         'category' => 'produktiv',
         'date' => '02/2026',
         'thumbnail' => '/pictures/projects/webinar.png',
-        'description' => 'Ein System um Interaktionen, Anwesenheit und Engagement von Webinaren zu analysieren.',
+        'description' => 'Ein System, um Anmeldungen, Anwesenheit und Engagement von Webinaren direkt im CRM auszuwerten.',
         'content' => [
             [
                 'type' => 'heading',
@@ -485,11 +537,19 @@ return [
             ],
             [
                 'type' => 'heading',
+                'text' => 'Technische Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die Anbindung authentifiziert sich per OAuth 2.0 und importiert Webinare, Anmeldungen und Teilnahmen in regelmäßigen Abständen. Dabei musste ich die Paginierung und die Limits der API berücksichtigen, damit auch große Webinare vollständig und ohne abgebrochene Importe übernommen werden. Ein erneuter Import erzeugt keine doppelten Datensätze, sondern aktualisiert die vorhandenen.',
+            ],
+            [
+                'type' => 'heading',
                 'text' => 'Datenverknüpfung',
             ],
             [
                 'type' => 'text',
-                'text' => 'Ein wichtiger Bestandteil war die Zuordnung der Webinarteilnehmer zu unseren CRM-Stammdaten. Dadurch konnten Informationen aus unterschiedlichen Quellen miteinander verbunden und für weitere Auswertungen genutzt werden.',
+                'text' => 'Ein wichtiger Bestandteil war die Zuordnung der Webinarteilnehmer zu unseren CRM-Stammdaten. Teilnehmer werden zuerst über ihre E-Mail-Adresse einem Ansprechpartner zugeordnet, ansonsten über die Domain einem Unternehmen. Was sich nicht eindeutig zuordnen lässt, landet in einer Liste zur manuellen Prüfung, statt falsch verknüpft zu werden.',
             ],
             [
                 'type' => 'heading',
@@ -504,6 +564,14 @@ return [
                 'src' => '/pictures/projects/webinar.png',
                 'alt' => 'Webinar-Verwaltung',
             ],
+            [
+                'type' => 'heading',
+                'text' => 'Ergebnis',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Vertrieb sieht jetzt direkt beim Kontakt, an welchen Webinaren jemand teilgenommen hat und wie lange. Besonders wertvoll ist die Liste derjenigen, die sich angemeldet haben, aber nicht dabei waren: Sie bekommen gezielt die Aufzeichnung und ein Gesprächsangebot. Übernommen werden dabei nur die Daten, die für diese Auswertungen wirklich gebraucht werden.',
+            ],
         ],
     ],
     [
@@ -511,7 +579,7 @@ return [
         'category' => 'produktiv',
         'date' => '02/2026',
         'thumbnail' => '/pictures/projects/leads.png',
-        'description' => 'Eine Grundlage zur internen Auswertung von Leads und Werbekampgnen',
+        'description' => 'Eine Grundlage zur internen Auswertung von Leads und Werbekampagnen.',
         'content' => [
             [
                 'type' => 'heading',
@@ -557,7 +625,7 @@ return [
         'category' => 'privat',
         'date' => '10/2025',
         'thumbnail' => '/pictures/projects/fleet.png',
-        'description' => 'Mittlerweile inkative Software für einen lokalen mobilen Gastronomie-Dienst. Kern war eine vereinfachte Kommunikation zwischen Planer und Fahrer',
+        'description' => 'Mittlerweile inaktive Software für einen lokalen mobilen Gastronomie-Dienst. Kern war eine vereinfachte Kommunikation zwischen Planer und Fahrer.',
         'content' => [],
     ],
     [
@@ -573,7 +641,7 @@ return [
         'category' => 'privat',
         'date' => '11/2025',
         'thumbnail' => '/pictures/projects/kanban.png',
-        'description' => 'Ein kleiner Versuch eine eigene kleine Kanban App für eine fiktives Unternehmen zu entwickeln.',
+        'description' => 'Ein kleiner Versuch, eine eigene Kanban-App für ein fiktives Unternehmen zu entwickeln.',
         'content' => [
             [
                 'type' => 'heading',
@@ -615,8 +683,57 @@ return [
         'category' => 'privat',
         'date' => '09/2025',
         'thumbnail' => '/pictures/projects/dg.jpg',
-        'description' => 'Als "Dungeon Master ist es wichtig, meinen Spielern eine narrative anzubieten. Dafür habe ich ein Infotainment System mit  Licht Musik und Notizen erschaffen.',
-        'content' => [],
+        'description' => 'Als Dungeon Master ist es mir wichtig, meinen Spielern eine lebendige Geschichte zu bieten. Dafür habe ich ein Infotainment-System mit Licht, Musik und Notizen gebaut.',
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Als Dungeon Master jongliere ich am Spieltisch mit vielen Dingen gleichzeitig: Notizen, Musik, Karten, Regeln und der Frage, was die Spieler eigentlich schon wissen. Jedes Mal, wenn ich nach dem passenden Lied oder der richtigen Notiz suchen musste, ging ein Stück Atmosphäre verloren. Deshalb habe ich ein System gebaut, das all das über eine einzige Oberfläche steuert.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Szenen',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Herzstück sind Szenen wie Taverne, Kampf oder Gewölbe. Jede Szene bündelt eine Playlist, eine Lichtstimmung und die passenden Notizen. Ein Tipp auf dem Tablet wechselt alles gleichzeitig: Die Musik blendet über, die LED-Streifen am Tisch wechseln Farbe und Helligkeit, und ich habe sofort die Informationen vor mir, die ich gerade brauche.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Nonlineare Geschichte',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Meine Spieler entscheiden selbst, wohin sie gehen und mit wem sie reden. Ein lineares Skript funktioniert dafür nicht. Meine Notizen sind deshalb als Netz aufgebaut: Personen, Orte und offene Handlungsstränge sind miteinander verknüpft, und ich markiere, was die Gruppe bereits herausgefunden hat. So bleibt die Welt auch über viele Abende hinweg stimmig.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Spieleranzeige',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Ein zweiter Bildschirm am Tisch zeigt den Spielern Karten, Bilder von Personen und Fundstücke, aber erst, wenn ich sie freigebe. Was die Gruppe noch nicht entdeckt hat, bleibt verborgen.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Technische Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Das System ist eine kleine Webanwendung, die lokal auf meinem Laptop läuft und im Browser bedient wird. Dadurch funktioniert sie auf dem Tablet genauso wie auf dem Laptop, auch ohne Internet. Das Licht kommt von LED-Streifen mit WLED, die sich über das lokale Netzwerk ansteuern lassen.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Fazit',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Meine Spieler erinnern sich vor allem an die Momente, in denen Licht, Musik und Geschichte zusammenpassen. Gleichzeitig ist meine Vorbereitung strukturierter geworden, weil jede Szene schon vor dem Abend vollständig steht.',
+            ],
+        ],
     ],
     [
         'title' => 'Adress-Auswertungstool',
@@ -631,15 +748,52 @@ return [
         'category' => 'produktiv',
         'date' => '01/2026',
         'thumbnail' => '/pictures/projects/gitlab.png',
-        'description' => 'Tickets im Kanban-Board sollten basierend auf GitLab Merge Requests automatisch ihren Status ändern.',
-        'content' => [],
+        'description' => 'Tickets im Kanban-Board ändern ihren Status automatisch anhand der Merge Requests in GitLab.',
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Unsere Entwicklungsaufgaben verwalten wir in einem Kanban-Board im CRM, den Code in GitLab. Nach jedem Merge Request musste das passende Ticket von Hand weitergeschoben werden. Das wurde regelmäßig vergessen, und das Board zeigte nicht mehr, woran gerade wirklich gearbeitet wird.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Umsetzung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'GitLab meldet jede Änderung an einem Merge Request per Webhook an einen eigenen Endpunkt im CRM. Der Endpunkt prüft zuerst das geheime Token des Webhooks, damit niemand von außen Tickets verschieben kann. Danach sucht er die Ticketnummer im Branch-Namen oder im Titel des Merge Requests.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Aus dem Zustand des Merge Requests ergibt sich der neue Ticketstatus: Wird ein Merge Request eröffnet, wandert das Ticket in den Review. Wird er gemergt, landet es im Test. Wird er ohne Merge geschlossen, geht es zurück in die Bearbeitung. Merge Requests im Entwurfsstatus werden ignoriert.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Robustheit',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Webhooks können doppelt oder in falscher Reihenfolge ankommen. Ein Ticket wird deshalb nur nach vorne verschoben, außer ein Merge Request wurde ausdrücklich geschlossen. Jede automatische Änderung steht mit einem Link zum Merge Request in der Ticket-Historie, damit nachvollziehbar bleibt, warum sich ein Status geändert hat.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Ergebnis',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Das Board ist jetzt aktuell, ohne dass jemand daran denken muss. Wer wissen will, wie weit eine Aufgabe ist, muss nicht mehr nachfragen, sondern sieht es direkt im Ticket.',
+            ],
+        ],
     ],
     [
         'title' => 'Adress-Cluster',
         'category' => 'produktiv',
         'date' => '02/2026',
         'thumbnail' => '/pictures/projects/cluster.png',
-        'description' => 'Ein Tool zur Management von Beziehungen zwischen Adressen und Netzen',
+        'description' => 'Ein Tool zur Verwaltung von Beziehungen zwischen Adressen und Netzen.',
         'content' => [
                 [
                     'type' => 'heading',
@@ -652,11 +806,11 @@ return [
                 [
                     'type' => 'image',
                     'src' => '/pictures/projects/adressverwaltung.PNG',
-                    'alt' => 'Addressen',
+                    'alt' => 'Adressbeziehungen im CRM',
                 ],
                 [
                     'type' => 'text',
-                    'text' => 'Besonders wertvoll für Unternehmensgruppen mit vielen Tochtergesellschaften. Darauf aufbauend habe ich ein System für konsistente Preiskommunikation geschaffen, damit unterschiedliche Adressen desselben Clusters nicht versehentlich unterschiedliche Preise erhalten.',
+                    'text' => 'Besonders wertvoll ist das für Unternehmensgruppen mit vielen Tochtergesellschaften.',
                 ],
                 [
                     'type' => 'text',
@@ -665,7 +819,7 @@ return [
                 [
                     'type' => 'image',
                     'src' => '/pictures/projects/sonderkonditionsverwaltung.PNG',
-                    'alt' => 'LoRaWAN Projekt',
+                    'alt' => 'Verwaltung von Sonderkonditionen',
                 ],
         ],
     ],
@@ -674,7 +828,7 @@ return [
         'category' => 'privat',
         'date' => '03/2026',
         'thumbnail' => '/pictures/projects/cicd.png',
-        'description' => 'Eine eigene Pipeline von Development bis Deployment',
+        'description' => 'Eine eigene Pipeline von der Entwicklung bis zum Deployment.',
         'content' => [],
     ],
     [
