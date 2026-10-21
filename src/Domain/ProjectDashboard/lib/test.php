@@ -229,7 +229,7 @@ return [
         'title' => 'krummen.de',
         'category' => 'privat',
         'thumbnail' => '/pictures/projects/krummen.jpg',
-        'description' => 'Eine Website für meine Verwandtschaft, umgesetzt mit WordPress bei IONOS – von der Einrichtung bis zur Übergabe.',
+        'description' => 'Die neue Website für Eventservice & Fotostudio Krummen in Lingen – in zwei Wochen vor der Hochzeitsmesse mit WordPress bei IONOS umgesetzt.',
         'content' => [
             [
                 'type' => 'heading',
@@ -237,11 +237,98 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Für meine Verwandten habe ich die Website krummen.de erstellt. Umgesetzt habe ich sie mit WordPress im Hosting von IONOS, weil sie danach ohne Programmierkenntnisse selbst gepflegt werden sollte.',
+                'text' => 'Eventservice & Fotostudio Krummen in Lingen brauchte eine neue Website, wollte dabei aber bei IONOS bleiben. Gebucht war der Tarif MyWebsite, der sich vor allem an kleine Unternehmen richtet, die überhaupt erst einmal online sichtbar sein wollen. Den visuellen Editor dort empfanden sie trotzdem als anstrengend und verwirrend.',
             ],
             [
                 'type' => 'text',
-                'text' => 'Ich habe mich um das komplette Projekt gekümmert: Einrichtung, Gestaltung, Inhalte und Veröffentlichung. Anschließend habe ich die fertige Seite an meine Verwandten übergeben, die sie seitdem selbst nutzen.',
+                'text' => 'Zwei Wochen vor der jährlichen Hochzeitsmesse in Lingen war ihnen klar, dass sie bis dahin allein keine Website hinbekommen würden, die sie dort guten Gewissens zeigen können. Weil sie wussten, dass ich Erfahrung im Webdesign habe, haben sie mich um Hilfe gebeten. Ich habe das Projekt in meiner Freizeit gegen eine kleine Aufwandsentschädigung übernommen.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/krummen.jpg',
+                'alt' => 'Startseite von krummen.de mit den Bereichen Fotostudio und Eventservice',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Technische Entscheidung',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Wir haben uns entschieden, auf dem bestehenden MyWebsite-Tarif auf WordPress umzusteigen. So blieb alles bei IONOS, und die Inhalte lassen sich langfristig weiterhin mit einem visuellen Builder selbst pflegen. Für mich war es das erste Projekt mit WordPress, und gerade die Grenzen eines solchen Baukastens haben mir überraschend viel Spaß gemacht.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Ablauf',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'In den zwei Wochen habe ich mich jeden dritten Tag mit ihnen zusammengesetzt, um Pläne und Änderungen zu besprechen. Am Anfang habe ich sie vor allem erzählen lassen: ihre Geschichte, ihre Visionen und was die Website unbedingt zeigen muss. Dabei kamen auch Dinge auf den Tisch, die ihnen selbst noch gar nicht ganz klar waren.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Struktur: drei Bereiche',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Schnell wurde deutlich, dass die angebotenen Leistungen eine ziemlich durcheinandergewürfelte Liste waren. Deshalb haben wir sie zuerst in drei klar getrennte Bereiche aufgeteilt:',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Das Fotostudio mit zwei Fotografen, die fast den ganzen Tag im Studio anzutreffen sind, aber auch für Aufnahmen vor Ort unterwegs sind. Den Eventservice, der auf den ersten Blick selbsterklärend wirkt, aber sehr viele verschiedene Leistungen umfasst, etwa die Vermittlung von Catering und DJ, Verleih von Equipment und den Aufbau. Und die Hochzeit als eigenen großen Bereich, der logisch mit Fotografie und Eventservice verbunden ist, aber viele Leistungen speziell für Hochzeiten bündelt.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/krummen-hochzeit.jpg',
+                'alt' => 'Hochzeitsseite: freie Trauung und Hochzeitsfotografie',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/krummen-trauung.jpg',
+                'alt' => 'Freie Trauung im Freien als großes Titelbild',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/krummen-locations.jpg',
+                'alt' => 'Übersicht der Partner-Locations',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Mehr als eine Website',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Aus der Website wurde schnell mehr. Wir haben eine Roadmap für die Marketingstrategie erarbeitet, über E-Commerce gesprochen und einige grundlegende geschäftliche Entscheidungen getroffen. Das Unternehmen hat also nicht nur das Projekt geprägt, sondern das Projekt auch das Unternehmen.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Gemeinsam haben wir eine Corporate Identity entwickelt, die zu ihnen passt. Sie zeigt sich heute in den Visuals, in der Preisgestaltung und im gesamten Online-Auftritt.',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/krummen-paare.jpg',
+                'alt' => 'Seite für Paar-Shootings mit Preis und Beispielbildern',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/krummen-iris.jpg',
+                'alt' => 'Seite für Irisfotografie mit Beispielen für Effekte',
+            ],
+            [
+                'type' => 'image',
+                'src' => '/pictures/projects/krummen-trauerrede.jpg',
+                'alt' => 'Unterseite für Trauerreden in eigener, ruhiger Farbwelt',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Was ich gelernt habe',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Ich musste lernen, etwas nach den Wünschen von Kunden umzusetzen und nicht nur nach meinem eigenen Plan. Dazu gehörte auch, ehrliches Feedback zu geben, wie Besucher eine Seite wahrscheinlich benutzen werden, selbst wenn das nicht immer die Antwort war, die man hören wollte.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Außerdem habe ich viel darüber gelernt, eine Erzählung aufzubauen: hundert verschiedene Ideen und Stile zu sammeln und sie trotzdem in eine einheitliche Website zu bringen.',
             ],
         ],
     ],
