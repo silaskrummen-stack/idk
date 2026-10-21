@@ -8,8 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Öffentliche Startseite von silas-krummen.de.
- * Verrät absichtlich nicht, was sonst auf der Domain läuft (Portfolio, CIV-Abend, LAN-Party …) –
- * wer etwas Bestimmtes sehen soll, bekommt einen direkten Link.
+ * Öffentlich erreichbar, verlinkt auf Portfolio, LAN-Night und CIV-Abend – die schützen sich selbst per Login.
  */
 class LandingController extends AbstractController
 {

@@ -14,23 +14,59 @@
         .landing {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            align-items: center;
+        }
+        .landing .hero {
+            display: flex;
+            align-items: center;
+            gap: 56px;
+            width: 100%;
+        }
+        .landing__text {
+            flex: 1 1 auto;
         }
         .landing .hero__title {
-            max-width: 18ch;
+            max-width: 16ch;
+        }
+        .landing .hero__portrait {
+            width: 32%;
+            max-width: 340px;
+        }
+        @media (max-width: 720px) {
+            .landing .hero {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                gap: 32px;
+                padding-top: 40px;
+            }
+            .landing .hero__portrait {
+                width: 60%;
+                max-width: 260px;
+            }
         }
     </style>
 </head>
 <body>
 <main class="landing">
     <section class="hero">
-        <p class="hero__eyebrow">$ ls ~</p>
-        <h1 class="hero__title">Hier gibt es nichts zu sehen.</h1>
-        <p class="hero__subtitle">
-            Diese Seite hat keine Startseite, die dir weiterhilft.
-            Mitte Oktober fand ein Umbau statt. Wenn du hier gelandet bist, hast du wahrscheinlich einen genaueren Link bekommen. Nutze am besten den oder frage einen an bei silas.krummen@web.de
-        </p>
+        <div class="landing__text">
+            <p class="hero__eyebrow">$ ls ~</p>
+            <h1 class="hero__title">Hi, ich bin Silas.</h1>
+            <p class="hero__subtitle">
+                Hier liegen ein paar Dinge, die ich gebaut habe. Für die meisten brauchst du einen Zugang.
+                Falls dir einer fehlt, schreib mir an
+                <a href="mailto:silas.krummen@web.de">silas.krummen@web.de</a>.
+            </p>
+            <div class="hero__actions">
+                <a href="{{ path('homepage') }}" class="btn btn--primary">Portfolio</a>
+                <a href="{{ path('lan_display') }}" class="btn btn--ghost">LAN-Night</a>
+                <a href="{{ path('civ_open', {target: 'display'}) }}" class="btn btn--ghost">CIV-Abend</a>
+            </div>
+        </div>
+
+        <div class="hero__portrait">
+            <img src="/pictures/landing.jpg" alt="Selfie von Silas und einem Freund abends auf einem Stadtfest">
+        </div>
     </section>
 </main>
 </body>

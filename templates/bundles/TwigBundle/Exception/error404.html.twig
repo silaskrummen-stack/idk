@@ -1,0 +1,8 @@
+{# Wird von Symfony automatisch für 404-Fehler genutzt (nur in prod; in dev unter /_error/404 ansehen) #}
+{% extends 'bundles/TwigBundle/Exception/error.html.twig' %}
+
+{% block eyebrow %}$ cd {{ app.request.pathInfo|default('/') }} → 404{% endblock %}
+{% block heading %}Diese Seite gibt es nicht.{% endblock %}
+{% block message %}
+    Vielleicht hat sich ein Tippfehler eingeschlichen, oder der Link ist veraltet.
+{% endblock %}

@@ -5,7 +5,7 @@ return [
         'title' => 'LAN-Party Moderation',
         'category' => 'privat',
         'thumbnail' => '/pictures/projects/lan.jpg',
-        'description' => 'Ein interaktiver Punktestand für meine LAN-Partys: zwei Teams, Spiele, Quiz und Abstimmungen live auf dem großen Bildschirm – moderiert über ein Admin-Panel, mitgespielt am Handy.',
+        'description' => 'Ein interaktiver Punktestand für meine LAN-Partys: zwei Teams, Spiele, Quiz und Abstimmungen live auf dem großen Bildschirm, moderiert über ein Admin-Panel, mitgespielt am Handy.',
         'content' => [
             [
                 'type' => 'heading',
@@ -94,7 +94,7 @@ return [
         'title' => 'CIV-Abend Spielleitung',
         'category' => 'privat',
         'thumbnail' => '/pictures/projects/civ.jpg',
-        'description' => 'Mein erster Versuch mit Vibecoding: ein Live-Punktestand für der Strategieklassiker Sid Meier's Civilization VI mit acht Spielern.',
+        'description' => 'Mein erster Versuch mit Vibecoding: ein Live-Punktestand für den Strategieklassiker Sid Meier’s Civilization VI mit acht Spielern.',
         // Mehrfachklick auf die Karte: 3× öffnet den Bildschirm, 5× die Spielleitung (siehe CivController)
         'clickLinks' => [3 => '/portfolio/civ/display', 5 => '/portfolio/civ/admin'],
         'content' => [
@@ -222,6 +222,26 @@ return [
             [
                 'type' => 'text',
                 'text' => 'Der Abend war sehr cool. Durch das System wurde die Kommunikation zwischen den Spielern gefördert, und die Punkte waren für alle übersichtlicher. Mir hat das Ganze auch viel Spaß gemacht, weil ich mich in meiner Rolle als Storyteller und Moderator sehr wohlgefühlt habe.',
+            ],
+        ],
+    ],
+    [
+        'title' => 'krummen.de',
+        'category' => 'privat',
+        'thumbnail' => '/pictures/projects/krummen.jpg',
+        'description' => 'Eine Website für meine Verwandtschaft, umgesetzt mit WordPress bei IONOS – von der Einrichtung bis zur Übergabe.',
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Für meine Verwandten habe ich die Website krummen.de erstellt. Umgesetzt habe ich sie mit WordPress im Hosting von IONOS, weil sie danach ohne Programmierkenntnisse selbst gepflegt werden sollte.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Ich habe mich um das komplette Projekt gekümmert: Einrichtung, Gestaltung, Inhalte und Veröffentlichung. Anschließend habe ich die fertige Seite an meine Verwandten übergeben, die sie seitdem selbst nutzen.',
             ],
         ],
     ],

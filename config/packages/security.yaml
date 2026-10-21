@@ -38,7 +38,7 @@ security:
             access_denied_handler: App\Security\PortfolioAccessDeniedHandler
 
     access_control:
-    # Öffentliche Startseite (verrät nichts), alles andere bleibt hinter dem Login
+    # Öffentliche Startseite, alles andere bleibt hinter dem Login
     - { path: ^/$, roles: PUBLIC_ACCESS }
     - { path: ^/portfolio/login, roles: PUBLIC_ACCESS }
     # CIV-Abend: Login-Prüfung für nginx (antwortet selbst mit 204/401) und Admin-Weiterleitung (prüft selbst)
