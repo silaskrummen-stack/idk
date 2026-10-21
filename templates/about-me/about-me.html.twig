@@ -5,7 +5,7 @@
 {% block body %}
     {% set skill_groups = {
         'Backend': {'PHP': 3, 'Java': 1, 'C#': 1},
-        'Frontend': {'Java/-TypeScript': 2, 'HTML / CSS': 2, 'Twig': 2},
+        'Frontend': {'Java/-TypeScript': 3, 'HTML / CSS': 2, 'Twig': 2},
         'Datenhandling': {'MySQL': 3, 'GraphQL': 1, 'SPSS': 1},
         'Sonstiges': {'Microsoft Office': 3, 'Docker': 2, 'GitLab & CI/CD': 2},
     } %}
@@ -149,7 +149,7 @@
                     <p class="about-card__text">
                         Ich leite regelmäßig Tabletop-Abende mit Freunden als Dungeon Master,
                         inklusive eigenem Infotainment-Setup mit Musik, Licht und Notizen zur
-                        Story sowie eine lineare Narrative.
+                        Story sowie eine nonlineare Narrative.
                     </p>
                 </div>
                 <div class="hobby-item">
@@ -318,34 +318,77 @@
                     <span class="tag">Kommunikationsfähigkeit</span>
                 </div>
             </div>
+
+            <div class="about-card">
+                <h3 class="about-card__title">Mobilität</h3>
+                <p class="about-card__text">
+                    Am liebsten bin ich mit dem Fahrrad oder der Bahn unterwegs. Beruflich bin ich in der
+                    Vergangenheit aber auch viel mit meinem eigenen Auto gefahren, etwa zu Kunden, und bin
+                    dazu auch in Zukunft gerne bereit.
+                </p>
+                <div class="tag-list about-card__tags">
+                    <span class="tag">Fahrrad</span>
+                    <span class="tag">Bahn</span>
+                    <span class="tag">Führerschein Klasse B</span>
+                    <span class="tag">Eigenes Auto</span>
+                </div>
+            </div>
         </section>
 
         <!-- Statement zu KI -->
-        <section class="about-section about-essay">
+        <section class="about-section">
             <h2 class="about-section__title">Statement zu KI</h2>
-            <p>
-                Ich sehe die zunehmende Durchdringung von KI im Berufs- und Privatleben mit klaren ethischen
-                und moralischen Bedenken und setze mich politisch dagegen ein, vor allem dort, wo KI kreative
-                Arbeit ersetzen soll. Menschlichen Kontakt kann sie für mich nicht ersetzen. Sie erzeugt nichts
-                wirklich Neues, sondern setzt nur Vorhandenes neu zusammen. Und in Fragen von Geschmack bleibt
-                sie für mich ungenügend: Wer nur UI-Design-Prinzipien befolgt, bekommt Seiten, die alle
-                irgendwie gleich aussehen.
-            </p>
-            <p>
-                Beruflich habe ich aber akzeptiert, dass eine komplette Ablehnung nicht tragbar ist, erst recht
-                nicht in der IT. 2025 ist mir klar geworden, dass reine Ignoranz keine nachhaltige Haltung ist:
-                Unternehmen, die KI nutzen, ersetzen die Leute, die es nicht tun. Begeistern kann ich mich für
-                Projekte, in denen KI der Gemeinschaft hilft und vor allem repetitive, frustrierende Aufgaben
-                abschafft. Bei der Qualitätssicherung von KI-Projekten habe ich oft mitgewirkt. Manche
-                Ergebnisse haben mich aus den Socken gehauen, andere haben mich ziemlich unbefriedigt
-                zurückgelassen.
-            </p>
-            <p>
-                Ein Thema, das aus meiner Sicht noch unterschätzt wird, ist Token-Management. Den Verbrauch, den
-                viele mittelständische Unternehmen gerade betreiben, werden sie nicht halten können, sobald die
-                Preise steigen, und das werden sie. Wer KI ohne Plan in seine Arbeitsweise einbaut, schafft sich
-                damit technische Altlasten. Das habe ich in meiner Karriere schon mehrmals erlebt.
-            </p>
+
+            <div class="about-ai">
+                <div class="about-ai__tools">
+                    <h3 class="about-ai__label">Ausgiebig genutzt</h3>
+                    <ul class="about-ai__list">
+                        <li class="tool-item">
+                            <img src="/pictures/about-me/claude.png" alt="">
+                            <span>Claude</span>
+                        </li>
+                        <li class="tool-item">
+                            <img src="/pictures/about-me/copilot.png" alt="">
+                            <span>Microsoft Copilot</span>
+                        </li>
+                        <li class="tool-item">
+                            <img src="/pictures/about-me/manus.png" alt="">
+                            <span>Manus</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="about-essay">
+                    <p>
+                        Ich sehe die zunehmende Verbreitung von KI im Berufs- und Privatleben mit klaren ethischen
+                        Bedenken und engagiere mich politisch für mehr Regulierung vor allem im kreativen Bereich. Sprachmodelle erzeugen im eigentlichen Sinne nichts Neues: Sie Re-Hashen rechtlich dubios ergatterte Trainingssets. Deshalb tendieren
+                        ihre Ergebnisse zum Durchschnitt. Wer Gestaltung allein nach gelernten UI-Prinzipien erzeugen
+                        lässt, bekommt Seiten, die alle irgendwie gleich aussehen. Geschmack, Haltung und echten
+                        menschlichen Kontakt wird es auch in Zukunft nicht ersetzen.
+                    </p>
+                    <p>
+                        Beruflich halte ich eine komplette Ablehnung trotzdem nicht für tragbar, erst recht nicht in
+                        der IT. Ende 2025 ist mir klar geworden, dass Ignoranz keine nachhaltige Haltung ist: Unternehmen die nicht mitziehen, werden durch die ersetzt, die es tun. Genau da sehe ich meine Arbeit: Unternehmen Helfen im technologischen Rennen mitzuhalten. Begeistern kann ich mich für Einsätze, die der Gemeinschaft nützen und repetitive,
+                        fehleranfällige Arbeit abnehmen.
+                    </p>
+                    <p>
+                        Bei der Qualitätssicherung von KI-Projekten habe ich oft mitgewirkt, und meine eigenen
+                        Projekte zeigen ein klares Muster: Die Qualität hängt weniger am Modell als an der
+                        Spezifikation. Mit klaren Anforderungen, vorgegebener Architektur und konsequentem Review
+                        entstehen gute Ergebnisse. Arbeitet ein Modell ohne diese Leitplanken, wächst der Code schnell
+                        und wird schwer wartbar.
+                    </p>
+                    <p>
+                        Ein Thema, dass aus meiner Sicht noch unterschätzt wird, ist Token-Management. Viele
+                        mittelständische Unternehmen bauen ihre Prozesse gerade auf den heutigen Preisen auf, und ich
+                        gehe fest davon aus, dass diese steigen werden. Dann wird jeder unbedachte Agenten-Workflow
+                        zum laufenden Kostenfaktor. Wer KI einführt, sollte deshalb den Verbrauch pro Prozess messen,
+                        für jede Aufgabe das kleinste ausreichende Modell wählen und Prozesse so bauen, dass sie nicht
+                        von einem einzigen Anbieter abhängen. Sonst entstehen technische Altlasten, wie ich sie in
+                        meiner Karriere schon mehrmals erlebt habe.
+                    </p>
+                </div>
+            </div>
         </section>
 
         <div class="hero__actions about-page__actions">

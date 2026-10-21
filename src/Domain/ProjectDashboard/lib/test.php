@@ -631,7 +631,7 @@ return [
         'category' => 'produktiv',
         'date' => '01/2026',
         'thumbnail' => '/pictures/projects/gitlab.png',
-        'description' => 'Tickets im Kanban-Board sollten basierend auf GitLab-Merge-Requests automatisch ihren Status ändern.',
+        'description' => 'Tickets im Kanban-Board sollten basierend auf GitLab Merge Requests automatisch ihren Status ändern.',
         'content' => [],
     ],
     [
