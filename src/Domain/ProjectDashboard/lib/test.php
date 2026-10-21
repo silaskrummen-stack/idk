@@ -93,7 +93,7 @@ return [
     ],
     [
         'title' => 'CIV-Abend Spielleitung',
-        'category' => 'produktiv',
+        'category' => 'privat',
         'date' => '09/2026',
         'thumbnail' => '/pictures/projects/civ.jpg',
         'description' => 'Mein erster Versuch mit Vibecoding: ein Live-Punktestand für den Strategieklassiker Sid Meier’s Civilization VI mit acht Spielern.',
@@ -229,7 +229,7 @@ return [
     ],
     [
         'title' => 'krummen.de',
-        'category' => 'privat',
+        'category' => 'produktiv',
         'date' => '09/2026',
         'thumbnail' => '/pictures/projects/krummen.jpg',
         'description' => 'Die neue Website für Eventservice & Fotostudio Krummen in Lingen. In zwei Wochen vor der Hochzeitsmesse mit WordPress bei IONOS umgesetzt.',
