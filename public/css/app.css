@@ -494,6 +494,7 @@ a.status-card__toggle {
 }
 
 .doc-page {
+    max-width: 70%;
     padding-bottom: 40px;
 }
 
@@ -601,6 +602,9 @@ a.status-card__toggle {
 }
 
 .doc-viewer__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     padding: 5px 12px;
     border: 1px solid var(--color-border);
     border-radius: 6px;
@@ -628,29 +632,108 @@ a.status-card__toggle {
     background: #fff;
 }
 
+/* Dokumentauswahl und gezeichnete Seiten gibt es nur in der Handy-Ansicht */
+.doc-viewer__picker,
+.doc-pages {
+    display: none;
+}
+
+.doc-pages canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.doc-pages[aria-busy="true"]:empty::before {
+    content: 'Dokument wird geladen …';
+    display: block;
+    padding: 48px 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
 @media (max-width: 720px) {
+    .doc-hero .hero__eyebrow {
+        display: none;
+    }
     .doc-layout {
         grid-template-columns: 1fr;
-        gap: 12px;
     }
-    /* Liste als waagerechte Leiste, damit sie keine Höhe frisst */
+    /* Die Liste wandert als Auswahlfeld in die Leiste über dem Dokument */
     .doc-list {
-        flex-direction: row;
-        overflow-x: auto;
-        padding-bottom: 4px;
-    }
-    .doc-list li {
-        flex-shrink: 0;
-    }
-    .doc-list__item {
-        padding: 8px 12px;
-        white-space: nowrap;
+        display: none;
     }
     .doc-viewer {
-        height: calc(100dvh - 16px);
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background: none;
     }
-    .doc-viewer__title {
+    /* Leiste bleibt beim Durchscrollen der Seiten oben am Bildschirm */
+    .doc-viewer__toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        margin: 0 -16px 12px;
+        padding: 10px 16px;
+        background: var(--color-bg);
+        border-bottom: 1px solid var(--color-border);
+    }
+    .doc-viewer__title,
+    .doc-viewer__action--desktop,
+    .doc-viewer__action-text {
         display: none;
+    }
+    .doc-viewer__picker {
+        display: block;
+        flex: 1;
+        min-width: 0;
+    }
+    .doc-viewer__picker select {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        background: var(--color-bg-elevated);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: 16px; /* unter 16px zoomt iOS beim Antippen ungefragt rein */
+    }
+    .doc-viewer__action {
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        border-radius: 8px;
+    }
+    /* Fallback ohne pdf.js: normaler Viewer mit fester Höhe */
+    .doc-viewer iframe {
+        height: 75vh;
+        height: 75dvh;
+        border-radius: 8px;
+    }
+    .doc-viewer.is-rendered iframe {
+        display: none;
+    }
+    .doc-viewer.is-rendered .doc-pages {
+        display: block;
     }
 }
     /* ===== Profile meta ===== */
@@ -1752,4 +1835,146 @@ a {
     font-size: clamp(1.2rem, 2.4vw, 1.5rem);
     font-weight: 500;
     margin: 0;
+}
+
+/* ===== Handy: weniger Scrollen, besser lesbar ===== */
+@media (max-width: 640px) {
+    .container,
+    .hero,
+    .doc-hero,
+    .project-section,
+    .status-feed {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* Navigation: kompakter, Projekte-Menü in voller Breite unter der Linkzeile */
+    .site-nav {
+        padding: 14px 16px 6px;
+        gap: 8px;
+    }
+    .site-nav__links {
+        position: relative;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 18px;
+    }
+    .site-nav__links a,
+    .site-nav__dropdown-toggle {
+        display: inline-block;
+        padding: 6px 0; /* größere Tippfläche */
+    }
+    .site-nav__dropdown-toggle {
+        display: inline-flex;
+    }
+    .site-nav__dropdown {
+        position: static;
+    }
+    .site-nav__submenu,
+    .site-nav__dropdown.is-open .site-nav__submenu,
+    .site-nav__dropdown:hover .site-nav__submenu {
+        left: 0;
+        right: 0;
+        min-width: 0;
+        padding-top: 6px;
+    }
+    .site-nav__submenu {
+        transform: translateY(-6px);
+    }
+    .site-nav__dropdown.is-open .site-nav__submenu,
+    .site-nav__dropdown:hover .site-nav__submenu {
+        transform: none;
+    }
+    .site-nav__submenu::before {
+        top: 6px;
+    }
+    .site-nav__submenu a {
+        padding: 11px 12px;
+    }
+
+    .hero {
+        padding-top: 24px;
+        padding-bottom: 28px;
+    }
+    .hero__subtitle {
+        font-size: 1rem;
+        margin: 10px 0 22px;
+    }
+    .doc-hero {
+        padding-top: 8px;
+        padding-bottom: 12px;
+    }
+
+    /* Lange deutsche Wörter umbrechen statt aus dem Bildschirm zu laufen */
+    p, li, dd, h1, h2, h3 {
+        hyphens: auto;
+        -webkit-hyphens: auto;
+        overflow-wrap: break-word;
+    }
+
+    .about-page {
+        padding-bottom: 48px;
+    }
+    .about-section {
+        margin-top: 40px;
+    }
+    .about-section__title {
+        margin-bottom: 16px;
+    }
+    .about-card {
+        padding: 18px;
+    }
+    .about-statements {
+        gap: 24px;
+    }
+    .about-page__actions {
+        margin-top: 40px;
+    }
+
+    /* Projekt-Log: kleine Karten als Zeile (Bild links), statt jede mit großem Vorschaubild */
+    .project-section {
+        padding-bottom: 36px;
+    }
+    .status-feed--compact {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .status-card--compact {
+        flex-direction: row;
+    }
+    .status-card--compact .status-card__thumb {
+        width: 108px;
+        flex-shrink: 0;
+        aspect-ratio: auto;
+    }
+    .status-card--compact .status-card__body {
+        padding: 12px 14px;
+    }
+    .status-card--compact .status-card__desc {
+        -webkit-line-clamp: 2;
+        margin-bottom: 8px;
+    }
+    .status-card--compact .status-card__toggle {
+        padding: 4px 12px;
+        font-size: 0.8rem;
+    }
+    .status-card--lead .status-card__body,
+    .status-card--feature .status-card__body {
+        padding: 18px;
+    }
+
+    .project-modal {
+        width: 100vw;
+        max-width: 100vw;
+        max-height: 100dvh;
+        border-radius: 0;
+    }
+    .project-modal__content {
+        max-height: calc(100dvh - 90px);
+        padding: 16px;
+    }
+
+    .site-footer {
+        padding: 24px 16px 32px;
+    }
 }

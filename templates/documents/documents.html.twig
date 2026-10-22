@@ -9,7 +9,6 @@
     <section class="doc-hero">
         <span class="hero__eyebrow">ls ./documents</span>
         <h1 class="doc-hero__title">Dokumente</h1>
-        <p class="doc-hero__subtitle">Zeugnisse und Zertifikate — zum Öffnen anklicken.</p>
     </section>
 
     <div class="container container--wide doc-page">
@@ -35,13 +34,33 @@
                 {% if documents|length > 0 %}
                     <div class="doc-viewer__toolbar">
                         <span class="doc-viewer__title" id="doc-title">{{ documents[0].title }}</span>
+
+                        {# Auf dem Handy ersetzt die Auswahl die Liste links #}
+                        <label class="doc-viewer__picker">
+                            <span class="visually-hidden">Dokument auswählen</span>
+                            <select id="doc-picker">
+                                {% for document in documents %}
+                                    <option value="/documents/{{ document.file }}">{{ document.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+
                         <div class="doc-viewer__actions">
-                            <button type="button" class="doc-viewer__action" id="doc-fullscreen">Vollbild</button>
-                            <a class="doc-viewer__action" id="doc-open" href="/documents/{{ documents[0].file }}" target="_blank" rel="noopener">In neuem Tab ↗</a>
-                            <a class="doc-viewer__action" id="doc-download" href="/documents/{{ documents[0].file }}" download>Herunterladen</a>
+                            <button type="button" class="doc-viewer__action doc-viewer__action--desktop" id="doc-fullscreen">Vollbild</button>
+                            <a class="doc-viewer__action" id="doc-open" href="/documents/{{ documents[0].file }}" target="_blank" rel="noopener" aria-label="In neuem Tab öffnen">
+                                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 2h5v5M14 2 7.5 8.5M12 9.5V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <span class="doc-viewer__action-text">In neuem Tab</span>
+                            </a>
+                            <a class="doc-viewer__action" id="doc-download" href="/documents/{{ documents[0].file }}" download aria-label="Herunterladen">
+                                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 13.5h11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <span class="doc-viewer__action-text">Herunterladen</span>
+                            </a>
                         </div>
                     </div>
+
                     <iframe id="doc-frame" src="/documents/{{ documents[0].file }}{{ pdf_view }}" title="Dokumentvorschau"></iframe>
+                    {# Handy: Seiten werden mit pdf.js als Bilder in voller Breite gezeichnet #}
+                    <div class="doc-pages" id="doc-pages" aria-live="polite"></div>
                 {% else %}
                     <p class="about-card__text">Sobald Dokumente hinterlegt sind, erscheinen sie hier.</p>
                 {% endif %}
@@ -54,17 +73,96 @@
     <script>
         const pdfView = '{{ pdf_view|e('js') }}';
         const viewer = document.getElementById('doc-viewer');
+        const frame = document.getElementById('doc-frame');
+        const pagesBox = document.getElementById('doc-pages');
+        const picker = document.getElementById('doc-picker');
+        const listItems = document.querySelectorAll('.doc-list__item');
+        const mobile = window.matchMedia('(max-width: 720px)');
+        let currentFile = picker ? picker.value : null;
 
-        document.querySelectorAll('.doc-list__item').forEach(function (btn) {
+        // ----- pdf.js nur auf dem Handy nachladen (liegt lokal unter /js/pdfjs) -----
+        let pdfjsPromise = null;
+        function loadPdfJs() {
+            pdfjsPromise ??= new Promise(function (resolve, reject) {
+                const script = document.createElement('script');
+                script.src = '/js/pdfjs/pdf.min.js';
+                script.onload = function () {
+                    window.pdfjsLib.GlobalWorkerOptions.workerSrc = '/js/pdfjs/pdf.worker.min.js';
+                    resolve(window.pdfjsLib);
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+            return pdfjsPromise;
+        }
+
+        let renderRun = 0;
+        let renderedWidth = 0;
+        async function renderPages(file) {
+            const run = ++renderRun;
+            viewer.classList.add('is-rendered');
+            frame.removeAttribute('src');
+            pagesBox.replaceChildren();
+            pagesBox.setAttribute('aria-busy', 'true');
+
+            try {
+                const pdfjsLib = await loadPdfJs();
+                const pdf = await pdfjsLib.getDocument(file).promise;
+                const width = pagesBox.clientWidth;
+                renderedWidth = width;
+                // Etwas schärfer als nötig zeichnen, damit Reinzoomen mit zwei Fingern lesbar bleibt
+                const sharpness = Math.min(Math.max(window.devicePixelRatio || 1, 2) * 1.25, 3);
+
+                for (let number = 1; number <= pdf.numPages; number++) {
+                    if (run !== renderRun) return; // inzwischen anderes Dokument gewählt
+                    const page = await pdf.getPage(number);
+                    const base = page.getViewport({ scale: 1 });
+                    const viewport = page.getViewport({ scale: (width / base.width) * sharpness });
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.floor(viewport.width);
+                    canvas.height = Math.floor(viewport.height);
+                    canvas.setAttribute('role', 'img');
+                    canvas.setAttribute('aria-label', 'Seite ' + number + ' von ' + pdf.numPages);
+                    pagesBox.appendChild(canvas);
+
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                }
+                pagesBox.removeAttribute('aria-busy');
+            } catch (error) {
+                // Fallback: normaler Browser-Viewer
+                if (run !== renderRun) return;
+                viewer.classList.remove('is-rendered');
+                pagesBox.removeAttribute('aria-busy');
+                frame.src = file + pdfView;
+            }
+        }
+
+        function showDocument(file) {
+            if (!file) return;
+            currentFile = file;
+
+            listItems.forEach(function (item) {
+                item.classList.toggle('is-active', item.dataset.file === file);
+            });
+            picker.value = file;
+            document.getElementById('doc-title').textContent = picker.selectedOptions[0].textContent;
+            document.getElementById('doc-open').href = file;
+            document.getElementById('doc-download').href = file;
+
+            if (mobile.matches) {
+                renderPages(file);
+            } else {
+                renderRun++; // laufendes Zeichnen abbrechen
+                viewer.classList.remove('is-rendered');
+                pagesBox.replaceChildren();
+                frame.src = file + pdfView;
+            }
+        }
+
+        listItems.forEach(function (btn) {
             btn.addEventListener('click', function () {
-                document.querySelectorAll('.doc-list__item').forEach(function (b) {
-                    b.classList.remove('is-active');
-                });
-                btn.classList.add('is-active');
-                document.getElementById('doc-frame').src = btn.dataset.file + pdfView;
-                document.getElementById('doc-title').textContent = btn.dataset.title;
-                document.getElementById('doc-open').href = btn.dataset.file;
-                document.getElementById('doc-download').href = btn.dataset.file;
+                showDocument(btn.dataset.file);
 
                 // Viewer ganz ins Bild holen, falls er noch halb unter dem Seitenkopf hängt
                 if (viewer.getBoundingClientRect().top > 24) {
@@ -72,6 +170,28 @@
                 }
             });
         });
+
+        if (picker) {
+            picker.addEventListener('change', function () {
+                showDocument(picker.value);
+                viewer.scrollIntoView({ block: 'start' });
+            });
+
+            if (mobile.matches) showDocument(currentFile);
+            // Wechsel zwischen Handy- und Desktop-Ansicht (z. B. Fenster verkleinert)
+            mobile.addEventListener('change', function () { showDocument(currentFile); });
+
+            // Handy gedreht: Seiten in der neuen Breite neu zeichnen
+            let resizeTimer = null;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    if (mobile.matches && Math.abs(pagesBox.clientWidth - renderedWidth) > 40) {
+                        renderPages(currentFile);
+                    }
+                }, 250);
+            });
+        }
 
         const fullscreen = document.getElementById('doc-fullscreen');
         if (fullscreen) {
