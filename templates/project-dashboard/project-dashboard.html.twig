@@ -40,7 +40,9 @@
                 {{ project.description }}
             </p>
 
-            {% if has_content %}
+            {% if project.route is defined %}
+                <a href="{{ path(project.route) }}" class="status-card__toggle">Projekt ansehen</a>
+            {% elseif has_content %}
                 <button
                     type="button"
                     class="status-card__toggle"

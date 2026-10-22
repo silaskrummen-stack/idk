@@ -1,0 +1,121 @@
+{% extends 'projects/_layout.html.twig' %}
+{% import 'projects/_macros.html.twig' as ui %}
+
+{% set eyebrow = 'projects/civ-abend --era 9' %}
+{% set backdrop_video = '/videos/projects/civ-abend.mp4' %}
+{% set specs = {
+    'Zeitraum': project.date,
+    'Spieler': '8 Reiche, 9 Ären',
+    'Meine Rolle': 'Styling, Infrastruktur, Spielleitung',
+    'Stack': 'Docker · PHP 8.3 · Apache · Vanilla JS',
+} %}
+
+{% block content %}
+    <section class="project-block">
+        {{ ui.section_title('01', 'Projektüberblick') }}
+        <div class="project-block__body">
+            <p>Für einen Civilization-VI-Abend mit acht Spielern habe ich eine Anzeige gebaut, die den ganzen Abend auf einem großen Bildschirm läuft: Punktestand aller Spieler, die aktuelle Ära mit ihrem Gipfel und die Regeln, die in dieser Ära gelten. Gesteuert wird alles über ein separates Admin-Panel, das für das Handy optimiert ist.</p>
+            <p>Das Projekt war mein erster Versuch mit Vibecoding. Weil ich es wirklich stresstesten wollte, habe ich kein Framework vorgegeben und allgemein sehr hands-off gearbeitet. Meine Vorgaben beschränkten sich auf das Styling, den Docker-Container und die Infrastruktur sowie eine Erläuterung der Regeln von CIV. Den Rest habe ich der KI überlassen.</p>
+            {{ ui.shot('/pictures/projects/civ-start.jpg', 'Startbildschirm des CIV-Abends mit Regeln und den acht Reichen', 'Bildschirm') }}
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('02', 'Ären, Gipfel & Regeln') }}
+        <div class="project-block__body">
+            <p>Das Spiel läuft über neun Ären. Zu jeder neuen Ära treffen sich alle Reiche zu einem Gipfel mit eigenen Regeln, die auf dem Bildschirm stehen. Kurz nach jedem Ära-Wechsel erscheint automatisch eine Gipfelaktion groß auf dem Bildschirm, zum Beispiel eine Vorstellungsrunde der Völker oder eine Abstimmung.</p>
+            <div class="project-shots">
+                {{ ui.shot('/pictures/projects/civ-board.jpg', 'Punktestand und Gipfelregeln', 'Punktestand') }}
+                {{ ui.shot('/pictures/projects/civ-gipfelaktion.jpg', 'Gipfelaktion „Vorstellung“', 'Gipfelaktion') }}
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('03', 'Events & Inszenierung') }}
+        <div class="project-block__body">
+            <p>Über Knöpfe im Admin-Panel lassen sich Ereignisse auslösen. Jedes Event hat eine eigene Animation.</p>
+            <ul class="project-chips">
+                {% for event in ['Kriegsalarm', 'Friedensschluss', 'Öffentliche Denunziation', 'ABC-Alarm', 'Weltkongress', 'Erste Weltumrundung', 'Erster Milliardär', 'Erster Geheimagent'] %}
+                    <li>{{ event }}</li>
+                {% endfor %}
+            </ul>
+            <div class="project-shots">
+                {{ ui.shot('/pictures/projects/civ-events-diplomatie.jpg', 'Events: Kriegsalarm, Frieden, Denunziation und ABC-Alarm', 'Diplomatie') }}
+                {{ ui.shot('/pictures/projects/civ-events-errungenschaften.jpg', 'Events: Erste Weltumrundung, Milliardär, Geheimagent und Weltkongress', 'Errungenschaften') }}
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('04', 'Watcher-Mod: das Spiel meldet sich selbst') }}
+        <div class="project-block__body">
+            <p>Ich konnte sogar einen Watcher-Mod umsetzen, der die Logs des laufenden Spiels liest und die wichtigen Ereignisse an die Anzeige meldet, vor allem Kriege, Friedensschlüsse, Spionage und Missionen. Ein kleines Skript neben Civilization VI schickt sie an den Server, abgesichert über einen Schlüssel aus dem Admin-Panel. So muss die Spielleitung nicht jedes Ereignis selbst mitbekommen und auslösen.</p>
+
+            <div class="project-flow" aria-label="Ablauf des Watcher-Mods">
+                <span class="project-flow__node">Civilization VI<small>Spiel-Logs</small></span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node">Watcher-Skript<small>mit Schlüssel</small></span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node project-flow__node--core">Server</span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node">Bildschirm<small>Event-Animation</small></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('05', 'Abstimmen per QR-Code') }}
+        <div class="project-block__body">
+            <p>Abstimmungen laufen über die Handys der Spieler: Auf dem Bildschirm erscheint ein QR-Code, der direkt zur Abstimmungsseite führt, ganz ohne Login. Möglich sind geheime und öffentliche Abstimmungen sowie ein anonymer Briefkasten.</p>
+            <p>Geantwortet wird mit Ja und Nein, mit den Namen der Mitspieler oder mit eigenen Antwortmöglichkeiten. Bei öffentlichen Abstimmungen zeigt der Bildschirm am Ende, wer wofür gestimmt hat. Ein analoges Voting-System brauchten wir dadurch nicht mehr.</p>
+            <div class="project-shots">
+                {{ ui.shot('/pictures/projects/civ-vote.jpg', 'Öffentliche Abstimmung mit QR-Code', 'Abstimmung') }}
+                {{ ui.shot('/pictures/projects/civ-vote-result.jpg', 'Ergebnis einer öffentlichen Abstimmung', 'Ergebnis') }}
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('06', 'Spielleitung') }}
+        <div class="project-block__body">
+            <p>Im Admin-Panel lassen sich Punkte, Ären, Gipfelregeln und Gipfelaktionen live ändern, ohne dass auf dem Bildschirm etwas davon zu sehen ist. Notizen sieht nur die Spielleitung, und Events lösen sich mit einem Tipp aus.</p>
+            <div class="project-shots">
+                {{ ui.shot('/pictures/projects/civ-admin-events.jpg', 'Admin-Panel: Events, An/Aus-Anzeigen und erste Errungenschaften', 'Admin') }}
+                {{ ui.shot('/pictures/projects/civ-admin-gipfel.jpg', 'Admin-Panel: Gipfel, Regeln und Gipfelaktionen bearbeiten', 'Admin') }}
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('07', 'Technische Umsetzung') }}
+        <div class="project-block__body">
+            <p>Die Anwendung läuft als eigener Docker-Container mit PHP 8.3 und Apache, das Frontend ist ohne Framework in Vanilla JavaScript und CSS umgesetzt. Der Spielstand liegt als JSON-Datei mit Datei-Lock vor, Bildschirm und Admin-Panel synchronisieren sich per Polling.</p>
+            <p>Online hängt der Container hinter demselben nginx wie dieses Portfolio. Der Zugriff auf die beiden Subdomains wird per auth_request gegen den Symfony-Login dieser Seite geprüft, der Bildschirm und die Spielleitung haben dabei getrennte Rollen.</p>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('08', 'Erfahrungen mit Vibecoding') }}
+        <div class="project-block__body">
+            <div class="project-verdict">
+                <div class="project-verdict__item project-verdict__item--good">
+                    <strong>Überraschend gut</strong>
+                    <p>Die KI hat die Spiellogik gut erfasst und von sich aus umfassende Fallbacks eingebaut, etwa eingebaute Töne, wenn keine Audiodatei vorhanden ist.</p>
+                </div>
+                <div class="project-verdict__item project-verdict__item--bad">
+                    <strong>Ausbaufähig</strong>
+                    <p>Die Wartbarkeit ließ deutlich zu wünschen übrig. Ohne vorgegebene Struktur ist der Code schnell gewachsen und schwer zu überblicken.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block project-block--outro">
+        {{ ui.section_title('09', 'Fazit') }}
+        <div class="project-block__body">
+            <p class="project-quote">Der Abend war sehr cool. Durch das System wurde die Kommunikation zwischen den Spielern gefördert, und die Punkte waren für alle übersichtlicher.</p>
+            <p>Mir hat das Ganze auch viel Spaß gemacht, weil ich mich in meiner Rolle als Storyteller und Moderator sehr wohlgefühlt habe.</p>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,16 @@
+Hintergrundvideos für die Projektseiten
+=======================================
+
+Hier die Videos ablegen, sie laufen stumm, in Schleife und abgedunkelt im Hintergrund:
+
+  lan-party.mp4   →  /projects/lan-party
+  civ-abend.mp4   →  /projects/civ-abend
+
+Fehlt eine Datei, zeigt die Seite stattdessen das Vorschaubild des Projekts.
+
+Tipps:
+  - Ton wird nie abgespielt, kann also ruhig entfernt werden (spart Platz).
+  - Für schnelles Laden: H.264, 1280–1920 px breit, 10–30 s Schleife, möglichst unter ~8 MB.
+    Zum Beispiel mit ffmpeg:
+      ffmpeg -i original.mp4 -an -vf "scale=1600:-2" -c:v libx264 -crf 28 -preset slow -movflags +faststart lan-party.mp4
+  - Ein anderer Dateiname lässt sich in templates/projects/<projekt>.html.twig bei backdrop_video eintragen.

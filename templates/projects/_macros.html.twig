@@ -1,0 +1,16 @@
+{# Screenshot im Browser-/Bildschirmrahmen, Klick vergrößert ihn (Lightbox in _layout) #}
+{% macro shot(src, alt, label) %}
+    <figure class="project-shot">
+        <div class="project-shot__frame">
+            <span class="project-shot__bar" aria-hidden="true"><i></i><i></i><i></i>{% if label %}<em>{{ label }}</em>{% endif %}</span>
+            <button type="button" class="project-shot__zoom" data-zoom="{{ src }}" aria-label="Bild vergrößern: {{ alt }}">
+                <img src="{{ src }}" alt="{{ alt }}" loading="lazy">
+            </button>
+        </div>
+        <figcaption>{{ alt }}</figcaption>
+    </figure>
+{% endmacro %}
+
+{% macro section_title(number, title) %}
+    <h2 class="project-block__title"><span>{{ number }}</span>{{ title }}</h2>
+{% endmacro %}

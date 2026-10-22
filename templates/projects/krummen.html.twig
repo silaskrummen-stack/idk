@@ -1,0 +1,306 @@
+{% extends 'projects/_layout.html.twig' %}
+{% import 'projects/_macros.html.twig' as ui %}
+
+{% set eyebrow = 'projects/krummen.de --client' %}
+{% set specs = {
+    'Zeitraum': '2 Wochen, ' ~ project.date,
+    'Kunde': 'Eventservice & Fotostudio Krummen, Lingen',
+    'Meine Rolle': 'Beratung, Struktur, Umsetzung',
+    'Stack': 'WordPress · IONOS',
+} %}
+
+{# Rundgang durch die Seite: Reiter → Screenshot #}
+{% set tour = [
+    {label: 'Start', src: '/pictures/projects/krummen.jpg', alt: 'Startseite von krummen.de mit den Bereichen Fotostudio und Eventservice'},
+    {label: 'Hochzeit', src: '/pictures/projects/krummen-hochzeit.jpg', alt: 'Hochzeitsseite: freie Trauung und Hochzeitsfotografie'},
+    {label: 'Freie Trauung', src: '/pictures/projects/krummen-trauung.jpg', alt: 'Freie Trauung im Freien als großes Titelbild'},
+    {label: 'Locations', src: '/pictures/projects/krummen-locations.jpg', alt: 'Übersicht der Partner-Locations'},
+    {label: 'Paar-Shootings', src: '/pictures/projects/krummen-paare.jpg', alt: 'Seite für Paar-Shootings mit Preis und Beispielbildern'},
+    {label: 'Irisfotografie', src: '/pictures/projects/krummen-iris.jpg', alt: 'Seite für Irisfotografie mit Beispielen für Effekte'},
+    {label: 'Trauerrede', src: '/pictures/projects/krummen-trauerrede.jpg', alt: 'Unterseite für Trauerreden in eigener, ruhiger Farbwelt'},
+] %}
+
+{# Leistungen für das Sortier-Spiel, absichtlich durcheinander. r = Schieflage im Haufen #}
+{% set services = [
+    {name: 'DJ-Vermittlung', group: 'event', r: -4},
+    {name: 'Paar-Shootings', group: 'foto', r: 3},
+    {name: 'Freie Trauung', group: 'hochzeit', r: -2},
+    {name: 'Equipment-Verleih', group: 'event', r: 5},
+    {name: 'Studio-Shootings', group: 'foto', r: -5},
+    {name: 'Partner-Locations', group: 'hochzeit', r: 2},
+    {name: 'Catering-Vermittlung', group: 'event', r: -3},
+    {name: 'Irisfotografie', group: 'foto', r: 4},
+    {name: 'Hochzeitsfotografie', group: 'hochzeit', r: -6},
+    {name: 'Aufbau', group: 'event', r: 6},
+    {name: 'Aufnahmen vor Ort', group: 'foto', r: -1},
+] %}
+
+{% block hero_actions %}
+    <div class="hero__actions project-hero__actions">
+        <a href="https://krummen.de" class="btn btn--primary" target="_blank" rel="noopener">krummen.de besuchen ↗</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="project-tour" data-tour>
+        <div class="project-tour__browser">
+            <div class="project-tour__chrome" aria-hidden="true">
+                <span class="project-shot__bar"><i></i><i></i><i></i></span>
+                <span class="project-tour__address">🔒 krummen.de<span data-tour-path></span></span>
+            </div>
+            <div class="project-tour__screen">
+                {% for page in tour %}
+                    <button
+                        type="button"
+                        class="project-tour__slide {{ loop.first ? 'is-active' }}"
+                        id="tour-slide-{{ loop.index }}"
+                        data-zoom="{{ page.src }}"
+                        aria-label="Bild vergrößern: {{ page.alt }}"
+                        {{ not loop.first ? 'hidden' }}
+                    >
+                        <img src="{{ page.src }}" alt="{{ page.alt }}" loading="{{ loop.first ? 'eager' : 'lazy' }}">
+                    </button>
+                {% endfor %}
+                <span class="project-tour__progress" aria-hidden="true" data-tour-progress></span>
+            </div>
+        </div>
+
+        <div class="project-tour__tabs" role="tablist" aria-label="Seiten von krummen.de">
+            {% for page in tour %}
+                <button
+                    type="button"
+                    role="tab"
+                    class="project-tour__tab"
+                    aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                    aria-controls="tour-slide-{{ loop.index }}"
+                    data-tour-tab="{{ loop.index0 }}"
+                    data-path="{{ loop.first ? '' : ' › ' ~ page.label }}"
+                >{{ page.label }}</button>
+            {% endfor %}
+        </div>
+        <p class="project-tour__caption" data-tour-caption>{{ tour[0].alt }}</p>
+    </section>
+
+    <section class="project-stats" aria-label="Eckdaten">
+        <div class="project-stats__item"><strong>14</strong><span>Tage bis zur Hochzeitsmesse</span></div>
+        <div class="project-stats__item"><strong>3</strong><span>klar getrennte Geschäftsbereiche</span></div>
+        <div class="project-stats__item"><strong>alle 3</strong><span>Tage ein gemeinsamer Termin</span></div>
+        <div class="project-stats__item"><strong>1.</strong><span>Projekt mit WordPress</span></div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('01', 'Ausgangslage') }}
+        <div class="project-block__body">
+            <p>Eventservice &amp; Fotostudio Krummen in Lingen brauchte eine neue Website, wollte dabei aber im IONOS-Ökosystem bleiben. Gebucht war der Tarif MyWebsite, der sich vor allem an kleine Unternehmen richtet, die überhaupt erst einmal online sichtbar sein wollen. Den visuellen Editor dort empfanden sie trotzdem als anstrengend und verwirrend.</p>
+            <p>Zwei Wochen vor der jährlichen Hochzeitsmesse in Lingen war ihnen klar, dass sie bis dahin allein keine Website hinbekommen würden, die sie dort guten Gewissens zeigen können. Weil sie wussten, dass ich Erfahrung im Webdesign habe, haben sie mich um Hilfe gebeten. Ich habe das Projekt in meiner Freizeit gegen eine kleine Aufwandsentschädigung übernommen.</p>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('02', 'Der Countdown') }}
+        <div class="project-block__body">
+            <p>In den zwei Wochen habe ich mich jeden dritten Tag mit ihnen zusammengesetzt, um Pläne und Änderungen zu besprechen. Am Anfang habe ich sie vor allem erzählen lassen: ihre Geschichte, ihre Visionen und was die Website unbedingt zeigen muss. Dabei kamen auch Dinge auf den Tisch, die ihnen selbst noch gar nicht ganz klar waren.</p>
+
+            <ol class="project-countdown" data-reveal>
+                {% for day in 1..14 %}
+                    {% set meeting = day % 3 == 1 and day < 14 %}
+                    <li
+                        class="project-countdown__day {{ meeting ? 'is-meeting' }} {{ day == 14 ? 'is-fair' }}"
+                        style="--i: {{ day }}"
+                    >
+                        <span class="project-countdown__num">{{ day == 14 ? '★' : day }}</span>
+                        {% if day == 1 %}
+                            <span class="project-countdown__label">Zuhören</span>
+                        {% elseif meeting %}
+                            <span class="project-countdown__label">Termin</span>
+                        {% elseif day == 14 %}
+                            <span class="project-countdown__label">Messe</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('03', 'Technische Entscheidung') }}
+        <div class="project-block__body">
+            <p>Wir haben uns entschieden, auf WordPress umzusteigen. So blieb alles bei IONOS, und die Inhalte lassen sich langfristig weiterhin mit einem visuellen Builder selbst pflegen. Für mich war es das erste Projekt mit WordPress, und gerade die Grenzen eines solchen Baukastens haben mir überraschend viel Spaß gemacht.</p>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('04', 'Aus Chaos wird Struktur') }}
+        <div class="project-block__body">
+            <p>Schnell wurde deutlich, dass die angebotenen Leistungen eine ziemlich durcheinandergewürfelte Liste waren. Deshalb haben wir sie zuerst in drei klar getrennte Bereiche aufgeteilt.</p>
+
+            <div class="sorter" data-sorter>
+                <div class="sorter__pile" data-sorter-pile>
+                    {% for service in services %}
+                        <span class="sorter__chip sorter__chip--{{ service.group }}" data-group="{{ service.group }}" style="--r: {{ service.r }}deg">{{ service.name }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="sorter__cols">
+                    <div class="sorter__col sorter__col--foto" data-sorter-col="foto">
+                        <h3>Fotostudio</h3>
+                        <p>Zwei Fotografen, fast den ganzen Tag im Studio, aber auch vor Ort unterwegs.</p>
+                    </div>
+                    <div class="sorter__col sorter__col--hochzeit" data-sorter-col="hochzeit">
+                        <h3>Hochzeit</h3>
+                        <p>Eigener großer Bereich, verbunden mit Fotografie und Eventservice.</p>
+                    </div>
+                    <div class="sorter__col sorter__col--event" data-sorter-col="event">
+                        <h3>Eventservice</h3>
+                        <p>Wirkt selbsterklärend, umfasst aber sehr viele verschiedene Leistungen.</p>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn--ghost sorter__toggle" data-sorter-toggle>Ordnen</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('05', 'Mehr als eine Website') }}
+        <div class="project-block__body">
+            <p class="project-quote">Das Unternehmen hat nicht nur das Projekt geprägt, sondern das Projekt auch das Unternehmen.</p>
+            <p>Aus der Website wurde schnell mehr:</p>
+
+            <div class="project-cards">
+                <div class="project-cards__item">
+                    <span>01</span>
+                    <strong>Marketing-Roadmap</strong>
+                    <p>Gemeinsam eine Roadmap für die Marketingstrategie erarbeitet.</p>
+                </div>
+                <div class="project-cards__item">
+                    <span>02</span>
+                    <strong>E-Commerce &amp; Geschäftliches</strong>
+                    <p>Über E-Commerce gesprochen und grundlegende geschäftliche Entscheidungen getroffen.</p>
+                </div>
+                <div class="project-cards__item">
+                    <span>03</span>
+                    <strong>Corporate Identity</strong>
+                    <p>Sichtbar in den Visuals, in der Preisgestaltung und nach und nach im gesamten Online-Auftritt.</p>
+                </div>
+            </div>
+
+            <p>Gemeinsam haben wir eine Corporate Identity entwickelt, die zu ihnen passt.</p>
+            {{ ui.shot('/pictures/projects/krummen-paare.jpg', 'Seite für Paar-Shootings mit Preis und Beispielbildern', 'krummen.de › Paar-Shootings') }}
+        </div>
+    </section>
+
+    <section class="project-block project-block--outro">
+        {{ ui.section_title('06', 'Was ich gelernt habe') }}
+        <div class="project-block__body">
+            <p>Ich musste lernen, etwas nach den Wünschen von Kunden umzusetzen und nicht nur nach meinem eigenen Plan. Dazu gehörte auch, ehrliches Feedback zu geben, wie Besucher eine Seite wahrscheinlich benutzen werden, selbst wenn das nicht immer die Antwort war, die man hören wollte. Gerade ein Fotostudio muss allgemeine Medienkompetenz beweisen, weil auch das Teil seines Images ist.</p>
+            <p>Außerdem habe ich viel darüber gelernt, eine Erzählung aufzubauen: hundert verschiedene Ideen und Stile zu sammeln und sie trotzdem in eine einheitliche Website zu bringen. Die Webseite wird auch weiterhin noch ein bisschen Liebe und Zuneigung brauchen.</p>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+<script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Rundgang: Reiter wechseln den Screenshot, ohne Interaktion blättert er alle 5 s weiter
+    document.querySelectorAll('[data-tour]').forEach((tour) => {
+        const tabs = [...tour.querySelectorAll('[data-tour-tab]')];
+        const slides = [...tour.querySelectorAll('.project-tour__slide')];
+        const caption = tour.querySelector('[data-tour-caption]');
+        const path = tour.querySelector('[data-tour-path]');
+        const progress = tour.querySelector('[data-tour-progress]');
+        let current = 0, timer = null;
+
+        const show = (index) => {
+            current = (index + slides.length) % slides.length;
+            slides.forEach((slide, i) => {
+                slide.hidden = i !== current;
+                slide.classList.toggle('is-active', i === current);
+            });
+            tabs.forEach((tab, i) => tab.setAttribute('aria-selected', String(i === current)));
+            caption.textContent = slides[current].querySelector('img').alt;
+            path.textContent = tabs[current].dataset.path;
+            // Fortschrittsbalken neu starten
+            progress.classList.remove('is-running');
+            void progress.offsetWidth;
+            if (timer) progress.classList.add('is-running');
+        };
+
+        const stop = () => {
+            clearInterval(timer);
+            timer = null;
+            progress.classList.remove('is-running');
+        };
+
+        tabs.forEach((tab, i) => tab.addEventListener('click', () => { stop(); show(i); }));
+        tour.addEventListener('keydown', (e) => {
+            if (!e.target.matches('[data-tour-tab]')) return;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                stop();
+                show(current + (e.key === 'ArrowRight' ? 1 : -1));
+                tabs[current].focus();
+            }
+        });
+
+        if (!reduceMotion) {
+            timer = setInterval(() => show(current + 1), 5000);
+            show(0);
+        }
+    });
+
+    // Elemente animieren, sobald sie ins Bild scrollen
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+
+    // Sortier-Spiel: Leistungen fliegen aus dem Haufen in die drei Bereiche (FLIP-Animation)
+    document.querySelectorAll('[data-sorter]').forEach((sorter) => {
+        const pile = sorter.querySelector('[data-sorter-pile]');
+        const chips = [...pile.children];
+        const toggle = sorter.querySelector('[data-sorter-toggle]');
+        let sorted = false;
+
+        const flip = (move) => {
+            const before = new Map(chips.map((chip) => [chip, chip.getBoundingClientRect()]));
+            move();
+            if (reduceMotion) return;
+            chips.forEach((chip, i) => {
+                const a = before.get(chip), b = chip.getBoundingClientRect();
+                chip.animate(
+                    [{ transform: `translate(${a.left - b.left}px, ${a.top - b.top}px)` }, { transform: 'none' }],
+                    { duration: 700, delay: i * 40, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'backwards' }
+                );
+            });
+        };
+
+        const setSorted = (value) => {
+            sorted = value;
+            flip(() => {
+                chips.forEach((chip) => {
+                    const target = sorted ? sorter.querySelector(`[data-sorter-col="${chip.dataset.group}"]`) : pile;
+                    target.appendChild(chip);
+                });
+            });
+            sorter.classList.toggle('is-sorted', sorted);
+            toggle.textContent = sorted ? 'Wieder durcheinander' : 'Ordnen';
+        };
+
+        toggle.addEventListener('click', () => setSorted(!sorted));
+
+        // Beim ersten Hinscrollen einmal von selbst sortieren
+        const autoSort = new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting) return;
+            autoSort.disconnect();
+            setTimeout(() => { if (!sorted) setSorted(true); }, 700);
+        }, { threshold: 0.6 });
+        autoSort.observe(sorter);
+    });
+</script>
+{% endblock %}

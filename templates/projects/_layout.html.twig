@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{#
+    Gemeinsames Gerüst der Projektseiten. Die Kindseiten setzen vorab:
+      eyebrow         – Zeile über dem Titel
+      specs           – Steckbrief {Label: Wert}
+      backdrop_video  – optional, Video unter public/videos/projects/, läuft stumm & abgedunkelt im Hintergrund
+#}
+
+{% block title %}{{ project.title }} — Portfolio{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/projects.css">
+{% endblock %}
+
+{% block body %}
+    {% if backdrop_video is defined %}
+        <div class="project-backdrop" aria-hidden="true">
+            {# Fehlt das Video, bleibt einfach das Vorschaubild stehen #}
+            <video autoplay muted loop playsinline disablepictureinpicture poster="{{ project.thumbnail }}" data-backdrop-video>
+                <source src="{{ backdrop_video }}" type="video/mp4">
+            </video>
+        </div>
+    {% endif %}
+
+    <article class="project-page project-page--{{ project.route }} {{ backdrop_video is defined ? 'project-page--backdrop' }}">
+        <header class="project-hero">
+            <a href="{{ path('project_dashboard') }}" class="project-hero__back">← Alle Projekte</a>
+
+            <span class="hero__eyebrow">{{ eyebrow }}</span>
+            <h1 class="project-hero__title">{{ project.title }}</h1>
+            <p class="project-hero__lead">{{ project.description }}</p>
+
+            <dl class="project-specs">
+                <div class="project-specs__item">
+                    <dt>Status</dt>
+                    <dd>
+                        <span class="project-specs__badge {{ project.category == 'privat' ? 'project-specs__badge--private' }}">
+                            <span class="status-card__dot"></span>{{ project.category }}
+                        </span>
+                    </dd>
+                </div>
+                {% for label, value in specs %}
+                    <div class="project-specs__item">
+                        <dt>{{ label }}</dt>
+                        <dd>{{ value }}</dd>
+                    </div>
+                {% endfor %}
+            </dl>
+
+            {% block hero_actions %}{% endblock %}
+        </header>
+
+        {% block content %}{% endblock %}
+
+        <nav class="project-next" aria-label="Weitere Projekte">
+            <a href="{{ path(next_project.route) }}" class="project-next__link">
+                <img src="{{ next_project.thumbnail }}" alt="" loading="lazy">
+                <span class="project-next__text">
+                    <small>Nächstes Projekt</small>
+                    <strong>{{ next_project.title }} →</strong>
+                </span>
+            </a>
+            <a href="{{ path('project_dashboard') }}" class="btn btn--ghost">Alle Projekte</a>
+        </nav>
+    </article>
+
+    <dialog class="project-lightbox" data-lightbox>
+        <button type="button" class="project-lightbox__close" aria-label="Schließen">×</button>
+        <img src="" alt="">
+    </dialog>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Hintergrundvideo: bei "Bewegung reduzieren" angehalten lassen
+    document.querySelectorAll('[data-backdrop-video]').forEach((video) => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const apply = () => (reduce.matches ? video.pause() : video.play().catch(() => {}));
+        apply();
+        reduce.addEventListener('change', apply);
+    });
+
+    // Screenshots vergrößern
+    const lightbox = document.querySelector('[data-lightbox]');
+    const lightboxImg = lightbox.querySelector('img');
+    document.addEventListener('click', (e) => {
+        const zoom = e.target.closest('[data-zoom]');
+        if (zoom) {
+            lightboxImg.src = zoom.dataset.zoom;
+            lightboxImg.alt = zoom.querySelector('img')?.alt ?? '';
+            lightbox.showModal();
+        }
+    });
+    // Klick neben das Bild oder auf × schließt
+    lightbox.addEventListener('click', (e) => {
+        if (e.target !== lightboxImg) lightbox.close();
+    });
+</script>
+{% endblock %}

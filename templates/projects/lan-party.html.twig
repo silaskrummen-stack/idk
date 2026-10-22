@@ -1,0 +1,81 @@
+{% extends 'projects/_layout.html.twig' %}
+{% import 'projects/_macros.html.twig' as ui %}
+
+{% set eyebrow = 'projects/lan-party --live' %}
+{% set backdrop_video = '/videos/projects/lan-party.mp4' %}
+{% set specs = {
+    'Zeitraum': project.date,
+    'Meine Rolle': 'Anforderungen, Styling, Infrastruktur, Moderation',
+    'Stack': 'Symfony · PHP 8.3 · Vanilla JS',
+} %}
+
+{% block content %}
+    <section class="project-block">
+        {{ ui.section_title('01', 'Projektüberblick') }}
+        <div class="project-block__body">
+            <p>Ich veranstalte regelmäßig LAN-Partys und wollte die Punktzahl dabei interaktiver gestalten. Zwei Teams treten den ganzen Abend in verschiedenen Spielen gegeneinander an, und wer am Ende die meisten Punkte hat, gewinnt.</p>
+            <p>Ein Bildschirm ist für alle auf der LAN-Party einsehbar und zeigt Punktestand, das aktuelle Spiel, Timer und Durchsagen. Währenddessen bedient eine andere Person das Admin-Panel und moderiert darüber den Abend: Punkte vergeben, Spiele starten, Ergebnisse eintragen.</p>
+            {{ ui.shot('/pictures/projects/lan-board.jpg', 'Punktestand der beiden Teams mit dem nächsten Spiel', 'Bildschirm') }}
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('02', 'Mitmachen am Handy') }}
+        <div class="project-block__body">
+            <p>Weil alles online läuft, kann die Verwaltung jede Person mit Zugang übernehmen, von jedem Gerät aus. Die Gäste scannen einen QR-Code auf dem Bildschirm und stimmen direkt am Handy ab, ganz ohne App oder Login.</p>
+            <p>So entstanden mehrere Runden:</p>
+
+            <ol class="project-rounds">
+                <li><strong>Trivia-Quiz</strong><span>Jedes Team loggt eine Antwort ein.</span></li>
+                <li><strong>Guess the Game</strong><span>Spiele anhand von Bildern erraten, auch Tippfehler oder andere Schreibweisen zählen.</span></li>
+                <li><strong>Guess the Price</strong><span>Preise schätzen, mit Eingaben wie „430 Mio“.</span></li>
+                <li><strong>Award-Verleihung</strong><span>Per Abstimmung am Handy.</span></li>
+                <li><strong>Glücksrad</strong><span>Zieht aus jedem Team zufällig einen Spieler.</span></li>
+            </ol>
+
+            {{ ui.shot('/pictures/projects/lan-quiz.jpg', 'Trivia-Quiz mit vier Antworten und QR-Code zum Mitraten', 'Quiz') }}
+            <div class="project-shots">
+                {{ ui.shot('/pictures/projects/lan-price.jpg', 'Guess the Price: Auflösung mit den Tipps beider Teams', 'Guess the Price') }}
+                {{ ui.shot('/pictures/projects/lan-wheel.jpg', 'Zwei Glücksräder, die pro Team einen Spieler auswählen', 'Glücksrad') }}
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('03', 'Admin-Panel') }}
+        <div class="project-block__body">
+            <p>Das Admin-Panel ist für das Handy optimiert. Dort steuert man, was auf dem Bildschirm zu sehen ist, sieht die Antworten der Teams schon vor der Auflösung und kann Ergebnisse jederzeit korrigieren. Die Punkte passen sich dabei automatisch an.</p>
+            {{ ui.shot('/pictures/projects/lan-admin.jpg', 'Admin-Panel während einer laufenden Quizfrage', 'Admin') }}
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('04', 'Technische Umsetzung') }}
+        <div class="project-block__body">
+            <p>Die Anwendung ist Teil dieses Symfony-Projekts (PHP 8.3), das Frontend ist in Vanilla JavaScript und CSS umgesetzt. Der Spielstand liegt als JSON-Datei mit Datei-Lock vor, Bildschirm, Admin-Panel und Handys synchronisieren sich per Polling.</p>
+            <p>Zeitabläufe wie Countdowns und Auflösungen steuert der Server, damit alle Geräte dasselbe zeigen. Lösungen und Bilder liefert er erst aus, wenn sie aufgedeckt werden, damit niemand vorher nachschauen kann.</p>
+
+            <div class="project-flow" aria-label="Datenfluss">
+                <span class="project-flow__node">Admin-Panel</span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node project-flow__node--core">Symfony<small>Spielstand als JSON</small></span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node">Bildschirm &amp; Handys<small>Polling</small></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('05', 'Zusammenarbeit mit Claude Code') }}
+        <div class="project-block__body">
+            <p>Das Projekt ist einer meiner ersten Tests mit Claude Code (Opus 5.5) in einem Symfony-Framework. Es war eine gute Symbiose: Ich habe die technischen Anforderungen, das Styling, die Infrastruktur, das Shipping und die Moderation übernommen, während sich Claude Code um die Umsetzung gekümmert hat.</p>
+        </div>
+    </section>
+
+    <section class="project-block project-block--outro">
+        {{ ui.section_title('06', 'Fazit') }}
+        <div class="project-block__body">
+            <p class="project-quote">Die LAN-Party war ein Erfolg, und auch viele meiner nicht-technischen Freunde waren davon beeindruckt.</p>
+        </div>
+    </section>
+{% endblock %}

@@ -17,7 +17,46 @@
     <ul class="site-nav__links">
         <li><a href="{{ path('homepage') }}">Start</a></li>
         <li><a href="{{ path('about_me') }}">Über mich</a></li>
-        <li><a href="{{ path('project_dashboard') }}">Projekte</a></li>
+        {% set current_route = app.request.attributes.get('_route') %}
+        <li class="site-nav__dropdown" data-nav-dropdown>
+            <button
+                type="button"
+                class="site-nav__dropdown-toggle {{ current_route starts with 'project' ? 'is-active' }}"
+                aria-expanded="false"
+                aria-controls="nav-projects"
+                data-nav-dropdown-toggle
+            >
+                Projekte
+                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <ul class="site-nav__submenu" id="nav-projects">
+                <li>
+                    <a href="{{ path('project_dashboard') }}" class="{{ current_route == 'project_dashboard' ? 'is-active' }}">
+                        Alle Projekte
+                        <small>Projekt-Log</small>
+                    </a>
+                </li>
+                <li class="site-nav__submenu-divider" role="separator"></li>
+                <li>
+                    <a href="{{ path('project_lan_party') }}" class="{{ current_route == 'project_lan_party' ? 'is-active' }}">
+                        LAN-Party Moderation
+                        <small>privat · 10/2026</small>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('project_civ_abend') }}" class="{{ current_route == 'project_civ_abend' ? 'is-active' }}">
+                        CIV-Abend Spielleitung
+                        <small>privat · 09/2026</small>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('project_krummen') }}" class="{{ current_route == 'project_krummen' ? 'is-active' }}">
+                        krummen.de
+                        <small>produktiv · 09/2026</small>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li><a href="{{ path('documents') }}">Dokumente</a></li>
         <li><a href="{{ path('contact') }}">Kontakt</a></li>
     </ul>
@@ -36,6 +75,26 @@
 </body>
 
 <script>
+
+    // Projekte-Dropdown: Hover öffnet es per CSS, der Button ist für Touch und Tastatur
+    document.querySelectorAll('[data-nav-dropdown]').forEach((dropdown) => {
+        const toggle = dropdown.querySelector('[data-nav-dropdown-toggle]');
+        const setOpen = (open) => {
+            dropdown.classList.toggle('is-open', open);
+            toggle.setAttribute('aria-expanded', String(open));
+        };
+
+        toggle.addEventListener('click', () => setOpen(!dropdown.classList.contains('is-open')));
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) setOpen(false);
+        });
+        dropdown.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                setOpen(false);
+                toggle.focus();
+            }
+        });
+    });
 
     document.querySelectorAll('[data-project-toggle]').forEach((btn) => {
         btn.addEventListener('click', () => {
