@@ -2,14 +2,17 @@
 
 {% block title %}Dokumente - Portfolio{% endblock %}
 
+{# PDF-Viewer im Browser: Seite auf Breite einpassen, Seitenleiste mit Vorschaubildern aus #}
+{% set pdf_view = '#view=FitH&navpanes=0' %}
+
 {% block body %}
-    <section class="hero" style="padding-bottom: 24px;">
+    <section class="doc-hero">
         <span class="hero__eyebrow">ls ./documents</span>
-        <h1 class="hero__title" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">Dokumente</h1>
-        <p class="hero__subtitle" style="margin-bottom: 0;">Zeugnisse und Zertifikate — zum Öffnen anklicken.</p>
+        <h1 class="doc-hero__title">Dokumente</h1>
+        <p class="doc-hero__subtitle">Zeugnisse und Zertifikate — zum Öffnen anklicken.</p>
     </section>
 
-    <div class="container" style="padding-bottom: 80px;">
+    <div class="container container--wide doc-page">
         <div class="doc-layout">
             <ul class="doc-list">
                 {% for document in documents %}
@@ -18,6 +21,7 @@
                             type="button"
                             class="doc-list__item{{ loop.first ? ' is-active' : '' }}"
                             data-file="/documents/{{ document.file }}"
+                            data-title="{{ document.title }}"
                         >
                             <span class="doc-list__title">{{ document.title }}</span>
                         </button>
@@ -27,9 +31,17 @@
                 {% endfor %}
             </ul>
 
-            <div class="doc-viewer">
+            <div class="doc-viewer" id="doc-viewer">
                 {% if documents|length > 0 %}
-                    <iframe id="doc-frame" src="/documents/{{ documents[0].file }}" title="Dokumentvorschau"></iframe>
+                    <div class="doc-viewer__toolbar">
+                        <span class="doc-viewer__title" id="doc-title">{{ documents[0].title }}</span>
+                        <div class="doc-viewer__actions">
+                            <button type="button" class="doc-viewer__action" id="doc-fullscreen">Vollbild</button>
+                            <a class="doc-viewer__action" id="doc-open" href="/documents/{{ documents[0].file }}" target="_blank" rel="noopener">In neuem Tab ↗</a>
+                            <a class="doc-viewer__action" id="doc-download" href="/documents/{{ documents[0].file }}" download>Herunterladen</a>
+                        </div>
+                    </div>
+                    <iframe id="doc-frame" src="/documents/{{ documents[0].file }}{{ pdf_view }}" title="Dokumentvorschau"></iframe>
                 {% else %}
                     <p class="about-card__text">Sobald Dokumente hinterlegt sind, erscheinen sie hier.</p>
                 {% endif %}
@@ -40,14 +52,38 @@
 
 {% block javascripts %}
     <script>
+        const pdfView = '{{ pdf_view|e('js') }}';
+        const viewer = document.getElementById('doc-viewer');
+
         document.querySelectorAll('.doc-list__item').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 document.querySelectorAll('.doc-list__item').forEach(function (b) {
                     b.classList.remove('is-active');
                 });
                 btn.classList.add('is-active');
-                document.getElementById('doc-frame').src = btn.dataset.file;
+                document.getElementById('doc-frame').src = btn.dataset.file + pdfView;
+                document.getElementById('doc-title').textContent = btn.dataset.title;
+                document.getElementById('doc-open').href = btn.dataset.file;
+                document.getElementById('doc-download').href = btn.dataset.file;
+
+                // Viewer ganz ins Bild holen, falls er noch halb unter dem Seitenkopf hängt
+                if (viewer.getBoundingClientRect().top > 24) {
+                    viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
+
+        const fullscreen = document.getElementById('doc-fullscreen');
+        if (fullscreen) {
+            if (!viewer.requestFullscreen) {
+                fullscreen.hidden = true; // z. B. iPhone: dort hilft "In neuem Tab"
+            }
+            fullscreen.addEventListener('click', function () {
+                document.fullscreenElement ? document.exitFullscreen() : viewer.requestFullscreen();
+            });
+            document.addEventListener('fullscreenchange', function () {
+                fullscreen.textContent = document.fullscreenElement ? 'Vollbild beenden' : 'Vollbild';
+            });
+        }
     </script>
 {% endblock %}
