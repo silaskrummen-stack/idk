@@ -2012,8 +2012,8 @@ html.lenis {
 /* Handy: der Text reicht fast bis zum Rand, deshalb kleiner, blasser und nur jedes zweite Symbol */
 @media (max-width: 720px) {
     .parallax__symbol {
-        width: calc(var(--size) * 0.6);
-        height: calc(var(--size) * 0.6);
+        width: calc(var(--size) * 0.5);
+        height: calc(var(--size) * 0.5);
     }
     .parallax__symbol.is-placed {
         opacity: calc(var(--opacity) * 0.6);

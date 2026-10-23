@@ -2,28 +2,36 @@
 
 {% block title %}Über mich — Portfolio{% endblock %}
 
-{# Parallax-Hintergrund: Symbole unter /pictures/parallax/, gleichmäßig über die Seite verteilt, abwechselnd links und rechts.
-   Drei Tiefenebenen: nah = groß, deutlicher, schneller; fern = klein, blasser, langsamer. #}
+{# Parallax-Hintergrund: Symbole unter /pictures/parallax/, kreuz und quer über die Seite verteilt.
+   Drei Tiefenebenen: nah = deutlich, schnell, am Rand; fern = riesig, blass, langsam, auch mitten hinter dem Inhalt.
+   Die Listen unten haben bewusst unterschiedliche Längen, damit sich kein Muster wiederholt. #}
 {% block parallax %}
     {% set symbols = ['code', 'd20', 'terminal', 'gamepad', 'wifi', 'pixel-heart', 'git', 'coffee', 'braces', 'wasd', 'globe',
         'pixel-alien', 'chip', 'trophy', 'cursor', 'headset', 'bug', 'cloud', 'sword', 'floppy', 'pixel-coin'] %}
-    {% set depths = [
-        {size: 84, speed: 0.7, opacity: 0.3},
-        {size: 40, speed: 0.3, opacity: 0.16},
-        {size: 60, speed: 0.5, opacity: 0.22},
-    ] %}
-    {% set x_left = [3, 8, 5, 10, 6] %}
-    {% set x_right = [90, 85, 92, 87, 89] %}
-    {% set offsets = [0.15, 0.55, 0.35, 0.75, 0.25, 0.65] %}
-    {% set rotations = [-12, 8, 0, 15, -6] %}
-    {% set spins = [-8, 6, 10, -5] %}
+    {% set depths = {
+        near: {size: 104, speed: 0.75, opacity: 0.28},
+        mid:  {size: 140, speed: 0.5,  opacity: 0.17},
+        far:  {size: 220, speed: 0.25, opacity: 0.09},
+    } %}
+    {% set depth_order = ['near', 'far', 'mid', 'far', 'near', 'mid', 'far'] %}
+    {# nahe Symbole bleiben am Rand, damit sie den Text nicht stören #}
+    {% set x_edge = [2, 88, 9, 80, 4, 91, 14, 84, 0, 77, 11] %}
+    {% set x_anywhere = [12, 47, 70, 28, 85, 5, 60, 38, 92, 20, 52, 78, 33] %}
+    {% set jitter = [0, 0.4, -0.3, 0.2, -0.45] %}
+    {% set offsets = [0.1, 0.62, 0.3, 0.85, 0.05, 0.45, 0.72, 0.2, 0.9, 0.38, 0.58] %}
+    {% set rotations = [-35, 20, -10, 40, -25, 12, 30] %}
+    {% set spins = [-18, 12, 25, -9, 15, -22] %}
+    {% set last = symbols|length - 1 %}
     <div class="parallax" aria-hidden="true" data-parallax>
         {% for symbol in symbols %}
             {% set i = loop.index0 %}
-            {% set depth = depths[i % 3] %}
+            {% set depth_name = depth_order[i % depth_order|length] %}
+            {% set depth = depths[depth_name] %}
+            {% set x = depth_name == 'near' ? x_edge[i % x_edge|length] : x_anywhere[i % x_anywhere|length] %}
+            {% set at = max(0, min(1, (i + jitter[i % jitter|length]) / last)) %}
             <img class="parallax__symbol" src="/pictures/parallax/{{ symbol }}.svg" alt="" width="{{ depth.size }}" height="{{ depth.size }}"
-                 style="--x: {{ i is even ? x_left[i % 5] : x_right[i % 5] }}%; --size: {{ depth.size }}px; --opacity: {{ depth.opacity }}; --rotate: {{ rotations[i % 5] }}deg"
-                 data-at="{{ i / (symbols|length - 1) }}" data-offset="{{ offsets[i % 6] }}" data-speed="{{ depth.speed }}" data-spin="{{ spins[i % 4] }}"
+                 style="--x: {{ x }}%; --size: {{ depth.size }}px; --opacity: {{ depth.opacity }}; --rotate: {{ rotations[i % rotations|length] }}deg"
+                 data-at="{{ at|round(3) }}" data-offset="{{ offsets[i % offsets|length] }}" data-speed="{{ depth.speed }}" data-spin="{{ spins[i % spins|length] }}"
                  decoding="async">
         {% endfor %}
     </div>
