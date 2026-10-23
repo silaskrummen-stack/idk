@@ -68,6 +68,50 @@
         'Datenhandling': {'MySQL': 3, 'GraphQL': 1, 'SPSS': 1},
         'Sonstiges': {'Microsoft Office': 3, 'Docker': 2, 'GitLab & CI/CD': 2},
     } %}
+    {# Aufklappbar: Kompetenz → Projekttitel aus lib/test.php (Links kommen aus project_urls) #}
+    {% set skill_projects = {
+        'PHP': ['LAN-Party Moderation', 'Raumverwaltung', 'Webinar', 'Finanzbuchhaltung-Anbindung'],
+        'Twig / React': ['LAN-Party Moderation', 'Webinar', 'Werbekampagnen Leads Auswertung'],
+        'MySQL': ['Adress-Auswertungstool', 'Adress-Cluster', 'Finanzbuchhaltung-Anbindung'],
+        'GitLab & CI/CD': ['Kanban-App', 'GitLab Pipeline', 'GitLab-Anbindung'],
+    } %}
+    {% set strengths = [
+        {name: 'Hilfsbereitschaft', proof: 'Zwei Wochen vor der Hochzeitsmesse habe ich für einen Lingener Betrieb kurzfristig die neue Website übernommen.', project: 'krummen.de'},
+        {name: 'Analytisches Denken', proof: 'Bei der Raumverwaltung lagen die Stolpersteine nicht in normalen Terminen, sondern in Absagen, verschobenen Serienterminen und kurzfristigen Verlängerungen.', project: 'Raumverwaltung'},
+        {name: 'Flexibilität', proof: 'Nach sechs Semestern Wirtschaftsinformatik bin ich in eine praxisorientierte Ausbildung gewechselt und habe dort genau den Einstieg gefunden, den ich gesucht hatte.', project: null},
+        {name: 'Kundenorientierung', proof: 'Mit dem Adress-Auswertungstool erstellt der Vertrieb seine Auswertungen selbst, statt tagelang auf die Entwicklung zu warten.', project: 'Adress-Auswertungstool'},
+        {name: 'Kreativität', proof: 'Für meine Tabletop-Abende habe ich ein System gebaut, das Licht, Musik und Notizen über eine einzige Oberfläche steuert.', project: 'Tabletop Infotainment-System'},
+        {name: 'Lernbereitschaft', proof: 'LoRaWAN habe ich mir von Grund auf erarbeitet: von der Technologie-Evaluierung über Hardwaretests bis zur Einführung ins Produktportfolio.', project: 'LoRaWAN'},
+        {name: 'Kommunikation', proof: 'Für LoRaWAN habe ich mitentwickelt, wie wir die Lösung unseren Kunden erklären, ohne dass sie sich mit Funktechnik beschäftigen müssen.', project: 'LoRaWAN'},
+    ] %}
+    {% set stations = [
+        {year: '2013', label: 'Realschule', title: 'Antoniusschule Thuine',
+            text: ['Aufgewachsen bin ich in Lingen (Ems), wo auch meine Begeisterung für Technik entstanden ist. Angefangen hat alles mit kleinen Bastelprojekten und dem Interesse daran, zu verstehen, wie Computer und Software funktionieren. Mit der Zeit wurden daraus immer anspruchsvollere Projekte, die meinen beruflichen Weg geprägt haben.'],
+            facts: ['Qualifizierter Realschulabschluss', 'Ø 2,4']},
+        {year: '2018', label: 'Praktikum', title: 'Bockmeyer Zaun & Tor Systeme',
+            text: ['Ein Praktikum im Einzelhandel und Landschaftsbau.'],
+            facts: ['960 Stunden']},
+        {year: '2019', label: 'Fachabitur', title: 'BBS Lingen Wirtschaft',
+            text: ['Nach meinem Realschulabschluss entschied ich mich für ein Fachabitur mit Schwerpunkt Informatik. Dort konnte ich meine ersten fundierten Kenntnisse in Softwareentwicklung und IT vertiefen. Dort wurde mir klar, dass ich meine berufliche Zukunft im Bereich der Softwareentwicklung sehe und bei der Digitalisierung im Emsland mitwirken wollte.'],
+            facts: ['Schwerpunkt Informatik', 'Ø 2,3']},
+        {year: '2020', label: 'Studium', title: 'Hochschule Osnabrück',
+            text: ['Im Anschluss begann ich ein Studium der Wirtschaftsinformatik an der Hochschule Osnabrück. Während der sechs Semester konnte ich einen Großteil der Module erfolgreich absolvieren und sowohl technische als auch betriebswirtschaftliche Grundlagen aufbauen. Aus privaten Gründen entschied ich mich dazu, das Studium vorzeitig zu beenden und einen praxisorientierten Weg einzuschlagen.'],
+            facts: ['Wirtschaftsinformatik', '6 Semester', 'über 75 % der Module']},
+        {year: '2024', label: 'Ausbildung', title: 'Geocapture GmbH',
+            text: ['Mit der Ausbildung zum Fachinformatiker für Anwendungsentwicklung bei der Geocapture GmbH fand ich genau den Einstieg, den ich gesucht hatte. Dort arbeitete ich an realen Kundenprojekten und konnte meine Kenntnisse in der Webentwicklung, Datenbanken und modernen Entwicklungsprozessen kontinuierlich erweitern.'],
+            facts: ['Fachinformatiker Anwendungsentwicklung', 'Prüfung: 2', 'Berufsschule Ø 1,8']},
+        {year: 'Heute', label: 'Heute', title: 'Full-Stack Web-Developer',
+            text: ['Nun bin ich ein ausgelernter Entwickler, der gespannt ist, was die Zukunft so bietet.'],
+            link: {href: path('project_dashboard'), label: 'Woran ich seitdem gearbeitet habe →'}},
+    ] %}
+    {% set hobbies = [
+        {icon: 'tabletop', title: 'Tabletop-RPG', text: 'Ich leite regelmäßig Tabletop-Abende mit Freunden als Dungeon Master, inklusive eigenem Infotainment-Setup mit Musik, Licht und Notizen zur Story sowie einer nonlinearen Erzählung.'},
+        {icon: 'gamedev', title: 'Godot & Gamedev', text: 'Wenn ich mal nicht selber Videospiele spiele, entwickle ich auch mal an einem eigenen 2D-Spiel. Dies ist ein persönliches Herzensprojekt, an dem ich ab und zu weiterarbeite.'},
+        {icon: 'kanu', title: 'Kanu fahren', text: 'Falls mal gutes Wetter ist, nehme ich oft mein Kanu für Touren an der Ems oder der Hase raus. Das ist auch oft verbunden mit Campen und Wandern.'},
+        {icon: 'gaming', title: 'Gaming', text: 'Ich bin im Herzen noch ein Gamer und Videospiele waren mein erster Kontakt zur Informatik. Heute veranstalte ich noch regelmäßig LAN-Partys.'},
+        {icon: 'bouldern', title: 'Bouldern', text: 'Seit der Eröffnung der Boulderhalle in Lingen versuche ich mindestens einmal im Monat eine neue Wand zu meistern oder meinen persönlichen Rekord zu brechen.'},
+        {icon: 'video', title: 'Videobearbeitung', text: 'Entstand durch das Schneiden von LoL-Highlights und entwickelte sich zu einem Hobby, bei dem ich auch kreative Projekte für Bekannte unterstütze.'},
+    ] %}
 
     <section class="hero" style="padding-bottom: 24px;">
         <span class="hero__eyebrow">whoami --verbose</span>
@@ -81,7 +125,7 @@
     <div class="container about-page">
 
         <!-- Profil-Metadaten -->
-        <dl class="profile-meta">
+        <dl class="profile-meta" data-reveal>
             <div class="profile-meta__row">
                 <dt>Alter</dt>
                 <dd>24</dd>
@@ -96,93 +140,56 @@
             </div>
         </dl>
 
-        <!-- Werdegang / Narrative -->
-        <section class="about-section">
+        <!-- Werdegang: Stationen oben anklicken, Text und Foto darunter -->
+        <section class="about-section" data-reveal>
             <h2 class="about-section__title">Werdegang</h2>
 
-            <div class="werdegang-layout">
-                <div class="werdegang-photo">
-                    <img src="/pictures/silas-9.webp" alt="Silas Krummen">
+            <div class="journey" data-journey>
+                <div class="journey__rail" role="tablist" aria-label="Stationen meines Werdegangs" style="--progress: 0">
+                    <span class="journey__progress" aria-hidden="true"></span>
+                    {% for station in stations %}
+                        <button type="button" class="journey__stop" role="tab" id="journey-tab-{{ loop.index0 }}" aria-controls="journey-panel-{{ loop.index0 }}" aria-selected="{{ loop.first ? 'true' : 'false' }}"{% if not loop.first %} tabindex="-1"{% endif %}>
+                            <span class="journey__dot" aria-hidden="true"></span>
+                            <span class="journey__year">{{ station.year }}</span>
+                            <span class="journey__label">{{ station.label }}</span>
+                        </button>
+                    {% endfor %}
                 </div>
 
-                <div class="werdegang-text">
-                    <p class="about-card__text">
-                        Aufgewachsen bin ich in Lingen (Ems), wo auch meine Begeisterung für Technik entstanden ist. Angefangen hat alles mit kleinen Bastelprojekten und dem Interesse daran, zu verstehen, wie Computer und Software funktionieren. Mit der Zeit wurden daraus immer anspruchsvollere Projekte, die meinen beruflichen Weg geprägt haben.
-                    </p>
-                    <p class="about-card__text">
-                        Nach meinem Realschulabschluss entschied ich mich für ein Fachabitur mit Schwerpunkt Informatik. Dort konnte ich meine ersten fundierten Kenntnisse in Softwareentwicklung und IT vertiefen. Dort wurde mir klar, dass ich meine berufliche Zukunft im Bereich der Softwareentwicklung sehe und bei der Digitalisierung im Emsland mitwirken wollte.
-                    </p>
-                    <p class="about-card__text">
-                        Im Anschluss begann ich ein Studium der Wirtschaftsinformatik an der Hochschule Osnabrück. Während der sechs Semester konnte ich einen Großteil der Module erfolgreich absolvieren und sowohl technische als auch betriebswirtschaftliche Grundlagen aufbauen. Aus privaten Gründen entschied ich mich dazu, das Studium vorzeitig zu beenden und einen praxisorientierten Weg einzuschlagen.
-                    </p>
-                    <p class="about-card__text">
-                        Mit der Ausbildung zum Fachinformatiker für Anwendungsentwicklung bei der Geocapture GmbH fand ich genau den Einstieg, den ich gesucht hatte. Dort arbeitete ich an realen Kundenprojekten und konnte meine Kenntnisse in der Webentwicklung, Datenbanken und modernen Entwicklungsprozessen kontinuierlich erweitern.
-                    </p>
-                </div>
-            </div>
+                <div class="journey__body">
+                    <div class="werdegang-photo journey__photo">
+                        <img src="/pictures/silas-9.webp" alt="Silas Krummen">
+                    </div>
 
-            <div class="werdegang-timeline" id="werdegangTimeline">
-                <div class="werdegang-timeline__track">
-                    <button type="button" class="timeline-item" data-index="0">
-                        <span class="timeline-item__year">2013</span>
-                        <span class="timeline-item__title">Antoniusschule Thuine</span>
-                        <span class="timeline-item__panel">
-                            <span class="timeline-item__panel-inner">
-                                <p class="timeline-item__text">Damals habe ich einen qualifizierten Realschulabschluss mit einem Durchschnitt von 2,4 absolviert</p>
-                            </span>
-                        </span>
-                    </button>
-                    <button type="button" class="timeline-item" data-index="1">
-                        <span class="timeline-item__year">2018</span>
-                        <span class="timeline-item__title">Bockmeyer Zaun & Tor Systeme</span>
-                        <span class="timeline-item__panel">
-                            <span class="timeline-item__panel-inner">
-                                <p class="timeline-item__text">Ein 960h Praktikum im Einzelhandel und Landschaftsbau</p>
-                            </span>
-                        </span>
-                    </button>
-                    <button type="button" class="timeline-item" data-index="2">
-                        <span class="timeline-item__year">2019</span>
-                        <span class="timeline-item__title">BBS Lingen Wirtschaft</span>
-                        <span class="timeline-item__panel">
-                            <span class="timeline-item__panel-inner">
-                                <p class="timeline-item__text">Der Abschluss meines Fachabiturs mit Schwerpunkt auf Informatik und einem Durchschnitt von 2,3 Notenpunkten</p>
-                            </span>
-                        </span>
-                    </button>
-                    <button type="button" class="timeline-item" data-index="3">
-                        <span class="timeline-item__year">2020</span>
-                        <span class="timeline-item__title">Hochschule Osnabrück</span>
-                        <span class="timeline-item__panel">
-                            <span class="timeline-item__panel-inner">
-                                <p class="timeline-item__text">Ein Studium im Bereich Wirtschaftsinformatik für 6 Semester. Trotz &gt;75% abgeschlossener Module, vorzeitiger Abbruch aus privaten Gründen</p>
-                            </span>
-                        </span>
-                    </button>
-                    <button type="button" class="timeline-item" data-index="4">
-                        <span class="timeline-item__year">2024</span>
-                        <span class="timeline-item__title">Geocapture GmbH</span>
-                        <span class="timeline-item__panel">
-                            <span class="timeline-item__panel-inner">
-                                <p class="timeline-item__text">Eine Ausbildung zum Fachinformatiker für Anwendungsentwicklung mit dem Prüfungszeugnis 2 und einem schulischen Durchschnitt von 1,8</p>
-                            </span>
-                        </span>
-                    </button>
-                    <button type="button" class="timeline-item is-selected" data-index="5">
-                        <span class="timeline-item__year">Heute</span>
-                        <span class="timeline-item__title">Full-Stack Web-Developer</span>
-                        <span class="timeline-item__panel">
-                            <span class="timeline-item__panel-inner">
-                                <p class="timeline-item__text">Nun bin ich ein ausgelernter Entwickler, der gespannt ist, was die Zukunft so bietet</p>
-                            </span>
-                        </span>
-                    </button>
+                    {# Alle Texte liegen übereinander, damit die Höhe beim Umschalten gleich bleibt #}
+                    <div class="journey__panels">
+                        {% for station in stations %}
+                            <div class="journey__panel" role="tabpanel" id="journey-panel-{{ loop.index0 }}" aria-labelledby="journey-tab-{{ loop.index0 }}"{% if not loop.first %} hidden{% endif %}>
+                                <h3 class="journey__title">{{ station.title }} <span>{{ station.year }}</span></h3>
+                                {% for paragraph in station.text %}
+                                    <p class="about-card__text">{{ paragraph }}</p>
+                                {% endfor %}
+                                {% if station.facts is defined %}
+                                    <ul class="journey__facts">
+                                        {% for fact in station.facts %}
+                                            <li>{{ fact }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if station.link is defined %}
+                                    <a class="journey__next" href="{{ station.link.href }}">{{ station.link.label }}</a>
+                                {% elseif not loop.last %}
+                                    <button type="button" class="journey__next" data-journey-next>Weiter: {{ stations[loop.index].year }} →</button>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Fokus & Motivation -->
-        <section class="about-section about-statements">
+        <section class="about-section about-statements" data-reveal>
             <div class="about-statement">
                 <h2 class="about-statement__title">Fokus</h2>
                 <p class="about-statement__text">
@@ -200,48 +207,21 @@
         </section>
 
         <!-- Hobbies -->
-        <section class="about-section about-card about-hobbies">
+        <section class="about-section about-card about-hobbies" data-reveal>
             <h2 class="about-section__title">Abseits vom Code</h2>
             <div class="hobby-list">
-                <div class="hobby-item">
-                    <h3 class="hobby-item__title">Tabletop-RPG</h3>
-                    <p class="about-card__text">
-                        Ich leite regelmäßig Tabletop-Abende mit Freunden als Dungeon Master,
-                        inklusive eigenem Infotainment-Setup mit Musik, Licht und Notizen zur
-                        Story sowie eine nonlineare Narrative.
-                    </p>
-                </div>
-                <div class="hobby-item">
-                    <h3 class="hobby-item__title">Godot &amp; Gamedev</h3>
-                    <p class="about-card__text">
-                        Wenn ich mal nicht selber Videospiele spiele, entwickle ich auch mal an einem eigenen 2D-Spiel. Dies ist ein
-                        persönliches Herzensprojekt, an dem ich ab und zu weiterarbeite.
-                    </p>
-                </div>
-                <div class="hobby-item">
-                    <h3 class="hobby-item__title">Kanu Fahren</h3>
-                    <p class="about-card__text">
-                        Falls mal gutes Wetter ist, nehme ich oft mein Kanu für Touren an der Ems oder der Hase raus. Das ist auch oft verbunden mit Campen und Wandern.
-                    </p>
-                </div>
-                <div class="hobby-item">
-                    <h3 class="hobby-item__title">Gaming</h3>
-                    <p class="about-card__text">
-                        Ich bin im Herzen noch ein Gamer und Videospiele waren mein erster Kontakt zur Informatik. Heute veranstalte ich noch regelmäßig LAN-Parties.
-                    </p>
-                </div>
-                <div class="hobby-item">
-                    <h3 class="hobby-item__title">Bouldern</h3>
-                    <p class="about-card__text">
-                        Seit der Eröffnung der Boulderhalle in Lingen versuche ich mindestens einmal im Monat eine neue Wand meistern zu können oder mein PR zu brechen.
-                    </p>
-                </div>
-                <div class="hobby-item">
-                    <h3 class="hobby-item__title">Videobearbeitung</h3>
-                    <p class="about-card__text">
-                        Entstand durch das Schneiden von LoL-Highlights und entwickelte sich zu einem Hobby, bei dem ich auch kreative Projekte für Bekannte unterstütze.
-                    </p>
-                </div>
+                {% for hobby in hobbies %}
+                    <button type="button" class="hobby-card" aria-expanded="false" data-hobby-card>
+                        <span class="hobby-card__face hobby-card__front">
+                            <img src="/pictures/about-me/hobbies/{{ hobby.icon }}.svg" alt="" width="52" height="52">
+                            <span class="hobby-card__title">{{ hobby.title }}</span>
+                        </span>
+                        <span class="hobby-card__face hobby-card__back">
+                            <span class="hobby-card__title">{{ hobby.title }}</span>
+                            <span class="hobby-card__text">{{ hobby.text }}</span>
+                        </span>
+                    </button>
+                {% endfor %}
             </div>
 
             <h3 class="about-subtitle">Medienbearbeitung</h3>
@@ -266,7 +246,7 @@
         </section>
 
         <!-- Werkzeuge & Kompetenzen -->
-        <section class="about-section">
+        <section class="about-section" data-reveal>
             <h2 class="about-section__title">Werkzeuge &amp; Kompetenzen</h2>
 
             <div class="about-tools">
@@ -278,13 +258,33 @@
                                 <span class="skill-group__title">{{ group }}</span>
                                 <ul class="skill-list">
                                     {% for name, level in skills %}
-                                        <li class="skill-item">
-                                            <span class="skill-item__name">{{ name }}</span>
+                                        {% set dots %}
                                             <span class="skill-item__dots" aria-label="{{ level }} von 5">
                                                 {% for i in 1..5 %}
                                                     <span class="dot{{ i <= level ? ' is-filled' : '' }}"></span>
                                                 {% endfor %}
                                             </span>
+                                        {% endset %}
+                                        <li>
+                                            {% if skill_projects[name] is defined %}
+                                                <details class="skill-more">
+                                                    <summary class="skill-item">
+                                                        <span class="skill-item__name">{{ name }}</span>
+                                                        {{ dots }}
+                                                    </summary>
+                                                    <p class="skill-more__projects">
+                                                        <span>Eingesetzt in</span>
+                                                        {% for title in skill_projects[name] %}
+                                                            <a href="{{ project_urls[title] }}">{{ title }}</a>
+                                                        {% endfor %}
+                                                    </p>
+                                                </details>
+                                            {% else %}
+                                                <div class="skill-item">
+                                                    <span class="skill-item__name">{{ name }}</span>
+                                                    {{ dots }}
+                                                </div>
+                                            {% endif %}
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -346,7 +346,7 @@
         </section>
 
         <!-- Fremdsprachen & Stärken -->
-        <section class="about-section about-grid">
+        <section class="about-section about-grid" data-reveal>
             <div class="about-card">
                 <h3 class="about-card__title">Fremdsprachen</h3>
                 <ul class="lang-list">
@@ -367,15 +367,17 @@
 
             <div class="about-card">
                 <h3 class="about-card__title">Stärken</h3>
-                <div class="tag-list">
-                    <span class="tag">Hilfsbereitschaft</span>
-                    <span class="tag">Analytisches Denken</span>
-                    <span class="tag">Flexibilität</span>
-                    <span class="tag">Kundenorientierung</span>
-                    <span class="tag">Kreativität</span>
-                    <span class="tag">Lernbereitschaft</span>
-                    <span class="tag">Kommunikation</span>
+                <div class="tag-list" data-strengths>
+                    {% for strength in strengths %}
+                        <button type="button" class="tag tag--proof" aria-expanded="false" aria-controls="strength-{{ loop.index }}">{{ strength.name }}</button>
+                    {% endfor %}
                 </div>
+                {% for strength in strengths %}
+                    <p class="strength-proof" id="strength-{{ loop.index }}" hidden>
+                        {{ strength.proof }}
+                        {% if strength.project %}<a href="{{ project_urls[strength.project] }}">{{ strength.project }} ansehen</a>{% endif %}
+                    </p>
+                {% endfor %}
             </div>
 
             <div class="about-card">
@@ -389,7 +391,7 @@
         </section>
 
         <!-- Benutzung von KI -->
-        <section class="about-section">
+        <section class="about-section" data-reveal>
             <h2 class="about-section__title">Benutzung von KI</h2>
 
             <div class="about-ai">
@@ -412,76 +414,92 @@
                 </div>
 
                 <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-statement" aria-labelledby="ai-tab-statement" tabindex="0">
-                    <p>
-                        Ich sehe die zunehmende Verbreitung von KI im Berufs- und Privatleben mit klaren ethischen
-                        Bedenken und engagiere mich politisch für mehr Regulierung vor allem im kreativen Bereich. Sprachmodelle erzeugen im eigentlichen Sinne nichts Neues: Sie Re-Hashen rechtlich dubios ergatterte Trainingssets. Deshalb tendieren
-                        ihre Ergebnisse zum Durchschnitt. Wer Gestaltung allein nach gelernten UI-Prinzipien erzeugen
-                        lässt, bekommt Seiten, die alle irgendwie gleich aussehen. Geschmack, Haltung und echten
-                        menschlichen Kontakt wird es auch in Zukunft nicht ersetzen.
-                    </p>
-                    <p>
-                        Beruflich halte ich eine komplette Ablehnung trotzdem nicht für tragbar, erst recht nicht in
-                        der IT. Ende 2025 ist mir klar geworden, dass Ignoranz keine nachhaltige Haltung ist: Unternehmen, die nicht mitziehen, werden durch die ersetzt, die es tun. Genau da sehe ich meine Arbeit: Unternehmen dabei helfen, im technologischen Rennen mitzuhalten. Begeistern kann ich mich für Einsätze, die der Gemeinschaft nützen und repetitive,
-                        fehleranfällige Arbeit abnehmen.
-                    </p>
-                    <p>
-                        Bei der Qualitätssicherung von KI-Projekten habe ich oft mitgewirkt, und meine eigenen
-                        Projekte zeigen ein klares Muster: Die Qualität hängt weniger am Modell als an der
-                        Spezifikation. Mit klaren Anforderungen, vorgegebener Architektur und konsequentem Review
-                        entstehen gute Ergebnisse. Arbeitet ein Modell ohne diese Leitplanken, wächst der Code schnell
-                        und wird schwer wartbar.
-                    </p>
-                    <p>
-                        Ein Thema, das aus meiner Sicht noch unterschätzt wird, ist Token-Management. Viele
-                        mittelständische Unternehmen bauen ihre Prozesse gerade auf den heutigen Preisen auf, und ich
-                        gehe fest davon aus, dass diese steigen werden. Dann wird jeder unbedachte Agenten-Workflow
-                        zum laufenden Kostenfaktor. Wer KI einführt, sollte deshalb den Verbrauch pro Prozess messen,
-                        für jede Aufgabe das kleinste ausreichende Modell wählen und Prozesse so bauen, dass sie nicht
-                        von einem einzigen Anbieter abhängen. Sonst entstehen technische Altlasten, wie ich sie in
-                        meiner Karriere schon mehrmals erlebt habe.
-                    </p>
+                    <p class="about-ai__verdict">Kritisch, aber pragmatisch: Ich sehe KI mit klaren ethischen Bedenken, halte eine komplette Ablehnung in der IT aber nicht für tragbar. Gute Ergebnisse entstehen durch klare Anforderungen und konsequentes Review.</p>
+                    <div class="about-ai__more">
+                        <p>
+                            Ich sehe die zunehmende Verbreitung von KI im Berufs- und Privatleben mit klaren ethischen
+                            Bedenken und engagiere mich politisch für mehr Regulierung vor allem im kreativen Bereich. Sprachmodelle erzeugen im eigentlichen Sinne nichts Neues: Sie Re-Hashen rechtlich dubios ergatterte Trainingssets. Deshalb tendieren
+                            ihre Ergebnisse zum Durchschnitt. Wer Gestaltung allein nach gelernten UI-Prinzipien erzeugen
+                            lässt, bekommt Seiten, die alle irgendwie gleich aussehen. Geschmack, Haltung und echten
+                            menschlichen Kontakt wird es auch in Zukunft nicht ersetzen.
+                        </p>
+                        <p>
+                            Beruflich halte ich eine komplette Ablehnung trotzdem nicht für tragbar, erst recht nicht in
+                            der IT. Ende 2025 ist mir klar geworden, dass Ignoranz keine nachhaltige Haltung ist: Unternehmen, die nicht mitziehen, werden durch die ersetzt, die es tun. Genau da sehe ich meine Arbeit: Unternehmen dabei helfen, im technologischen Rennen mitzuhalten. Begeistern kann ich mich für Einsätze, die der Gemeinschaft nützen und repetitive,
+                            fehleranfällige Arbeit abnehmen.
+                        </p>
+                        <p>
+                            Bei der Qualitätssicherung von KI-Projekten habe ich oft mitgewirkt, und meine eigenen
+                            Projekte zeigen ein klares Muster: Die Qualität hängt weniger am Modell als an der
+                            Spezifikation. Mit klaren Anforderungen, vorgegebener Architektur und konsequentem Review
+                            entstehen gute Ergebnisse. Arbeitet ein Modell ohne diese Leitplanken, wächst der Code schnell
+                            und wird schwer wartbar.
+                        </p>
+                        <p>
+                            Ein Thema, das aus meiner Sicht noch unterschätzt wird, ist Token-Management. Viele
+                            mittelständische Unternehmen bauen ihre Prozesse gerade auf den heutigen Preisen auf, und ich
+                            gehe fest davon aus, dass diese steigen werden. Dann wird jeder unbedachte Agenten-Workflow
+                            zum laufenden Kostenfaktor. Wer KI einführt, sollte deshalb den Verbrauch pro Prozess messen,
+                            für jede Aufgabe das kleinste ausreichende Modell wählen und Prozesse so bauen, dass sie nicht
+                            von einem einzigen Anbieter abhängen. Sonst entstehen technische Altlasten, wie ich sie in
+                            meiner Karriere schon mehrmals erlebt habe.
+                        </p>
+                    </div>
+                    <button type="button" class="about-ai__toggle" aria-expanded="false" data-ai-toggle>Ganzen Text lesen</button>
                 </div>
                 <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-claude" aria-labelledby="ai-tab-claude" tabindex="0" hidden>
-                    <p>
-                        Claude und Claude Code nutze ich vor allem für professionelle Arbeit, also überall dort, wo das Ergebnis wirklich zählt. Claude versteht gut, was ich eigentlich will, auch wenn ich es nicht bis ins letzte Detail ausformuliere. Die Codequalität ist sehr gut, nur bei Konventionen und Standards braucht es klare Vorgaben.
-                    </p>
-                    <p>
-                        Auffällig ist, wie viel Claude mitdenkt. Fallbacks und Randfälle baut es von sich aus ein, und wenn eine Änderung Stellen im Code betrifft, die ich selbst gar nicht im Blick hatte, findet es diese und passt sie gleich mit an.
-                    </p>
-                    <p>
-                        Stark ist es auch beim Testen: Entweder baut es sich eine eigene Testumgebung auf, oder es nutzt die, die ich ihm vorgebe, und prüft seine Änderungen, bevor es sie als fertig meldet.
-                    </p>
-                    <p>
-                        Ich nutze Claude mit dem Pro-Plan für sehr viele Aufgaben und bin dabei bisher nie an die Nutzungsgrenzen gestoßen. Über die Zeit habe ich mir eigene Skills aufgebaut, zum Beispiel für SEO, für rechtliche Anforderungen an Websites wie Impressum und Datenschutz und um schwache Formulierungen in Texten zu finden.
-                    </p>
-                    <p>
-                        Privat habe ich mit Claude ganze Spiele nach meinen Wünschen gemoddet, Spiele nachträglich um einen Mehrspielermodus erweitert und alte Spiele aus der Zeit um 2010 dekompiliert, damit sie auf moderner Hardware laufen, für mich selbst und für unsere LAN-Partys.
-                    </p>
+                    <p class="about-ai__verdict">Mein Werkzeug für professionelle Arbeit, überall dort, wo das Ergebnis wirklich zählt.</p>
+                    <div class="about-ai__more">
+                        <p>
+                            Claude und Claude Code nutze ich vor allem für professionelle Arbeit, also überall dort, wo das Ergebnis wirklich zählt. Claude versteht gut, was ich eigentlich will, auch wenn ich es nicht bis ins letzte Detail ausformuliere. Die Codequalität ist sehr gut, nur bei Konventionen und Standards braucht es klare Vorgaben.
+                        </p>
+                        <p>
+                            Auffällig ist, wie viel Claude mitdenkt. Fallbacks und Randfälle baut es von sich aus ein, und wenn eine Änderung Stellen im Code betrifft, die ich selbst gar nicht im Blick hatte, findet es diese und passt sie gleich mit an.
+                        </p>
+                        <p>
+                            Stark ist es auch beim Testen: Entweder baut es sich eine eigene Testumgebung auf, oder es nutzt die, die ich ihm vorgebe, und prüft seine Änderungen, bevor es sie als fertig meldet.
+                        </p>
+                        <p>
+                            Ich nutze Claude mit dem Pro-Plan für sehr viele Aufgaben und bin dabei bisher nie an die Nutzungsgrenzen gestoßen. Über die Zeit habe ich mir eigene Skills aufgebaut, zum Beispiel für SEO, für rechtliche Anforderungen an Websites wie Impressum und Datenschutz und um schwache Formulierungen in Texten zu finden.
+                        </p>
+                        <p>
+                            Privat habe ich mit Claude ganze Spiele nach meinen Wünschen gemoddet, Spiele nachträglich um einen Mehrspielermodus erweitert und alte Spiele aus der Zeit um 2010 dekompiliert, damit sie auf moderner Hardware laufen, für mich selbst und für unsere LAN-Partys.
+                        </p>
+                    </div>
+                    <button type="button" class="about-ai__toggle" aria-expanded="false" data-ai-toggle>Ganzen Text lesen</button>
                 </div>
                 <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-copilot" aria-labelledby="ai-tab-copilot" tabindex="0" hidden>
-                    <p>
-                        Microsoft Copilot ist mir in verschiedenen Unternehmen immer wieder begegnet. Wirklich überzeugt hat es mich aber nur innerhalb einer Microsoft-365-Umgebung.
-                    </p>
-                    <p>
-                        Dort spielt es seine größte Stärke aus: den Zugriff auf den Kontext des Unternehmens. Copilot kennt E-Mails, Teams-Besprechungen und Dokumente in SharePoint und OneDrive. Darauf aufbauend fasst es Besprechungen zusammen, schreibt Entwürfe in Word oder wertet Tabellen in Excel aus, und zwar innerhalb der Berechtigungen, die im Unternehmen ohnehin gelten.
-                    </p>
-                    <p>
-                        Besonders gut ist es bei Problemen mit Microsoft selbst. Fragen zu Excel-Formeln, Teams-Einstellungen, Power Automate oder Fehlermeldungen in Windows beantwortet es oft schneller und treffender als andere Assistenten.
-                    </p>
-                    <p>
-                        Außerhalb dieses Ökosystems verliert es für mich deutlich an Wert. Für Unternehmen ist Copilot deshalb vor allem eine strategische Entscheidung: Wer bereit ist, sich langfristig an Microsoft zu binden, bekommt ein wirklich nützliches Werkzeug, das sich nahtlos in die bestehende Arbeit einfügt. Wer Wert auf Unabhängigkeit legt, sollte diese Abhängigkeit vorher bewusst abwägen.
-                    </p>
+                    <p class="about-ai__verdict">Stark innerhalb einer Microsoft-365-Umgebung, außerhalb davon für mich deutlich weniger wert.</p>
+                    <div class="about-ai__more">
+                        <p>
+                            Microsoft Copilot ist mir in verschiedenen Unternehmen immer wieder begegnet. Wirklich überzeugt hat es mich aber nur innerhalb einer Microsoft-365-Umgebung.
+                        </p>
+                        <p>
+                            Dort spielt es seine größte Stärke aus: den Zugriff auf den Kontext des Unternehmens. Copilot kennt E-Mails, Teams-Besprechungen und Dokumente in SharePoint und OneDrive. Darauf aufbauend fasst es Besprechungen zusammen, schreibt Entwürfe in Word oder wertet Tabellen in Excel aus, und zwar innerhalb der Berechtigungen, die im Unternehmen ohnehin gelten.
+                        </p>
+                        <p>
+                            Besonders gut ist es bei Problemen mit Microsoft selbst. Fragen zu Excel-Formeln, Teams-Einstellungen, Power Automate oder Fehlermeldungen in Windows beantwortet es oft schneller und treffender als andere Assistenten.
+                        </p>
+                        <p>
+                            Außerhalb dieses Ökosystems verliert es für mich deutlich an Wert. Für Unternehmen ist Copilot deshalb vor allem eine strategische Entscheidung: Wer bereit ist, sich langfristig an Microsoft zu binden, bekommt ein wirklich nützliches Werkzeug, das sich nahtlos in die bestehende Arbeit einfügt. Wer Wert auf Unabhängigkeit legt, sollte diese Abhängigkeit vorher bewusst abwägen.
+                        </p>
+                    </div>
+                    <button type="button" class="about-ai__toggle" aria-expanded="false" data-ai-toggle>Ganzen Text lesen</button>
                 </div>
                 <div class="about-essay about-ai__panel" role="tabpanel" id="ai-panel-chatgpt" aria-labelledby="ai-tab-chatgpt" tabindex="0" hidden>
-                    <p>
-                        ChatGPT nutze ich vor allem für Kommunikation und für Privates. Beruflich formuliere ich damit E-Mails um und lasse mir Nachrichten an Kunden gegenlesen, bevor ich sie abschicke: Passt der Ton, ist die Kernaussage klar, könnte etwas missverstanden werden?
-                    </p>
-                    <p>
-                        Privat ist es mein Werkzeug für fast alles Alltägliche, vom Kochen bis zur Recherche zu Themen, die keine wissenschaftliche Tiefe brauchen.
-                    </p>
-                    <p>
-                        Für besonders klug halte ich ChatGPT nicht, bei komplexen technischen Aufgaben greife ich zu Claude. Dafür ist es freundlich, einfach zu bedienen, kostet in der Basisversion praktisch nichts und nennt bei Recherchen seine Quellen, sodass ich Aussagen selbst überprüfen kann. Für die meisten Alltagsfragen ist genau das wichtiger als maximale Intelligenz.
-                    </p>
+                    <p class="about-ai__verdict">Für Kommunikation und Alltägliches. Bei komplexen technischen Aufgaben greife ich zu Claude.</p>
+                    <div class="about-ai__more">
+                        <p>
+                            ChatGPT nutze ich vor allem für Kommunikation und für Privates. Beruflich formuliere ich damit E-Mails um und lasse mir Nachrichten an Kunden gegenlesen, bevor ich sie abschicke: Passt der Ton, ist die Kernaussage klar, könnte etwas missverstanden werden?
+                        </p>
+                        <p>
+                            Privat ist es mein Werkzeug für fast alles Alltägliche, vom Kochen bis zur Recherche zu Themen, die keine wissenschaftliche Tiefe brauchen.
+                        </p>
+                        <p>
+                            Für besonders klug halte ich ChatGPT nicht, bei komplexen technischen Aufgaben greife ich zu Claude. Dafür ist es freundlich, einfach zu bedienen, kostet in der Basisversion praktisch nichts und nennt bei Recherchen seine Quellen, sodass ich Aussagen selbst überprüfen kann. Für die meisten Alltagsfragen ist genau das wichtiger als maximale Intelligenz.
+                        </p>
+                    </div>
+                    <button type="button" class="about-ai__toggle" aria-expanded="false" data-ai-toggle>Ganzen Text lesen</button>
                 </div>
             </div>
         </section>
@@ -495,31 +513,66 @@
 
 {% block javascripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var track = document.querySelector('.werdegang-timeline__track');
-    if (!track) return;
-    var items = track.querySelectorAll('.timeline-item');
+// Werdegang: Station oben wählen, Text darunter wechselt. Pfeiltasten wie bei Tabs.
+document.querySelectorAll('[data-journey]').forEach(function (journey) {
+    var rail = journey.querySelector('.journey__rail');
+    var stops = Array.prototype.slice.call(journey.querySelectorAll('.journey__stop'));
 
-    function selectItem(item, smooth) {
-        items.forEach(function (i) { i.classList.remove('is-selected'); });
-        item.classList.add('is-selected');
-        item.scrollIntoView({
-            behavior: smooth ? 'smooth' : 'auto',
-            inline: 'center',
-            block: 'nearest'
+    function select(index, focus) {
+        stops.forEach(function (stop, i) {
+            var isSelected = i === index;
+            stop.setAttribute('aria-selected', String(isSelected));
+            stop.tabIndex = isSelected ? 0 : -1;
+            stop.classList.toggle('is-passed', i < index);
+            document.getElementById(stop.getAttribute('aria-controls')).hidden = !isSelected;
         });
+        rail.style.setProperty('--progress', index / (stops.length - 1));
+        if (focus) stops[index].focus({ preventScroll: true });
     }
 
-    items.forEach(function (item) {
-        item.addEventListener('click', function () {
-            selectItem(item, true);
+    stops.forEach(function (stop, index) {
+        stop.addEventListener('click', function () {
+            select(index, false);
+        });
+        stop.addEventListener('keydown', function (e) {
+            var next = null;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = Math.min(index + 1, stops.length - 1);
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = Math.max(index - 1, 0);
+            if (e.key === 'Home') next = 0;
+            if (e.key === 'End') next = stops.length - 1;
+            if (next === null) return;
+            e.preventDefault();
+            select(next, true);
         });
     });
 
-    var initial = track.querySelector('.timeline-item.is-selected') || items[items.length - 1];
-    // slight delay so layout is settled before we scroll
-    requestAnimationFrame(function () {
-        selectItem(initial, false);
+    // "Weiter"-Knöpfe stehen in Panel 0 … n-2, der i-te führt also zu Station i+1
+    journey.querySelectorAll('[data-journey-next]').forEach(function (button, index) {
+        button.addEventListener('click', function () {
+            select(index + 1, true);
+        });
+    });
+});
+
+// Hobbys: Karte antippen dreht Symbol und Text
+document.querySelectorAll('[data-hobby-card]').forEach(function (card) {
+    card.addEventListener('click', function () {
+        card.setAttribute('aria-expanded', String(card.getAttribute('aria-expanded') !== 'true'));
+    });
+});
+
+// Stärken: Klick zeigt ein Beispiel darunter, immer nur eins auf einmal
+document.querySelectorAll('[data-strengths]').forEach(function (list) {
+    var tags = Array.prototype.slice.call(list.querySelectorAll('[aria-controls]'));
+    tags.forEach(function (tag) {
+        tag.addEventListener('click', function () {
+            var open = tag.getAttribute('aria-expanded') !== 'true';
+            tags.forEach(function (t) {
+                var isOpen = t === tag && open;
+                t.setAttribute('aria-expanded', String(isOpen));
+                document.getElementById(t.getAttribute('aria-controls')).hidden = !isOpen;
+            });
+        });
     });
 });
 
@@ -551,6 +604,25 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!next) return;
             e.preventDefault();
             selectTab(next, true);
+        });
+    });
+
+    // Erst das Fazit, der ganze Text auf Wunsch. Gilt für alle Einträge gemeinsam,
+    // damit die Höhe beim Umschalten der Tabs gleich bleibt.
+    var ai = document.querySelector('.about-ai');
+    var toggles = Array.prototype.slice.call(ai.querySelectorAll('[data-ai-toggle]'));
+    toggles.forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+            var expanded = !ai.classList.contains('is-expanded');
+            ai.classList.toggle('is-expanded', expanded);
+            toggles.forEach(function (t) {
+                t.setAttribute('aria-expanded', String(expanded));
+                t.textContent = expanded ? 'Weniger anzeigen' : 'Ganzen Text lesen';
+            });
+            // Beim Zuklappen nicht irgendwo unterhalb des Abschnitts landen
+            if (!expanded && ai.getBoundingClientRect().top < 0) {
+                ai.scrollIntoView({ block: 'start' });
+            }
         });
     });
 });

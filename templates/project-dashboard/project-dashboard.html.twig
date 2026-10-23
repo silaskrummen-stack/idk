@@ -117,7 +117,7 @@
         <section class="project-section">
             <div class="project-featured">
                 {% for project in featured %}
-                    {{ _self.project_card(project, 'project-featured-' ~ loop.index, loop.first ? 'lead' : 'feature') }}
+                    {{ _self.project_card(project, project.anchor, loop.first ? 'lead' : 'feature') }}
                 {% endfor %}
             </div>
         </section>
@@ -127,7 +127,7 @@
         <h2 class="project-section__title">Weitere Projekte <span>{{ others|length }}</span></h2>
         <div class="status-feed status-feed--compact">
             {% for project in others %}
-                {{ _self.project_card(project, 'project-' ~ loop.index, 'compact') }}
+                {{ _self.project_card(project, project.anchor, 'compact') }}
             {% endfor %}
         </div>
     </section>
@@ -140,6 +140,14 @@
 
 {% block javascripts %}
 <script>
+    // Direktlink auf ein Projekt (z. B. von "Über mich"): /projects#projekt-webinar öffnet das passende Modal.
+    // Beim Schließen verschwindet der Anker wieder, damit ein Neuladen nicht erneut öffnet.
+    const linked = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (linked instanceof HTMLDialogElement) {
+        linked.showModal();
+        linked.addEventListener('close', () => history.replaceState(null, '', location.pathname + location.search), { once: true });
+    }
+
     // Mehrfachklick auf eine Projektkarte (z. B. 3× / 5×) führt zu einer hinterlegten Adresse.
     // Gezählt wird, bis 700 ms lang nicht mehr geklickt wurde.
     document.querySelectorAll('[data-click-links]').forEach((card) => {

@@ -13,6 +13,23 @@
         });
     }
 
+    // Abschnitte mit data-reveal blenden beim ersten Hineinscrollen sanft ein.
+    // Die Klasse am <html> setzt erst JS: ohne JS oder bei "Bewegung reduzieren" bleibt alles sofort sichtbar.
+    var reveals = document.querySelectorAll('[data-reveal]');
+    if (reveals.length && !reduceMotion && 'IntersectionObserver' in window) {
+        document.documentElement.classList.add('has-reveal');
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+            });
+        }, { rootMargin: '0px 0px -10% 0px' });
+        reveals.forEach(function (el) {
+            observer.observe(el);
+        });
+    }
+
     var layer = document.querySelector('[data-parallax]');
     if (!layer) return;
 
@@ -60,9 +77,16 @@
         }, { passive: true });
     }
 
-    // Seitenhöhe ändert sich durch nachladende Bilder, aufgeklappte Karten usw.
-    new ResizeObserver(layout).observe(document.body);
-    window.addEventListener('resize', layout);
+    // Positionen nur beim Laden festlegen, nicht bei jeder Höhenänderung: sonst springen die Symbole,
+    // sobald jemand etwas auf- oder zuklappt. Neu berechnet wird erst, wenn alle Bilder da sind,
+    // und wenn sich die Fensterbreite ändert (nicht die Höhe: auf dem Handy blendet sich die Adressleiste ein und aus).
+    window.addEventListener('load', layout);
+    var lastWidth = window.innerWidth;
+    window.addEventListener('resize', function () {
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
+        layout();
+    });
 
     layout();
     items.forEach(function (el) {

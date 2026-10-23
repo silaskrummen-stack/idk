@@ -779,14 +779,6 @@ a.status-card__toggle {
     gap: 20px;
 }
 
-.hobby-item__title {
-    display: block;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 6px;
-}
-
 .lang-list {
     list-style: none;
     margin: 0;
@@ -917,16 +909,6 @@ a.status-card__toggle {
     bottom: 0;
     height: 4px;
     background: #8221bc; /* swap for your theme's purple if you have a variable */
-}
-
-@media (max-width: 640px) {
-    .werdegang-layout {
-        flex-direction: column;
-    }
-    .werdegang-photo {
-        width: 100%;
-        height: 260px;
-    }
 }
 
 .status-feed {
@@ -1114,137 +1096,6 @@ form {
     border-radius: 8px;
     margin-bottom: 16px;
     font-size: 0.9rem;
-}
-
-.werdegang-timeline {
-    overflow-x:auto;
-    scrollbar-width:thin;
-    scrollbar-color:var(--color-primary-light) transparent;
-}
-
-.werdegang-timeline__track {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    gap: 70px;
-    min-width: 900px;
-    padding-top: 40px;
-    height: 250px;
-}
-
-/* the purple line */
-.werdegang-timeline__track::before {
-    content: "";
-    position: absolute;
-    left: 0px;
-    right: -600px;
-    top: 23px;
-    height: 4px;
-    background: var(--color-primary-light);
-    border-radius: 999px;
-}
-
-.timeline-item {
-    position: relative;
-    width: 220px;
-    flex-shrink: 0;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-    font: inherit;
-    color: inherit;
-    cursor: pointer;
-}
-
-.timeline-item:hover::before {
-    border-color: var(--color-primary-light);
-}
-
-/* station circle */
-.timeline-item::before {
-    content: "";
-    position: absolute;
-    top: -28px;
-    left: 0;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--color-bg);
-    border: 4px solid var(--color-border);
-    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-}
-
-.timeline-item.is-selected::before {
-    background: var(--color-signal-live);
-    border-color: var(--color-signal-live);
-    box-shadow: 0 0 12px var(--color-signal-live);
-}
-
-.timeline-item__year {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: .75rem;
-    color: var(--color-primary-light);
-    margin-bottom: 8px;
-}
-
-.timeline-item.is-selected .timeline-item__year {
-    color: var(--color-signal-live);
-}
-
-.timeline-item__title {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-}
-
-/* collapsed by default, expands smoothly when selected */
-.timeline-item__panel {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.3s ease;
-}
-
-.timeline-item__panel-inner {
-    overflow: hidden;
-    display: block;
-}
-
-.timeline-item.is-selected .timeline-item__panel {
-    grid-template-rows: 1fr;
-}
-
-.timeline-item__text {
-    color: var(--color-text-muted);
-    font-size: .9rem;
-    line-height: 1.5;
-    margin: 0;
-}
-
-.werdegang-timeline::-webkit-scrollbar{
-    height:10px;
-}
-
-.werdegang-timeline::-webkit-scrollbar-track{
-    background:rgba(255,255,255,.05);
-    border-radius:999px;
-}
-
-.werdegang-timeline::-webkit-scrollbar-thumb{
-    background:var(--color-primary);
-    border-radius:999px;
-}
-
-.werdegang-timeline::-webkit-scrollbar-thumb:hover{
-    background:var(--color-primary-light);
 }
 
 .werdegang-photo {
@@ -1600,23 +1451,6 @@ a {
     margin: 36px 0 14px;
 }
 
-.werdegang-layout {
-    display: flow-root;
-    margin-bottom: 40px;
-}
-
-.werdegang-text {
-}
-
-.werdegang-text .about-card__text {
-    font-size: 1rem;
-    line-height: 1.7;
-}
-
-.werdegang-text .about-card__text + .about-card__text {
-    margin-top: 14px;
-}
-
 /* Fokus & Motivation as two large statements instead of small cards */
 .about-statements {
     display: grid;
@@ -1660,16 +1494,6 @@ a {
 
 .about-hobbies .hobby-list {
     gap: 28px 32px;
-}
-
-.hobby-item {
-    padding-top: 16px;
-    border-top: 2px solid var(--color-signal-private);
-}
-
-.about-hobbies .hobby-item__title {
-    font-size: 1.15rem;
-    margin-bottom: 8px;
 }
 
 .tool-list {
@@ -1771,8 +1595,23 @@ a {
     background: rgba(124, 92, 255, 0.16);
 }
 
+/* Alle Texte liegen in derselben Grid-Zelle: der Bereich ist immer so hoch wie der längste Text,
+   damit die Seite beim Umschalten nicht springt (und der Parallax-Hintergrund mit ihr) */
+.about-ai__list {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.about-ai__panel {
+    grid-column: 2;
+    grid-row: 1;
+    transition: opacity 0.25s ease;
+}
+
 .about-ai__panel[hidden] {
-    display: none;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
 }
 
 .about-essay {
@@ -1809,6 +1648,10 @@ a {
     }
     .about-ai__tab {
         width: auto;
+    }
+    .about-ai__panel {
+        grid-column: 1;
+        grid-row: 2;
     }
     .about-hobbies {
         padding: 24px;
@@ -2025,6 +1868,407 @@ html.lenis {
 
 @media (prefers-reduced-motion: reduce) {
     .parallax__symbol {
+        transition: none;
+    }
+}
+
+/* ===== Über mich: interaktive Elemente ===== */
+
+/* ----- Abschnitte einblenden (Klasse has-reveal setzt scroll.js) ----- */
+.has-reveal [data-reveal] {
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.has-reveal [data-reveal]:not(.is-revealed) {
+    opacity: 0;
+    transform: translateY(28px);
+}
+
+/* ----- Werdegang ----- */
+.journey__rail {
+    --inset: calc(100% / 12); /* Mitte der ersten bzw. letzten von sechs Spalten */
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin-bottom: 36px;
+}
+
+.journey__rail::before,
+.journey__progress {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: var(--inset);
+    height: 4px;
+    border-radius: 999px;
+}
+
+.journey__rail::before {
+    right: var(--inset);
+    background: var(--color-border);
+}
+
+.journey__progress {
+    width: calc((100% - 2 * var(--inset)) * var(--progress, 0));
+    background: var(--color-primary-light);
+    transition: width 0.5s ease;
+}
+
+.journey__stop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0 4px 4px;
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.journey__dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-bg);
+    border: 4px solid var(--color-border);
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.journey__stop:hover .journey__dot {
+    border-color: var(--color-primary-light);
+    transform: scale(1.15);
+}
+
+.journey__stop.is-passed .journey__dot {
+    border-color: var(--color-primary-light);
+}
+
+.journey__stop[aria-selected="true"] .journey__dot {
+    background: var(--color-signal-live);
+    border-color: var(--color-signal-live);
+    box-shadow: 0 0 12px var(--color-signal-live);
+}
+
+.journey__year {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-primary-light);
+}
+
+.journey__label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+}
+
+.journey__stop[aria-selected="true"] .journey__year {
+    color: var(--color-signal-live);
+}
+
+.journey__stop[aria-selected="true"] .journey__label {
+    color: var(--color-text);
+}
+
+.journey__body {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.journey__photo {
+    margin: 0;
+}
+
+/* alle Texte in derselben Zelle: die Höhe richtet sich nach dem längsten */
+.journey__panels {
+    display: grid;
+}
+
+.journey__panel {
+    grid-area: 1 / 1;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.journey__panel[hidden] {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.journey__title {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+}
+
+.journey__title span {
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+}
+
+.journey__panel .about-card__text {
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.journey__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+}
+
+.journey__facts li {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: var(--color-bg-elevated-2);
+    border: 1px solid var(--color-border);
+}
+
+.journey__next {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-primary-light);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.journey__next:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .journey__label {
+        display: none;
+    }
+    .journey__body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .journey__photo {
+        width: 140px;
+        height: 170px;
+    }
+}
+
+/* ----- Hobbys: Symbol vorne, Text nach dem Antippen ----- */
+.hobby-card {
+    position: relative;
+    display: grid;
+    min-height: 168px;
+    padding: 20px;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--color-border);
+    border-top: 2px solid var(--color-signal-private);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.hobby-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 176, 32, 0.45);
+    background: rgba(255, 176, 32, 0.04);
+}
+
+/* kleines Plus oben rechts, wird beim Öffnen zum × */
+.hobby-card::after {
+    content: '+';
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    transition: transform 0.25s ease;
+}
+
+.hobby-card[aria-expanded="true"]::after {
+    transform: rotate(45deg);
+}
+
+.hobby-card__face {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.hobby-card__front {
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.hobby-card__front img {
+    width: 52px;
+    height: 52px;
+    transition: transform 0.3s ease;
+}
+
+.hobby-card:hover .hobby-card__front img {
+    transform: rotate(-8deg) scale(1.06);
+}
+
+.hobby-card__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+}
+
+.hobby-card__back {
+    gap: 8px;
+}
+
+.hobby-card__back .hobby-card__title {
+    font-size: 1rem;
+    color: var(--color-signal-private);
+}
+
+.hobby-card__text {
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.hobby-card[aria-expanded="false"] .hobby-card__back,
+.hobby-card[aria-expanded="true"] .hobby-card__front {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.hobby-card[aria-expanded="false"] .hobby-card__back {
+    transform: translateY(8px);
+}
+
+.hobby-card[aria-expanded="true"] .hobby-card__front {
+    transform: translateY(-8px);
+}
+
+/* ----- Kompetenzen: unauffällig aufklappbar ----- */
+.skill-more summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.skill-more summary::-webkit-details-marker {
+    display: none;
+}
+
+.skill-more summary .skill-item__name {
+    transition: color 0.2s ease;
+}
+
+.skill-more summary:hover .skill-item__name,
+.skill-more[open] summary .skill-item__name {
+    color: var(--color-primary-light);
+}
+
+.skill-more__projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin: 10px 0 2px;
+    font-size: 0.82rem;
+}
+
+.skill-more__projects span {
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+}
+
+.skill-more__projects a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: rgba(124, 92, 255, 0.5);
+    text-underline-offset: 3px;
+}
+
+.skill-more__projects a:hover {
+    color: var(--color-primary-light);
+}
+
+/* ----- Stärken: Beispiel auf Klick ----- */
+.tag--proof {
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.tag--proof:hover,
+.tag--proof[aria-expanded="true"] {
+    border-color: var(--color-primary-light);
+}
+
+.tag--proof[aria-expanded="true"] {
+    background: rgba(124, 92, 255, 0.16);
+}
+
+.strength-proof {
+    margin: 16px 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.strength-proof a {
+    margin-left: 4px;
+    color: var(--color-primary-light);
+    white-space: nowrap;
+}
+
+/* ----- KI: erst das Fazit, der ganze Text auf Wunsch ----- */
+.about-essay .about-ai__verdict {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--color-text);
+}
+
+.about-ai:not(.is-expanded) .about-ai__more {
+    display: none;
+}
+
+.about-ai__toggle {
+    margin-top: 8px;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-primary-light);
+    cursor: pointer;
+}
+
+.about-ai__toggle:hover {
+    text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .journey__progress,
+    .journey__panel,
+    .hobby-card,
+    .hobby-card__face,
+    .hobby-card__front img {
         transition: none;
     }
 }
