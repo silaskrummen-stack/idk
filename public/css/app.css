@@ -1993,45 +1993,38 @@ html.lenis {
     pointer-events: none;
 }
 
-.parallax__img {
+.parallax__symbol {
     position: absolute;
     top: 0;
-    width: min(42vw, 600px);
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+    left: var(--x);
+    width: var(--size);
+    height: var(--size);
     opacity: 0;
-    filter: saturate(0.75);
-    /* weiche Ränder statt harter Bildkanten */
-    -webkit-mask-image: radial-gradient(ellipse at center, #000 40%, transparent 72%);
-    mask-image: radial-gradient(ellipse at center, #000 40%, transparent 72%);
     will-change: transform;
     transition: opacity 0.8s ease;
 }
 
-.parallax__img:nth-child(odd) {
-    left: -6vw;
-}
-
-.parallax__img:nth-child(even) {
-    right: -6vw;
-}
-
 /* erst einblenden, wenn scroll.js die Position gesetzt hat */
-.parallax__img.is-placed {
-    opacity: 0.18;
+.parallax__symbol.is-placed {
+    opacity: var(--opacity);
 }
 
+/* Handy: der Text reicht fast bis zum Rand, deshalb kleiner, blasser und nur jedes zweite Symbol */
 @media (max-width: 720px) {
-    .parallax__img {
-        width: 80vw;
+    .parallax__symbol {
+        width: calc(var(--size) * 0.6);
+        height: calc(var(--size) * 0.6);
     }
-    .parallax__img.is-placed {
-        opacity: 0.12;
+    .parallax__symbol.is-placed {
+        opacity: calc(var(--opacity) * 0.6);
+    }
+    .parallax__symbol:nth-child(even) {
+        display: none;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .parallax__img {
+    .parallax__symbol {
         transition: none;
     }
 }

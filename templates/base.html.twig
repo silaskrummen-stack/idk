@@ -11,22 +11,8 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-{# Parallax-Hintergrund, gesteuert von /js/scroll.js. Seiten können vorab parallax_images setzen. #}
-{% block parallax %}
-    {% set parallax_images = parallax_images|default([
-        '/pictures/projects/lan.jpg',
-        '/pictures/projects/civ.jpg',
-        '/pictures/projects/krummen.jpg',
-        '/pictures/projects/rage.jpg',
-        '/pictures/projects/klima.jpg',
-        '/pictures/projects/dg.jpg',
-    ]) %}
-    <div class="parallax" aria-hidden="true" data-parallax>
-        {% for src in parallax_images %}
-            <img class="parallax__img" src="{{ src }}" alt="" data-speed="{{ loop.index is odd ? '0.45' : '0.6' }}" {% if not loop.first %}loading="lazy" {% endif %}decoding="async">
-        {% endfor %}
-    </div>
-{% endblock %}
+{# Optionaler Parallax-Hintergrund (gesteuert von /js/scroll.js), bisher nur auf "Über mich" #}
+{% block parallax %}{% endblock %}
 
 <nav class="site-nav">
     <a href="{{ path('homepage') }}" class="site-nav__logo">system.log</a>

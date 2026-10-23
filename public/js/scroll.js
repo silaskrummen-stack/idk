@@ -1,5 +1,5 @@
-// Weiches Scrollen (Lenis, liegt lokal unter /js/lenis) und Parallax-Hintergrund.
-// Bei "Bewegung reduzieren" scrollt die Seite normal und die Bilder laufen einfach mit.
+// Weiches Scrollen (Lenis, liegt lokal unter /js/lenis) und optionaler Parallax-Hintergrund.
+// Bei "Bewegung reduzieren" scrollt die Seite normal und die Symbole laufen einfach mit.
 (function () {
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var lenis = null;
@@ -16,27 +16,24 @@
     var layer = document.querySelector('[data-parallax]');
     if (!layer) return;
 
-    var images = Array.prototype.slice.call(layer.querySelectorAll('img'));
+    var items = Array.prototype.slice.call(layer.children);
     var placed = [];
 
-    // Verteilt die Bilder über die ganze Seitenlänge: Bild i steht an seiner Startposition,
-    // wenn man i/(n-1) der Seite gescrollt hat. Kurze Seiten bekommen entsprechend weniger Bilder.
+    // Jedes Element steht bei data-offset (Anteil der Fensterhöhe), wenn man data-at (Anteil 0–1) der Seite
+    // gescrollt hat. Davor und danach wandert es mit data-speed mal der Scrollgeschwindigkeit.
     function layout() {
         var vh = window.innerHeight;
         var range = Math.max(0, document.documentElement.scrollHeight - vh);
-        var count = Math.min(images.length, Math.max(1, Math.round(range / vh) + 1));
 
-        placed = [];
-        images.forEach(function (img, i) {
-            var visible = i < count;
-            img.hidden = !visible;
-            if (!visible) return;
-
-            var speed = reduceMotion ? 1 : parseFloat(img.dataset.speed || '0.5');
-            var at = count > 1 ? (i / (count - 1)) * range : 0;
-            // abwechselnd etwas höher und tiefer im Bild, damit links und rechts nicht gleichauf stehen
-            var offset = vh * (i % 2 ? 0.45 : 0.1);
-            placed.push({ img: img, speed: speed, base: at * speed + offset });
+        placed = items.map(function (el) {
+            var speed = reduceMotion ? 1 : parseFloat(el.dataset.speed || '0.5');
+            var at = parseFloat(el.dataset.at || '0') * range;
+            return {
+                el: el,
+                speed: speed,
+                base: at * speed + parseFloat(el.dataset.offset || '0.3') * vh,
+                spin: reduceMotion ? 0 : parseFloat(el.dataset.spin || '0') / 1000, // Grad pro Pixel
+            };
         });
         update();
     }
@@ -44,7 +41,8 @@
     function update() {
         var y = window.scrollY;
         placed.forEach(function (p) {
-            p.img.style.transform = 'translate3d(0, ' + (p.base - y * p.speed).toFixed(1) + 'px, 0)';
+            p.el.style.transform = 'translate3d(0, ' + (p.base - y * p.speed).toFixed(1) + 'px, 0)'
+                + ' rotate(calc(var(--rotate, 0deg) + ' + (y * p.spin).toFixed(2) + 'deg))';
         });
     }
 
@@ -67,7 +65,7 @@
     window.addEventListener('resize', layout);
 
     layout();
-    images.forEach(function (img) {
-        img.classList.add('is-placed');
+    items.forEach(function (el) {
+        el.classList.add('is-placed');
     });
 })();

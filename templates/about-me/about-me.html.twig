@@ -2,6 +2,33 @@
 
 {% block title %}Über mich — Portfolio{% endblock %}
 
+{# Parallax-Hintergrund: Symbole unter /pictures/parallax/, gleichmäßig über die Seite verteilt, abwechselnd links und rechts.
+   Drei Tiefenebenen: nah = groß, deutlicher, schneller; fern = klein, blasser, langsamer. #}
+{% block parallax %}
+    {% set symbols = ['code', 'd20', 'terminal', 'gamepad', 'wifi', 'pixel-heart', 'git', 'coffee', 'braces', 'wasd', 'globe',
+        'pixel-alien', 'chip', 'trophy', 'cursor', 'headset', 'bug', 'cloud', 'sword', 'floppy', 'pixel-coin'] %}
+    {% set depths = [
+        {size: 84, speed: 0.7, opacity: 0.3},
+        {size: 40, speed: 0.3, opacity: 0.16},
+        {size: 60, speed: 0.5, opacity: 0.22},
+    ] %}
+    {% set x_left = [3, 8, 5, 10, 6] %}
+    {% set x_right = [90, 85, 92, 87, 89] %}
+    {% set offsets = [0.15, 0.55, 0.35, 0.75, 0.25, 0.65] %}
+    {% set rotations = [-12, 8, 0, 15, -6] %}
+    {% set spins = [-8, 6, 10, -5] %}
+    <div class="parallax" aria-hidden="true" data-parallax>
+        {% for symbol in symbols %}
+            {% set i = loop.index0 %}
+            {% set depth = depths[i % 3] %}
+            <img class="parallax__symbol" src="/pictures/parallax/{{ symbol }}.svg" alt="" width="{{ depth.size }}" height="{{ depth.size }}"
+                 style="--x: {{ i is even ? x_left[i % 5] : x_right[i % 5] }}%; --size: {{ depth.size }}px; --opacity: {{ depth.opacity }}; --rotate: {{ rotations[i % 5] }}deg"
+                 data-at="{{ i / (symbols|length - 1) }}" data-offset="{{ offsets[i % 6] }}" data-speed="{{ depth.speed }}" data-spin="{{ spins[i % 4] }}"
+                 decoding="async">
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {% block body %}
     {% set skill_groups = {
         'Backend': {'PHP': 3, 'Java': 1, 'C#': 1},
