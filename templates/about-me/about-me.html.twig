@@ -22,16 +22,41 @@
     {% set rotations = [-35, 20, -10, 40, -25, 12, 30] %}
     {% set spins = [-18, 12, 25, -9, 15, -22] %}
     {% set last = symbols|length - 1 %}
+    {% set items = [] %}
+    {% for symbol in symbols %}
+        {% set i = loop.index0 %}
+        {% set depth = depth_order[i % depth_order|length] %}
+        {% set items = items|merge([{
+            symbol: symbol,
+            depth: depth,
+            x: depth == 'near' ? x_edge[i % x_edge|length] : x_anywhere[i % x_anywhere|length],
+            at: max(0, min(1, (i + jitter[i % jitter|length]) / last)),
+            offset: offsets[i % offsets|length],
+            rotate: rotations[i % rotations|length],
+            spin: spins[i % spins|length],
+        }]) %}
+    {% endfor %}
+    {# Von Hand gesetzt: Lücken oben rechts (at 0 = beim Laden sichtbar) und am Seitenende (at 1) #}
+    {% set items = items|merge([
+        {symbol: 'server',      depth: 'far',  x: 70, at: 0,    offset: 0.06, rotate: -14, spin: 10},
+        {symbol: 'rocket',      depth: 'near', x: 89, at: 0,    offset: 0.4,  rotate: 28,  spin: -15},
+        {symbol: 'hash',        depth: 'mid',  x: 79, at: 0.02, offset: 0.68, rotate: -22, spin: 14},
+        {symbol: 'pixel-heart', depth: 'mid',  x: 61, at: 0,    offset: 0.02, rotate: 12,  spin: -10},
+        {symbol: 'joystick',    depth: 'near', x: 77, at: 0.06, offset: 0.14, rotate: -8,  spin: 20},
+        {symbol: 'trophy',      depth: 'near', x: 6,  at: 1,    offset: 0.55, rotate: -18, spin: 12},
+        {symbol: 'code',        depth: 'far',  x: 56, at: 1,    offset: 0.32, rotate: 24,  spin: -8},
+        {symbol: 'd20',         depth: 'mid',  x: 83, at: 0.97, offset: 0.78, rotate: -30, spin: 18},
+        {symbol: 'pixel-alien', depth: 'near', x: 90, at: 1,    offset: 0.22, rotate: 10,  spin: -14},
+        {symbol: 'wifi',        depth: 'mid',  x: 21, at: 0.95, offset: 0.86, rotate: 35,  spin: -20},
+        {symbol: 'cloud',       depth: 'far',  x: 30, at: 1,    offset: 0.62, rotate: -6,  spin: 9},
+        {symbol: 'gamepad',     depth: 'near', x: 80, at: 0.93, offset: 0.5,  rotate: 16,  spin: -12},
+    ]) %}
     <div class="parallax" aria-hidden="true" data-parallax>
-        {% for symbol in symbols %}
-            {% set i = loop.index0 %}
-            {% set depth_name = depth_order[i % depth_order|length] %}
-            {% set depth = depths[depth_name] %}
-            {% set x = depth_name == 'near' ? x_edge[i % x_edge|length] : x_anywhere[i % x_anywhere|length] %}
-            {% set at = max(0, min(1, (i + jitter[i % jitter|length]) / last)) %}
-            <img class="parallax__symbol" src="/pictures/parallax/{{ symbol }}.svg" alt="" width="{{ depth.size }}" height="{{ depth.size }}"
-                 style="--x: {{ x }}%; --size: {{ depth.size }}px; --opacity: {{ depth.opacity }}; --rotate: {{ rotations[i % rotations|length] }}deg"
-                 data-at="{{ at|round(3) }}" data-offset="{{ offsets[i % offsets|length] }}" data-speed="{{ depth.speed }}" data-spin="{{ spins[i % spins|length] }}"
+        {% for item in items %}
+            {% set depth = depths[item.depth] %}
+            <img class="parallax__symbol" src="/pictures/parallax/{{ item.symbol }}.svg" alt="" width="{{ depth.size }}" height="{{ depth.size }}"
+                 style="--x: {{ item.x }}%; --size: {{ depth.size }}px; --opacity: {{ depth.opacity }}; --rotate: {{ item.rotate }}deg"
+                 data-at="{{ item.at|round(3) }}" data-offset="{{ item.offset }}" data-speed="{{ depth.speed }}" data-spin="{{ item.spin }}"
                  decoding="async">
         {% endfor %}
     </div>
