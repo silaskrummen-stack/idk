@@ -52,10 +52,12 @@ docker compose -f compose.yml -f compose.prod.yml exec nginx nginx -s reload
 
 Die Handys der Mitspieler öffnen `https://civ.silas-krummen.de/abstimmen/` **ohne Login** (Ausnahme in `docker/nginx.prod.conf`).
 Dort kann man nur für die gerade laufende Abstimmung eine Stimme abgeben – Spielstand, Bildschirm und Spielleitung bleiben geschützt.
-Nach einer Änderung an `docker/nginx.prod.conf`: `git pull` und dann
+Nach einer Änderung an `docker/nginx.prod.conf`: `git pull`, dann testen und den nginx-Container **neu erstellen**
+(ein `reload` sieht die neue Datei nicht, siehe `DEPLOY.md`):
 
 ```bash
-docker compose -f compose.yml -f compose.prod.yml exec nginx nginx -s reload
+docker compose -f compose.yml -f compose.prod.yml run --rm --no-deps nginx nginx -t
+docker compose -f compose.yml -f compose.prod.yml up -d --force-recreate nginx
 ```
 
 ## Verbindung zu Civ VI (Mod + Watcher)

@@ -3,10 +3,17 @@
 
 {% set eyebrow = 'projects/lan-party --live' %}
 {% set backdrop_video = '/videos/projects/lan-party.mp4' %}
+{% set parallax_images = [
+    '/pictures/projects/lan-board.jpg',
+    '/pictures/projects/lan-quiz.jpg',
+    '/pictures/projects/lan-wheel.jpg',
+    '/pictures/projects/lan-price.jpg',
+    '/pictures/projects/lan-admin.jpg',
+] %}
 {% set specs = {
     'Zeitraum': project.date,
     'Meine Rolle': 'Anforderungen, Styling, Infrastruktur, Moderation',
-    'Stack': 'Symfony · PHP 8.3 · Vanilla JS',
+    'Stack': 'Symfony · PHP 8.5 · Vanilla JS',
 } %}
 
 {% block content %}
@@ -52,7 +59,7 @@
     <section class="project-block">
         {{ ui.section_title('04', 'Technische Umsetzung') }}
         <div class="project-block__body">
-            <p>Die Anwendung ist Teil dieses Symfony-Projekts (PHP 8.3), das Frontend ist in Vanilla JavaScript und CSS umgesetzt. Der Spielstand liegt als JSON-Datei mit Datei-Lock vor, Bildschirm, Admin-Panel und Handys synchronisieren sich per Polling.</p>
+            <p>Die Anwendung ist Teil dieses Symfony-Projekts (PHP 8.5), das Frontend ist in Vanilla JavaScript und CSS umgesetzt. Der Spielstand liegt als JSON-Datei mit Datei-Lock vor, Bildschirm, Admin-Panel und Handys synchronisieren sich per Polling.</p>
             <p>Zeitabläufe wie Countdowns und Auflösungen steuert der Server, damit alle Geräte dasselbe zeigen. Lösungen und Bilder liefert er erst aus, wenn sie aufgedeckt werden, damit niemand vorher nachschauen kann.</p>
 
             <div class="project-flow" aria-label="Datenfluss">

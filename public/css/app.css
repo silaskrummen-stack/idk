@@ -1978,3 +1978,60 @@ a {
         padding: 24px 16px 32px;
     }
 }
+
+/* ===== Parallax-Hintergrund & weiches Scrollen ===== */
+/* Lenis übernimmt das weiche Scrollen, natives smooth würde sich damit beißen */
+html.lenis {
+    scroll-behavior: auto;
+}
+
+.parallax {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.parallax__img {
+    position: absolute;
+    top: 0;
+    width: min(42vw, 600px);
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    opacity: 0;
+    filter: saturate(0.75);
+    /* weiche Ränder statt harter Bildkanten */
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 40%, transparent 72%);
+    mask-image: radial-gradient(ellipse at center, #000 40%, transparent 72%);
+    will-change: transform;
+    transition: opacity 0.8s ease;
+}
+
+.parallax__img:nth-child(odd) {
+    left: -6vw;
+}
+
+.parallax__img:nth-child(even) {
+    right: -6vw;
+}
+
+/* erst einblenden, wenn scroll.js die Position gesetzt hat */
+.parallax__img.is-placed {
+    opacity: 0.18;
+}
+
+@media (max-width: 720px) {
+    .parallax__img {
+        width: 80vw;
+    }
+    .parallax__img.is-placed {
+        opacity: 0.12;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .parallax__img {
+        transition: none;
+    }
+}

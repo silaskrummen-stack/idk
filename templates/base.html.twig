@@ -4,14 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Portfolio{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="/favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/js/lenis/lenis.css">
     <link rel="stylesheet" href="/css/app.css">
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
+{# Parallax-Hintergrund, gesteuert von /js/scroll.js. Seiten können vorab parallax_images setzen. #}
+{% block parallax %}
+    {% set parallax_images = parallax_images|default([
+        '/pictures/projects/lan.jpg',
+        '/pictures/projects/civ.jpg',
+        '/pictures/projects/krummen.jpg',
+        '/pictures/projects/rage.jpg',
+        '/pictures/projects/klima.jpg',
+        '/pictures/projects/dg.jpg',
+    ]) %}
+    <div class="parallax" aria-hidden="true" data-parallax>
+        {% for src in parallax_images %}
+            <img class="parallax__img" src="{{ src }}" alt="" data-speed="{{ loop.index is odd ? '0.45' : '0.6' }}" {% if not loop.first %}loading="lazy" {% endif %}decoding="async">
+        {% endfor %}
+    </div>
+{% endblock %}
+
 <nav class="site-nav">
     <a href="{{ path('homepage') }}" class="site-nav__logo">system.log</a>
     <ul class="site-nav__links">
@@ -72,8 +88,9 @@
 </footer>
 
 {% block javascripts %}{% endblock %}
-</body>
 
+<script src="/js/lenis/lenis.min.js" defer></script>
+<script src="/js/scroll.js" defer></script>
 <script>
 
     // Projekte-Dropdown: Hover öffnet es per CSS, der Button ist für Touch und Tastatur
@@ -107,4 +124,5 @@
         });
     });
 </script>
+</body>
 </html>
