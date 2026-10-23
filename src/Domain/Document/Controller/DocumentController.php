@@ -27,7 +27,7 @@ class DocumentController extends AbstractController
 
     /** Liefert ein PDF nur hinter dem Portfolio-Login aus (access_control ^/). */
     #[Route('/documents/{file}', name: 'document_file', requirements: ['file' => '[a-z0-9-]+\.pdf'], methods: ['GET'])]
-    public function file(string $file): BinaryFileResponse
+    public function download(string $file): BinaryFileResponse
     {
         // Nur Dateien aus der Liste, kein freier Zugriff auf den Ordner
         if (!in_array($file, array_column($this->documents(), 'file'), true) || !is_file($this->dir . '/' . $file)) {
