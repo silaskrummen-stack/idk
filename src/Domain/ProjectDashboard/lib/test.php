@@ -2,6 +2,66 @@
 
 return [
     [
+        'title' => 'Portfolio-Chatbot',
+        'category' => 'privat',
+        'date' => '10/2026',
+        'description' => 'Ein KI-Assistent für dieses Portfolio: Er beantwortet Fragen zu meinem Werdegang und meinen Projekten, gebaut mit Symfony AI und einem austauschbaren Sprachmodell über Microsoft Azure AI Foundry.',
+        'content' => [
+            [
+                'type' => 'heading',
+                'text' => 'Projektüberblick',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Unten rechts auf jeder Portfolio-Seite sitzt ein Chat, der Fragen zu mir beantwortet: Was habe ich mit LoRaWAN gemacht, welche Erfahrung habe ich mit Schnittstellen, was hat das Adress-Auswertungstool gebracht? Die Antworten stützen sich ausschließlich auf die Inhalte dieses Portfolios. Was der Assistent nicht weiß, sagt er offen.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Architektur',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Chat ist direkt in die Symfony-Anwendung eingebaut und nutzt Symfony AI. Das Sprachmodell läuft über Microsoft Azure AI Foundry und wird über eine OpenAI-kompatible Schnittstelle angesprochen. Dadurch ist der Anbieter austauschbar: Für ein anderes Modell ändern sich nur Adresse, Schlüssel und Modellname in der Konfiguration, der Code bleibt gleich.',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Im Systemprompt steht von jedem Projekt nur eine kurze Zusammenfassung. Fragt jemand genauer nach, ruft das Modell selbst ein Tool auf, das die vollständige Projektbeschreibung nachlädt. So bleibt der Prompt klein und die Antworten trotzdem detailliert. Die Antwort wird gestreamt, also Wort für Wort angezeigt, sobald das Modell sie erzeugt.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Eine Quelle für alle Inhalte',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Assistent liest dieselben Daten wie die Website: die Projekte aus dem Projekt-Log, Werdegang und Stärken von der Seite „Über mich“ und ergänzende Texte aus eigenen Prompt-Dateien. Ändere ich ein Projekt, sind Website und Chatbot gleichzeitig aktuell. Doppelte Pflege gibt es nicht.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Sicherheit und Kosten',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Der Chat liegt hinter dem Portfolio-Login und ist zusätzlich mit einem CSRF-Token und einer Begrenzung der Fragen pro Stunde geschützt. Gespräche werden nirgends gespeichert. Antworten des Modells werden nie als HTML eingefügt, sondern sicher in Text, Listen und geprüfte Links übersetzt. Feste Regeln im Systemprompt verhindern, dass sich der Assistent per Prompt Injection umprogrammieren lässt oder private Daten herausgibt. Weil der Systemprompt bei jeder Anfrage identisch ist, kann der Anbieter ihn zwischenspeichern, was Antworten schneller und günstiger macht.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Testen statt hoffen',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Zu dem Assistenten gehört ein Katalog aus Testfragen mit erwartetem Verhalten: von einfachen Fragen über Fallen wie „Was verdient er?“ bis zu Versuchen, die Regeln auszuhebeln. Nach jeder Änderung an Inhalten oder Modell gehe ich ihn durch.',
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Erkenntnisse',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Die größte Hürde war nicht der Code, sondern die Infrastruktur: Neue Azure-Konten bekommen für die bekannten OpenAI-Modelle zunächst kein Kontingent. Statt mich an einen Anbieter zu binden, habe ich den Assistenten deshalb von Anfang an anbieterunabhängig gebaut. Außerdem habe ich gelernt, dass die Qualität eines solchen Assistenten weniger vom Modell abhängt als von den Inhalten: Konkrete Ergebnisse und ehrliche Lerngeschichten machen den Unterschied.',
+            ],
+        ],
+    ],
+    [
         'title' => 'LAN-Party Moderation',
         'featured' => true,
         'category' => 'privat',

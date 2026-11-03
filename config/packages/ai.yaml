@@ -1,0 +1,27 @@
+# Symfony AI – Portfolio-Chat
+# Doku: https://symfony.com/doc/current/ai/bundles/ai-bundle.html
+#
+# Austauschbarkeit: Das Modell läuft über eine OpenAI-kompatible Schnittstelle ("generic").
+# Für einen anderen Anbieter (Azure OpenAI, Mistral, lokaler Server …) ändern sich nur
+# base_url, Key und Modellname in .env.local – der Code bleibt gleich.
+
+ai:
+    platform:
+        generic:
+            # Azure AI Foundry, v1-Schnittstelle:
+            # https://<resource>.openai.azure.com/openai  +  /v1/chat/completions
+            foundry:
+                base_url: 'https://%env(AZURE_AI_BASEURL)%/openai'
+                api_key: '%env(AZURE_AI_KEY)%'
+                supports_embeddings: false
+
+    agent:
+        portfolio:
+            platform: 'ai.platform.generic.foundry'
+            # Name der Bereitstellung in Foundry (z. B. grok-4.6)
+            model: '%env(AZURE_AI_DEPLOYMENT)%'
+            # Tools, die das Modell selbst aufrufen darf
+            tools:
+                - 'App\Ai\Tool\ProjectDetails'
+            # Kein prompt hier: Den Systemprompt baut App\Ai\PortfolioKnowledge aus den Dateien in prompts/
+            # zusammen und schickt ihn mit jeder Anfrage mit.

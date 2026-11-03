@@ -1,0 +1,38 @@
+{# Portfolio-Assistent: schwebender Button + Chatfenster. Wird in base.html.twig nur für eingeloggte Besucher eingebunden. #}
+<div class="chat" data-chat
+     data-chat-endpoint="{{ path('portfolio_chat') }}"
+     data-chat-token="{{ csrf_token('portfolio_chat') }}">
+
+    <button type="button" class="chat__launcher" data-chat-open aria-haspopup="dialog" aria-controls="chat-panel">
+        <span class="chat__launcher-prompt" aria-hidden="true">&gt;</span>
+        <span>Frag den Chatbot</span>
+    </button>
+
+    <section class="chat__panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" hidden data-chat-panel>
+        <header class="chat__header">
+            <div>
+                <h2 class="chat__title" id="chat-title"><span aria-hidden="true">●</span> ask_silas.exe</h2>
+                <p class="chat__subtitle">KI-Assistent · beantwortet Fragen zu Silas und seinen Projekten</p>
+            </div>
+            <button type="button" class="chat__close" data-chat-close aria-label="Chat schließen">×</button>
+        </header>
+
+        <div class="chat__log" data-chat-log aria-live="polite" data-lenis-prevent>
+            <div class="chat__msg chat__msg--assistant">
+                <p>Hi! Ich bin ein KI-Assistent und kenne Silas' Werdegang und Projekte. Frag mich zum Beispiel:</p>
+                <div class="chat__suggestions">
+                    <button type="button" data-chat-suggestion>Was hat Silas mit LoRaWAN gemacht?</button>
+                    <button type="button" data-chat-suggestion>Welche Erfahrung hat er mit Schnittstellen?</button>
+                    <button type="button" data-chat-suggestion>Wie ist dieser Chat gebaut?</button>
+                </div>
+            </div>
+        </div>
+
+        <form class="chat__form" data-chat-form>
+            <label class="visually-hidden" for="chat-input">Deine Frage</label>
+            <textarea id="chat-input" class="chat__input" rows="1" maxlength="500" placeholder="Frag etwas über Silas …" data-chat-input required></textarea>
+            <button type="submit" class="chat__send" data-chat-send aria-label="Senden">↵</button>
+        </form>
+        <p class="chat__disclaimer">KI-generiert, kann Fehler enthalten. Bitte keine persönlichen Daten eingeben. Es wird nichts gespeichert.</p>
+    </section>
+</div>
