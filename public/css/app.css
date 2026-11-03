@@ -1311,6 +1311,11 @@ a {
     gap: 24px;
 }
 
+/* Erste Karte ist breit; bleibt danach eine einzelne Karte übrig, nimmt sie ebenfalls die volle Breite */
+.project-featured > :last-child:nth-child(even) {
+    grid-column: 1 / -1;
+}
+
 .status-card--lead {
     grid-column: 1 / -1;
     display: grid;

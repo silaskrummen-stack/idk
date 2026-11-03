@@ -43,6 +43,10 @@
     };
 
     openButton.addEventListener('click', () => setOpen(true));
+    // Andere Elemente auf der Seite (z. B. „Jetzt ausprobieren“ auf der Chatbot-Projektseite) öffnen den Chat ebenfalls
+    document.querySelectorAll('[data-chat-launch]').forEach((button) => {
+        button.addEventListener('click', () => setOpen(true));
+    });
     root.querySelector('[data-chat-close]').addEventListener('click', () => setOpen(false));
     panel.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') setOpen(false);

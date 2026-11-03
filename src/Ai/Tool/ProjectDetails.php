@@ -4,13 +4,18 @@ namespace App\Ai\Tool;
 
 use App\Domain\ProjectDashboard\ProjectCatalog;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Tool für den Portfolio-Assistenten: liefert den ausführlichen Text eines Projekts aus lib/test.php.
+ * Tool für den Portfolio-Assistenten: liefert die ausführliche Beschreibung eines Projekts.
  *
- * Im Systemprompt steht von jedem Projekt nur eine Zeile. Fragt jemand genauer nach, ruft das Modell dieses Tool
- * auf und bekommt die ganze Projektbeschreibung – so bleibt der Prompt klein (schneller, günstiger),
- * und trotzdem kann der Assistent in die Tiefe gehen.
+ * Eine Quelle für alles:
+ *   - Projekte mit eigener Seite (LAN-Party, CIV-Abend, krummen.de, Chatbot): Die fertige Projektseite wird intern
+ *     gerendert (Sub-Request) und ihr Text ausgelesen – genau das, was Besucher im Browser sehen.
+ *   - Alle anderen: der Text aus lib/test.php, den auch das Modal im Projekt-Log zeigt.
+ *
+ * Im Systemprompt steht von jedem Projekt nur eine Zeile; Details holt sich das Modell nur bei Bedarf.
  */
 #[AsTool(
     name: 'projekt_details',
@@ -18,8 +23,12 @@ use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 )]
 final class ProjectDetails
 {
-    public function __construct(private readonly ProjectCatalog $catalog)
-    {
+    private const MAX_LENGTH = 12000;
+
+    public function __construct(
+        private readonly ProjectCatalog $catalog,
+        private readonly HttpKernelInterface $kernel,
+    ) {
     }
 
     /**
@@ -39,14 +48,25 @@ final class ProjectDetails
         }
 
         $url = $this->catalog->urls()[$project['title']] ?? '';
-        $lines = [
+        $header = [
             '# '.$project['title'],
             \sprintf('Datum: %s · %s · Link: %s', $project['date'] ?? 'ohne Datum', 'produktiv' === ($project['category'] ?? '') ? 'beruflich' : 'privat', $url),
             '',
             trim($project['description'] ?? ''),
+            '',
         ];
 
-        foreach ($project['content'] ?? [] as $block) {
+        $body = isset($project['route']) ? $this->pageText($url) : null;
+        $body ??= $this->contentText($project['content'] ?? []);
+
+        return mb_substr(implode("\n", $header).$body, 0, self::MAX_LENGTH);
+    }
+
+    /** Text aus dem 'content'-Array in lib/test.php */
+    private function contentText(array $content): string
+    {
+        $lines = [];
+        foreach ($content as $block) {
             match ($block['type'] ?? null) {
                 'heading' => array_push($lines, '', '## '.$block['text']),
                 'text' => $lines[] = $block['text'],
@@ -54,9 +74,60 @@ final class ProjectDetails
             };
         }
 
-        if (empty($project['content'])) {
-            $lines[] = '';
-            $lines[] = '(Zu diesem Projekt gibt es eine eigene Projektseite mit mehr Inhalt, siehe Link.)';
+        return implode("\n", $lines);
+    }
+
+    /** Rendert eine Projektseite intern und gibt ihren Text zurück (oder null, wenn das nicht klappt). */
+    private function pageText(string $url): ?string
+    {
+        if ('' === $url) {
+            return null;
+        }
+
+        try {
+            $response = $this->kernel->handle(Request::create($url), HttpKernelInterface::SUB_REQUEST, false);
+            if (200 !== $response->getStatusCode()) {
+                return null;
+            }
+
+            return $this->htmlToText((string) $response->getContent());
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    private function htmlToText(string $html): ?string
+    {
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+        libxml_clear_errors();
+
+        $xpath = new \DOMXPath($dom);
+        // Nur der Artikel, ohne „Nächstes Projekt“-Navigation und Skripte
+        $nodes = $xpath->query(
+            '//article//*[self::h2 or self::h3 or self::p or self::li or self::dt or self::dd or self::figcaption or self::strong]'
+            .'[not(ancestor::nav)][not(ancestor::script)]',
+        );
+        if (false === $nodes || 0 === $nodes->length) {
+            return null;
+        }
+
+        $lines = [];
+        foreach ($nodes as $node) {
+            // <strong> nur als eigene Zeile, wenn es nicht Teil eines Absatzes ist
+            if ('strong' === $node->nodeName && null !== $node->parentNode && 'p' === $node->parentNode->nodeName) {
+                continue;
+            }
+            $text = trim(preg_replace('/\s+/u', ' ', $node->textContent) ?? '');
+            if ('' === $text || end($lines) === $text) {
+                continue;
+            }
+            $lines[] = match ($node->nodeName) {
+                'h2', 'h3' => "\n## ".preg_replace('/^\d{2}\s*/', '', $text),
+                'li' => '- '.$text,
+                default => $text,
+            };
         }
 
         return implode("\n", $lines);
@@ -71,7 +142,6 @@ final class ProjectDetails
     {
         $needle = mb_strtolower(trim($title));
 
-        // 1. exakter Titel, 2. Titel enthält Suchbegriff (oder umgekehrt)
         foreach ($projects as $project) {
             if (mb_strtolower($project['title']) === $needle) {
                 return $project;

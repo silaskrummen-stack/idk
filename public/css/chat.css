@@ -199,6 +199,9 @@
 
 .chat__form {
     display: flex;
+    flex-direction: row; /* app.css setzt form { flex-direction: column } für das Login-Formular */
+    align-items: flex-end;
+    max-width: none;
     gap: 8px;
     padding: 12px 12px 6px;
     border-top: 1px solid var(--color-border);
@@ -206,6 +209,7 @@
 
 .chat__input {
     flex: 1;
+    min-width: 0;
     resize: none;
     max-height: 120px;
     padding: 10px 12px;
@@ -226,6 +230,7 @@
 .chat__send {
     flex: none;
     width: 42px;
+    height: 42px;
     border: 0;
     border-radius: 10px;
     background: var(--color-primary);
@@ -267,4 +272,10 @@
         transition: none;
         animation: none;
     }
+}
+
+/* Scrollbalken passend zum dunklen Design (Firefox + Chromium) */
+.chat__log {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-bg-elevated-2) transparent;
 }

@@ -1,0 +1,102 @@
+{% extends 'projects/_layout.html.twig' %}
+{% import 'projects/_macros.html.twig' as ui %}
+
+{% set eyebrow = 'projects/chatbot --ask silas' %}
+{% set specs = {
+    'Zeitraum': project.date,
+    'Modell': 'GPT-5.4 mini',
+    'Plattform': 'Azure AI Foundry, EU-Datenzone',
+    'Stack': 'Symfony 7.4 · Symfony AI · Vanilla JS',
+} %}
+
+{% block hero_actions %}
+    <div class="hero__actions project-hero__actions">
+        <button type="button" class="btn btn--primary" data-chat-launch>Jetzt ausprobieren</button>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="project-block">
+        {{ ui.section_title('01', 'Projektüberblick') }}
+        <div class="project-block__body">
+            <p>Unten rechts auf jeder Seite dieses Portfolios sitzt ein Chat, der Fragen zu mir beantwortet: Was habe ich mit LoRaWAN gemacht, welche Erfahrung habe ich mit Schnittstellen, was hat das Adress-Auswertungstool gebracht? Die Antworten stützen sich ausschließlich auf die Inhalte dieses Portfolios. Was der Assistent nicht weiß, sagt er offen, statt etwas zu erfinden.</p>
+            <p>Gebaut habe ich ihn direkt in diese Symfony-Anwendung, mit Symfony AI und einem Sprachmodell über Microsoft Azure AI Foundry.</p>
+            {{ ui.shot('/pictures/projects/chatbot-chat.png', 'Der Assistent beantwortet eine Frage zu einem Projekt', 'ask_silas.exe') }}
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('02', 'Woher das Wissen kommt') }}
+        <div class="project-block__body">
+            <p>Der größte Teil des Wissens stammt aus dem, was tatsächlich auf dieser Website steht: Werdegang, Kenntnisse, Stärken und Hobbys von der Seite „Über mich“, die Projekte aus dem Projekt-Log und die ausführlichen Projektseiten wie diese hier. Website und Chatbot lesen dieselben Daten. Ändere ich ein Projekt, sind beide gleichzeitig aktuell, ohne doppelte Pflege.</p>
+            <p>Den Rest liefern Markdown-Dateien, die ich selbst geschrieben oder mit KI-Hilfe formuliert habe: die Verhaltensregeln des Assistenten und Ergänzungen, die nicht auf der Website stehen, etwa meine Arbeitsweise, Ergebnisse mit konkreten Zahlen oder Lernerfahrungen.</p>
+
+            <div class="project-flow" aria-label="Woher der Assistent sein Wissen bezieht">
+                <span class="project-flow__node">Website<small>Über mich, Projekte</small></span>
+                <span class="project-flow__node">Markdown<small>Regeln, Ergänzungen</small></span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node project-flow__node--core">Systemprompt</span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node">GPT-5.4 mini<small>+ Tool für Details</small></span>
+                <span class="project-flow__arrow" aria-hidden="true"></span>
+                <span class="project-flow__node">Antwort<small>Wort für Wort</small></span>
+            </div>
+
+            <p>Damit der Prompt klein und schnell bleibt, steht von jedem Projekt nur eine Zeile darin. Fragt jemand genauer nach, ruft das Modell selbst ein Tool auf, das die vollständige Projektseite nachlädt. Ein nächster Schritt wäre RAG (Retrieval-Augmented Generation): Inhalte würden in einem Vektorspeicher abgelegt und bei jeder Frage nur die passenden Abschnitte gesucht. Für die aktuelle Textmenge ist das nicht nötig, sobald weitere Inhalte hinzukommen aber eine naheliegende Erweiterung.</p>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('03', 'Das Modell') }}
+        <div class="project-block__body">
+            <p>Als Sprachmodell nutze ich GPT-5.4 mini von OpenAI. Es hat kleine Reasoning-Fähigkeiten, denkt vor einer Antwort also kurz nach, die ich bewusst auf eine niedrige Stufe gestellt habe. Es formuliert natürlich und geht auf den Ton einer Frage ein, bleibt dabei aber sehr schnell. Für einen Chat ist genau diese Mischung entscheidend.</p>
+            <p>Das habe ich auf dem Weg dorthin gelernt: Mein erster Versuch lief mit einem großen Reasoning-Modell, das selbst auf „Was ist deine Lieblingsfarbe?“ 20 bis 30 Sekunden nachgedacht hat. Das stärkste Modell ist nicht automatisch das richtige.</p>
+            <p>Das Modell ist austauschbar. Der Assistent spricht es über eine OpenAI-kompatible Schnittstelle an. Für einen anderen Anbieter ändern sich nur Adresse, Schlüssel und Modellname in der Konfiguration, der Code bleibt gleich.</p>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('04', 'Datenschutz & EU-Datenzone') }}
+        <div class="project-block__body">
+            <p>Das Modell läuft in der EU-Datenzone von Azure. Anfragen werden damit in Rechenzentren innerhalb der EU verarbeitet. Microsoft nutzt sie nicht zum Training von Modellen.</p>
+            <p>Auf dieser Website wird nichts dauerhaft gespeichert: Es gibt keinen Chatverlauf auf dem Server. Der Verlauf liegt nur im geöffneten Browser-Tab und verschwindet, sobald der Tab geschlossen wird.</p>
+            <ul class="project-chips">
+                {% for item in ['EU-Datenzone', 'Kein Chatverlauf auf dem Server', 'Nur hinter dem Portfolio-Login', 'Keine Weitergabe privater Daten'] %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('05', 'Sicherheit & Kosten') }}
+        <div class="project-block__body">
+            <p>Der Chat ist nur nach dem Login erreichbar und zusätzlich mit einem CSRF-Token und einer Begrenzung der Fragen pro Stunde abgesichert. Antworten des Modells werden nie als HTML eingefügt, sondern sicher in Absätze, Listen und geprüfte Links übersetzt. So kann selbst eine manipulierte Antwort keinen Schadcode ausführen.</p>
+            <p>Feste Regeln im Systemprompt verhindern, dass sich der Assistent per Prompt Injection umprogrammieren lässt, private Daten herausgibt oder Aussagen zu Gehalt und Vertragsdetails macht. Weil der Systemprompt bei jeder Anfrage identisch ist, kann Azure ihn zwischenspeichern. Das macht Antworten schneller und günstiger.</p>
+        </div>
+    </section>
+
+    <section class="project-block">
+        {{ ui.section_title('06', 'Testen statt hoffen') }}
+        <div class="project-block__body">
+            <div class="project-verdict">
+                <div class="project-verdict__item project-verdict__item--good">
+                    <strong>Testkatalog</strong>
+                    <p>Zwanzig Testfragen mit erwartetem Verhalten, von einfachen Fragen über Fallen wie „Was verdient er?“ bis zu Versuchen, die Regeln auszuhebeln. Nach jeder Änderung an Inhalten oder Modell gehe ich sie durch.</p>
+                </div>
+                <div class="project-verdict__item project-verdict__item--bad">
+                    <strong>Größte Hürde</strong>
+                    <p>Nicht der Code, sondern die Infrastruktur: Neue Azure-Konten bekommen für viele Modelle zunächst kein Kontingent. Genau deshalb ist der Assistent von Anfang an anbieterunabhängig gebaut.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="project-block project-block--outro">
+        {{ ui.section_title('07', 'Fazit') }}
+        <div class="project-block__body">
+            <p class="project-quote">Die Qualität eines solchen Assistenten hängt weniger vom Modell ab als von den Inhalten dahinter.</p>
+            <p>Konkrete Ergebnisse, ehrliche Lerngeschichten und klare Regeln machen den Unterschied. Gleichzeitig ist das Projekt ein kleines Beispiel dafür, wie sich KI in eine bestehende Anwendung einbauen lässt: mit Firmenwissen statt Allgemeinwissen, mit Datenschutz von Anfang an und ohne Abhängigkeit von einem einzelnen Anbieter.</p>
+        </div>
+    </section>
+{% endblock %}
