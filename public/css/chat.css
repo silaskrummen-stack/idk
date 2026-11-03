@@ -30,8 +30,19 @@
     box-shadow: 0 10px 36px rgba(78, 48, 227, 0.5);
 }
 
-.chat__launcher-prompt {
-    color: var(--color-signal-live);
+.chat__icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex: none;
+}
+
+.chat__icon--small {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    vertical-align: -3px;
 }
 
 .chat.is-open .chat__launcher {
@@ -69,12 +80,6 @@
     font-family: var(--font-mono);
     font-size: 0.95rem;
     font-weight: 600;
-}
-
-.chat__title span {
-    color: var(--color-signal-live);
-    font-size: 0.7rem;
-    vertical-align: 2px;
 }
 
 .chat__subtitle {

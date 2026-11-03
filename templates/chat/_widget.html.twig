@@ -4,14 +4,14 @@
      data-chat-token="{{ csrf_token('portfolio_chat') }}">
 
     <button type="button" class="chat__launcher" data-chat-open aria-haspopup="dialog" aria-controls="chat-panel">
-        <span class="chat__launcher-prompt" aria-hidden="true">&gt;</span>
+        <img class="chat__icon" src="/pictures/chatbot.png" alt="" width="24" height="24">
         <span>Frag den Chatbot</span>
     </button>
 
     <section class="chat__panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" hidden data-chat-panel>
         <header class="chat__header">
             <div>
-                <h2 class="chat__title" id="chat-title"><span aria-hidden="true">●</span> ask_silas.exe</h2>
+                <h2 class="chat__title" id="chat-title"><img class="chat__icon chat__icon--small" src="/pictures/chatbot.png" alt="" width="18" height="18"> ask_silas.exe</h2>
                 <p class="chat__subtitle">KI-Assistent · beantwortet Fragen zu Silas und seinen Projekten</p>
             </div>
             <button type="button" class="chat__close" data-chat-close aria-label="Chat schließen">×</button>
