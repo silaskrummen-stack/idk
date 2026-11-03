@@ -5,7 +5,7 @@ return [
         'title' => 'Portfolio-Chatbot',
         'category' => 'privat',
         'date' => '10/2026',
-        'thumbnail' => '/pictures/projects/botproject.jpg',
+        'thumbnail' => '/pictures/projects/botproject.png',
         'description' => 'Ein KI-Assistent für dieses Portfolio: Er beantwortet Fragen zu meinem Werdegang und meinen Projekten, gebaut mit Symfony AI und einem austauschbaren Sprachmodell über Microsoft Azure AI Foundry.',
         'content' => [
             [
