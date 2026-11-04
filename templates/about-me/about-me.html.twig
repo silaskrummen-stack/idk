@@ -215,7 +215,7 @@
                                 <ul class="skill-list">
                                     {% for name, level in skills %}
                                         {% set dots %}
-                                            <span class="skill-item__dots" aria-label="{{ level }} von 5">
+                                            <span class="skill-item__dots" aria-label="{{ level }} von 5" style="--level: {{ level }}">
                                                 {% for i in 1..5 %}
                                                     <span class="dot{{ i <= level ? ' is-filled' : '' }}"></span>
                                                 {% endfor %}
