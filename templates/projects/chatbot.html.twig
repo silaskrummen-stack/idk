@@ -32,8 +32,10 @@
             <p>Den Rest liefern Markdown-Dateien, die ich selbst geschrieben oder mit KI-Hilfe formuliert habe: die Verhaltensregeln des Assistenten und Ergänzungen, die nicht auf der Website stehen, etwa meine Arbeitsweise, Ergebnisse mit konkreten Zahlen oder Lernerfahrungen.</p>
 
             <div class="project-flow" aria-label="Woher der Assistent sein Wissen bezieht">
-                <span class="project-flow__node">Website<small>Über mich, Projekte</small></span>
-                <span class="project-flow__node">Markdown<small>Regeln, Ergänzungen</small></span>
+                <span class="project-flow__group">
+                    <span class="project-flow__node">Website<small>Über mich, Projekte</small></span>
+                    <span class="project-flow__node">Markdown<small>Regeln, Ergänzungen</small></span>
+                </span>
                 <span class="project-flow__arrow" aria-hidden="true"></span>
                 <span class="project-flow__node project-flow__node--core">Systemprompt</span>
                 <span class="project-flow__arrow" aria-hidden="true"></span>
@@ -50,7 +52,6 @@
         {{ ui.section_title('03', 'Das Modell') }}
         <div class="project-block__body">
             <p>Als Sprachmodell nutze ich GPT-5.4 mini von OpenAI. Es hat kleine Reasoning-Fähigkeiten, denkt vor einer Antwort also kurz nach, die ich bewusst auf eine niedrige Stufe gestellt habe. Es formuliert natürlich und geht auf den Ton einer Frage ein, bleibt dabei aber sehr schnell. Für einen Chat ist genau diese Mischung entscheidend.</p>
-            <p>Das habe ich auf dem Weg dorthin gelernt: Mein erster Versuch lief mit einem großen Reasoning-Modell, das selbst auf „Was ist deine Lieblingsfarbe?“ 20 bis 30 Sekunden nachgedacht hat. Das stärkste Modell ist nicht automatisch das richtige.</p>
             <p>Das Modell ist austauschbar. Der Assistent spricht es über eine OpenAI-kompatible Schnittstelle an. Für einen anderen Anbieter ändern sich nur Adresse, Schlüssel und Modellname in der Konfiguration, der Code bleibt gleich.</p>
         </div>
     </section>
@@ -82,11 +83,11 @@
             <div class="project-verdict">
                 <div class="project-verdict__item project-verdict__item--good">
                     <strong>Testkatalog</strong>
-                    <p>Zwanzig Testfragen mit erwartetem Verhalten, von einfachen Fragen über Fallen wie „Was verdient er?“ bis zu Versuchen, die Regeln auszuhebeln. Nach jeder Änderung an Inhalten oder Modell gehe ich sie durch.</p>
+                    <p>Zwanzig Testfragen mit erwartetem Verhalten, von einfachen Fragen über Fallen wie „Was ist deine Lieblingsfarbe“ bis zu Versuchen, die Regeln auszuhebeln. Nach jeder Änderung an Inhalten oder Modell gehe ich sie automatisch durch. Ein Claude Personaler-Skill hat mir geholfen Fragen zu definieren.</p>
                 </div>
                 <div class="project-verdict__item project-verdict__item--bad">
                     <strong>Größte Hürde</strong>
-                    <p>Nicht der Code, sondern die Infrastruktur: Neue Azure-Konten bekommen für viele Modelle zunächst kein Kontingent. Genau deshalb ist der Assistent von Anfang an anbieterunabhängig gebaut.</p>
+                    <p>Die Nutzung von Plattformen wie Azure und OpenRouter erlaubt zwar ein umfangreiches Verwalten der KI-Infrastruktur, doch der Ruf von Azure unter Entwicklern kommt nicht von ungefähr: Bis das erste Modell tatsächlich antwortete, habe ich mehr Zeit mit Kontingenten und Regionen verbracht als mit dem eigentlichen Code</p>
                 </div>
             </div>
         </div>

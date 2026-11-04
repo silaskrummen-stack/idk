@@ -294,6 +294,35 @@
 
         toggle.addEventListener('click', () => setSorted(!sorted));
 
+        // Feste Höhe: beide Zustände kurz unsichtbar ausmessen und den größeren nehmen,
+        // damit der Kasten beim Umschalten nicht springt
+        const place = (value) => {
+            chips.forEach((chip) => {
+                const target = value ? sorter.querySelector(`[data-sorter-col="${chip.dataset.group}"]`) : pile;
+                target.appendChild(chip);
+            });
+            sorter.classList.toggle('is-sorted', value);
+        };
+        const lockHeight = () => {
+            sorter.classList.add('is-measuring');
+            sorter.style.minHeight = '';
+            place(false);
+            const loose = sorter.offsetHeight;
+            place(true);
+            const tidy = sorter.offsetHeight;
+            place(sorted);
+            sorter.style.minHeight = `${Math.max(loose, tidy)}px`;
+            void sorter.offsetHeight;
+            sorter.classList.remove('is-measuring');
+        };
+        lockHeight();
+        document.fonts?.ready.then(lockHeight);
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(lockHeight, 150);
+        });
+
         // Beim ersten Hinscrollen einmal von selbst sortieren
         const autoSort = new IntersectionObserver(([entry]) => {
             if (!entry.isIntersecting) return;
