@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  *   - prompts/assistent-regeln.md       Verhalten des Assistenten
  *   - AboutMe/lib/profil.php           Werdegang, Kenntnisse, Stärken, Hobbys (auch Seite „Über mich“)
  *   - prompts/ueber-mich.md             alles, was nicht auf der Website steht (Ziele, Arbeitsweise, FAQ)
+ *   - prompts/zeugnisse.md              Kurzfassung der Zeugnisse (PDFs unter „Dokumente“)
  *   - ProjectDashboard/lib/test.php    Projektübersicht (auch Seite „Projekte“)
  *
  * Der Prompt ist bei jeder Anfrage identisch. Das ist Absicht: Anbieter cachen einen gleichbleibenden
@@ -36,6 +37,7 @@ final class PortfolioKnowledge
         return $this->systemPrompt ??= implode("\n\n", [
             $this->read('assistent-regeln.md'),
             "# Über Silas\n\n".$this->read('ueber-mich.md'),
+            $this->read('zeugnisse.md'),
             $this->profileSection(),
             "## Projekte\n\nAlle Projekte aus seinem Portfolio, neueste zuerst. „beruflich“ = in der Ausbildung bzw. für Kunden entstanden, „privat“ = eigene Projekte.\n\n".$this->projectList(),
         ]);

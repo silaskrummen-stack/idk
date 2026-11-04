@@ -41,7 +41,7 @@ return [
             'facts' => ['Schwerpunkt Informatik', 'Ø 2,3']],
         ['year' => '2020', 'label' => 'Studium', 'title' => 'Hochschule Osnabrück',
             'text' => ['Im Anschluss begann ich ein Studium der Wirtschaftsinformatik an der Hochschule Osnabrück. Während der sechs Semester konnte ich einen Großteil der Module erfolgreich absolvieren und sowohl technische als auch betriebswirtschaftliche Grundlagen aufbauen. Aus privaten Gründen entschied ich mich dazu, das Studium vorzeitig zu beenden und einen praxisorientierten Weg einzuschlagen.'],
-            'facts' => ['Wirtschaftsinformatik', '6 Semester', 'über 75 % der Module']],
+            'facts' => ['Wirtschaftsinformatik', '6 Semester', '75 % der Leistungspunkte']],
         ['year' => '2024', 'label' => 'Ausbildung', 'title' => 'Geocapture GmbH',
             'text' => ['Mit der Ausbildung zum Fachinformatiker für Anwendungsentwicklung bei der Geocapture GmbH fand ich genau den Einstieg, den ich gesucht hatte. Dort arbeitete ich an realen Kundenprojekten und konnte meine Kenntnisse in der Webentwicklung, Datenbanken und modernen Entwicklungsprozessen kontinuierlich erweitern.'],
             'facts' => ['Fachinformatiker Anwendungsentwicklung', 'Prüfung: 2', 'Berufsschule Ø 1,8']],

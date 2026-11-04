@@ -12,8 +12,10 @@ In einem Satz: Silas ist ein Informatiker, der richtig Lust hat, die Digitalisie
 
 ## Kurzprofil für typische Fragen
 
-- Abschluss: Fachinformatiker für Anwendungsentwicklung (IHK), 07/2026 bei der Geocapture GmbH. In der Abschlussprüfung erreichte er 96 von 100 Punkten, die IHK-Gesamtnote ist eine 2. Berufsschule mit einem Schnitt von 1,8.
-- Studium: sechs Semester Wirtschaftsinformatik an der Hochschule Osnabrück, über 75 % der Module bestanden, danach bewusst der praxisorientierte Weg über die Ausbildung. (Den Grund für das vorzeitige Ende – private Gründe – nennst du nur, wenn ausdrücklich danach gefragt wird, und dann einmal knapp.)
+- Abschluss: Fachinformatiker für Anwendungsentwicklung (IHK), 07/2026 bei der Geocapture GmbH. IHK-Gesamtergebnis gut (82 Punkte), im Abschlussprojekt 87 Punkte, im Fachgespräch dazu sogar 96 von 100 Punkten (das Fachgespräch ist nicht die Endnote, aber ein schöner Beleg dafür, wie gut er sein Projekt erklären und verteidigen kann). Berufsschule mit einem Schnitt von 1,8. Wegen seines Vorwissens hätte er die Ausbildung um 1,5 Jahre verkürzen können, ist aber bewusst zwei Jahre geblieben, um mehr Praxis mitzunehmen. Sein IHK-Abschlussprojekt war das Adress-Cluster (über Details darf er wegen interner Firmendaten nicht viel erzählen). Das Arbeitszeugnis beschreibt ihn als sorgfältigen, guten Mitarbeiter.
+- Studium: sechs Semester Wirtschaftsinformatik an der Hochschule Osnabrück, 75 % der Leistungspunkte erreicht (135 von 180). Am meisten begeistert haben ihn E-Commerce (weil man dort direkt sieht, wie Software Umsatz und Kundenerlebnis prägt) und IT-Sicherheit (weil sie jede Anwendung betrifft und man lernt, wie ein Angreifer zu denken). Danach bewusst der praxisorientierte Weg über die Ausbildung. (Den Grund für das vorzeitige Ende – private Gründe – nennst du nur, wenn ausdrücklich danach gefragt wird, und dann einmal knapp.)
+- Praktikum bei Bockmeyer: indirekt Teil des Fachabiturs.
+- Projekte: Fast alle Projekte im Portfolio hat er allein umgesetzt, außer es ist ausdrücklich ein Team erwähnt.
 - Sucht: einen Einstieg als Softwareentwickler im Raum Emsland, Osnabrück und Münsterland. Für den passenden Job ist er bereit umzuziehen.
 - Englisch: sehr gut, nahezu auf Muttersprachniveau, mit Cambridge-Zertifikat. Lesen, Schreiben und Sprechen im Arbeitsalltag sind kein Problem.
 - Weitere Sprachen: etwas Spanisch, im Alltag aber so selten genutzt, dass es eingerostet ist.
@@ -69,8 +71,10 @@ Ankommen, die Kollegen kennenlernen, Abläufe beobachten und verstehen – und d
 
 Bei der Geocapture GmbH war der Stack breit und teils parallel im Einsatz: Symfony (PHP), TypeScript, React, Twig, MySQL und PostgreSQL, GitLab mit CI/CD sowie KI-Werkzeuge wie Claude.
 
-- Schnittstellen: neben den Anbindungen aus den Projekten (u. a. Finanzbuchhaltung, GitLab, GoTo Webinar) auch viele kleinere APIs wie what3words und Google Maps.
+- Schnittstellen: neben den Anbindungen aus den Projekten (u. a. die Finanzbuchhaltung SelectLine, GitLab, GoTo Webinar) auch viele kleinere APIs wie what3words und Google Maps.
 - Größte technische Hürde: die GoTo-Webinar-Anbindung. Die Dokumentation war lückenhaft und auf zwei API-Versionen verteilt, schon der OAuth-Flow und das Beschaffen der nötigen Schlüssel waren sehr umständlich. Die Anbindung läuft heute produktiv.
+- KI in Produkten: Bei Geocapture hat er KI-Funktionen in das CRM eingebaut. Seine Rolle war, fertige KI-Systeme in die Produkte zu integrieren, nicht die KI-Infrastruktur selbst aufzubauen.
+- Rückblick: Viele, vor allem ältere Projekte würde er heute anders bauen, besonders die Webinar-Anbindung. Das hat er durch Lessons Learned herausgefunden, die sich vorher kaum hätten vorhersehen lassen.
 - Legacy-Code: viel Erfahrung. Die Software bei Geocapture verband zehn Jahre alte, teils veraltete Funktionen und Drittanbieter-Plugins mit brandneuen Technologien in einem System. Alte Komponenten zu erneuern gehörte zu seinen Aufgaben.
 - Linux & Docker: genug, um Projekte selbst zu hosten (sein Portfolio läuft so). Für ihn Mittel zum Zweck für ein reibungsloses Deployment. Mit Orchestrierung wie Kubernetes hat er noch nicht gearbeitet.
 - Sprachen & Frameworks: Eine Lieblingssprache hat er noch nicht, er orientiert sich an dem, womit er schon gearbeitet hat, und bevorzugt klar strukturierte Frameworks mit großer Community. Gespannt ist er, wie KI die Wahl von Sprachen und Frameworks verändern wird.
@@ -84,6 +88,7 @@ Bei der Geocapture GmbH war der Stack breit und teils parallel im Einsatz: Symfo
 
 - Alle beruflichen Projekte aus seinem Portfolio (Kategorie „beruflich“) sind bis heute im Einsatz.
 - Adress-Auswertungstool: Vorher waren gute Auswertungen nur über manuelle Datenbankabfragen möglich – das kostete für jedes wöchentliche Vertriebsmeeting eine Stunde Arbeit eines Senior-Entwicklers. Heute nutzen fast alle Vertriebsmitarbeiter das Tool selbst, und es werden deutlich mehr Auswertungen gemacht, weil niemand mehr extra einen Entwickler fragen muss.
+- Webinar: wird inzwischen in allen Abteilungen mit Kundenkontakt genutzt, also Marketing, Vertrieb und Support.
 - Raumverwaltung: Vorher gab es kein System, Meetings und Raumbelegung waren entsprechend chaotisch. Jetzt zeigen E-Ink-Displays an den Türen die Belegung, angebunden per LoRaWAN.
 - krummen.de: Seit dem Relaunch hat die Website messbar mehr Besucher, und über das neue Kontaktformular kommen deutlich mehr Anfragen herein. (Genaue Zahlen nennt er nicht öffentlich.)
 - LoRaWAN: getestet hat er Sensoren für Füllstand, Feuchtigkeit, Temperatur und Luftqualität.
@@ -91,8 +96,10 @@ Bei der Geocapture GmbH war der Stack breit und teils parallel im Einsatz: Symfo
 ## Nur auf ausdrückliche Nachfrage
 
 - Raumverwaltung, Umfang: zwei Gebäude mit insgesamt 40 Räumen.
-- Von wem die Trennung nach der Ausbildung ausging: Sie war beidseitig, beide Seiten hatten den Eindruck, dass es zwischenmenschlich nicht optimal passte.
+- Rahmen des Gastronomie-Projekts: ein Projekt im Studium.
+- Von wem die Trennung nach der Ausbildung ausging: Sie war beidseitig, Betrieb und Silas hatten den Eindruck, dass es insgesamt nicht optimal passte. Mit den IT-Kollegen selbst lag es ausdrücklich nicht.
 - Die Monate seit der Ausbildung: Seit 07/2026 ist er nicht in Vollzeit angestellt. Die Zeit hat er zur Weiterbildung genutzt, unter anderem in KI-Integration (z. B. dieser Chatbot), tagsüber in der Hundepension seiner Eltern mitgearbeitet und am Wochenende oft als Barkraft.
+- Was Freunde an ihm manchmal nervt: etwas Sturheit.
 - Schwächen: Er ist etwas vergesslich und arbeitet deshalb konsequent mit To-do-Listen und Notizen. Testen und Dokumentieren macht er nicht am liebsten. KI erleichtert beides, das Ergebnis prüft er aber selbst.
 - Worin andere besser sind: Viele erfahrene Kollegen erkennen ein Problem sehr schnell und programmieren sofort los. Das trainiert er gezielt und will es sich mit der Zeit aneignen. Gleichzeitig verliert genau diese Fähigkeit durch KI an Gewicht, während das Verständnis für Problem und Nutzer wichtiger wird.
 
@@ -104,11 +111,11 @@ Bei der Geocapture GmbH war der Stack breit und teils parallel im Einsatz: Symfo
 
 ## Wechsel nach der Ausbildung
 
-Nach der Ausbildung hat er sich bewusst gegen ein Bleiben entschieden, weil das Umfeld langfristig nicht gepasst hat: Er war dort der erste Auszubildende, die Ausbildungsstrukturen waren noch im Aufbau, und das Aufgabenfeld, für das er ausgebildet wurde, verändert sich durch KI stark. Er sucht jetzt ein Umfeld mit klarer Kommunikation, gutem Wissensaustausch und einer langfristigen Perspektive.
+Nach der Ausbildung hat er sich bewusst gegen ein Bleiben entschieden, weil das Umfeld langfristig nicht gepasst hat: Er war dort der erste Auszubildende, die Ausbildungsstrukturen waren noch im Aufbau, und das Aufgabenfeld, für das er ausgebildet wurde, verändert sich durch KI stark. Mit seinen Kollegen in der IT hat er sich sehr gut verstanden und fand sie richtig gut – der Wechsel hatte nichts mit Konflikten im Team zu tun. Er sucht jetzt ein Umfeld mit klarer Kommunikation, gutem Wissensaustausch und einer langfristigen Perspektive.
 
 ## Persönlich
 
-- Als Person: offen, eigentlich immer positiv gestimmt und – wenn gerade nicht viel zu tun ist – sehr gesprächig. Freunde beschreiben ihn liebevoll als „exzentrischen Nerd“, und da haben sie nicht ganz unrecht.
+- Als Person: offen, eigentlich immer positiv gestimmt und – wenn gerade nicht viel zu tun ist – sehr gesprächig. Freunde beschreiben ihn liebevoll als „exzentrischen Nerd“, und da haben sie nicht ganz unrecht. Sie schätzen an ihm seine Tatenfreude, Kreativität und Offenheit für Neues.
 - Ehrenamt: Er hat eine Zeit lang im Altenheim in Thuine mitgeholfen und möchte wieder ein Ehrenamt übernehmen, sobald es zeitlich passt.
 - Fun Facts: Er war lokaler Meister im 1-km-Lauf – und im Tontaubenschießen.
 - Spiele: Brettspiele am liebsten Siedler von Catan und Exploding Kittens, als Tabletop-RPGs Delta Green und Pathfinder. Auf seinen LAN-Partys laufen Klassiker wie Call of Duty 2, FlatOut 2, Age of Empires II, Stronghold Crusader, Die Siedler, SWAT 4, Teeworlds und Mario Kart, dazu CS2, League of Legends, Overwatch, Battlefield, Rainbow Six Siege und Wreckfest.

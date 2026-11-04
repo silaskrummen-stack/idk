@@ -221,6 +221,20 @@ return [
                 'text' => 'Der VR-Rageroom ist ein Konzept in Unity: ein Raum voller Geschirr, Flaschen, Möbel und alter Elektronik, den man in VR mit bloßen Händen oder mit Werkzeugen wie Hammer und Baseballschläger auseinandernehmen darf. Das Ziel war nicht möglichst viel Inhalt, sondern dass sich jeder einzelne Schlag richtig anfühlt.',
             ],
             [
+                'type' => 'video',
+                'src' => '/videos/projects/vr-rageroom.mp4',
+                'alt' => 'Projektpräsentation des VR-Rageroom',
+                'loop' => true,
+            ],
+            [
+                'type' => 'heading',
+                'text' => 'Team und meine Rolle',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Wir haben das Projekt zu dritt umgesetzt, mit einem Projektplan von rund 50 Stunden von der Planung über Prototyping bis zur Abwicklung. Unity haben wir gegenüber der Unreal Engine gewählt, weil es leichter einzusteigen ist und weniger Hardware braucht. Die 3D-Modelle entstanden in Blender. Ich habe etwas C# beigesteuert, war aber nicht hauptverantwortlich für die Programmierung, sondern unter anderem für die Präsentation.',
+            ],
+            [
                 'type' => 'heading',
                 'text' => 'Zerstörung',
             ],
@@ -255,7 +269,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Das Projekt ist bisher ein Konzept, hat mir aber gezeigt, wie sehr das Spielgefühl an kleinen Details hängt: einem kurzen Ruckeln im Controller, einem leicht anderen Klang oder ein paar Millisekunden Verzögerung.',
+                'text' => 'Das Projekt ist bisher ein Konzept, hat mir aber gezeigt, wie sehr das Spielgefühl an kleinen Details hängt: einem kurzen Ruckeln im Controller, einem leicht anderen Klang oder ein paar Millisekunden Verzögerung. Für die Teamarbeit haben wir mitgenommen, dass paralleles Arbeiten an Unity-Szenen trotz Git schwierig ist und einfachere Werkzeuge oft die bessere Wahl sind.',
             ],
         ],
     ],
@@ -724,7 +738,7 @@ return [
         'category' => 'produktiv',
         'date' => '02/2026',
         'thumbnail' => '/pictures/projects/cluster.png',
-        'description' => 'Ein Tool zur Verwaltung von Beziehungen zwischen Adressen und Netzen.',
+        'description' => 'Mein IHK-Abschlussprojekt: ein Tool zur Verwaltung von Beziehungen zwischen Adressen und Netzen.',
         'content' => [
                 [
                     'type' => 'heading',
@@ -732,7 +746,11 @@ return [
                 ],
                 [
                     'type' => 'text',
-                    'text' => 'Ich habe ein Feature im CRM entwickelt, das Beziehungen zwischen Adressen abbildet.',
+                    'text' => 'Ich habe ein Feature im CRM entwickelt, das Beziehungen zwischen Adressen abbildet. Es war mein Abschlussprojekt für die IHK-Prüfung.',
+                ],
+                [
+                    'type' => 'text',
+                    'text' => 'Weil das Projekt tief in das CRM und die Preisgestaltung von Geocapture eingreift, darf ich über Details nicht allzu viel erzählen. Die Grundidee lässt sich aber gut zeigen.',
                 ],
                 [
                     'type' => 'image',
@@ -829,7 +847,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Passwörter werden nicht mehr direkt angezeigt, sondern erst auf Klick und nur für kurze Zeit. Sie lassen sich mit einem Klick kopieren, ohne sie überhaupt sichtbar zu machen. Ein integrierter Generator erzeugt starke Passwörter direkt beim Anlegen eines neuen Zugangs.',
+                'text' => 'Passwörter sind jetzt optisch verschleiert und werden erst auf Klick angezeigt. Sie lassen sich mit einem Klick kopieren, ohne sie überhaupt sichtbar zu machen. Zu jedem Zugang können außerdem Notizen und der zugehörige Benutzer hinterlegt werden, dazu kamen weitere kleinere Erweiterungen.',
             ],
             [
                 'type' => 'heading',
@@ -837,7 +855,7 @@ return [
             ],
             [
                 'type' => 'text',
-                'text' => 'Die Passwörter liegen verschlüsselt in der Datenbank und werden erst entschlüsselt, wenn jemand sie gezielt abruft. Bis dahin stehen sie auch nicht im Quelltext der Seite. Wer welches Passwort wann angesehen oder kopiert hat, wird protokolliert, und der Zugriff richtet sich nach den Rollen im CRM. In Logs oder Fehlermeldungen tauchen Passwörter nie auf.',
+                'text' => 'Das Hashing-Verfahren habe ich auf einen aktuellen Stand umgestellt. Die Passwörter liegen verschlüsselt in der Datenbank und werden erst entschlüsselt, wenn jemand sie gezielt abruft. Bis dahin stehen sie auch nicht im Quelltext der Seite. Wer welches Passwort wann angesehen oder kopiert hat, wird protokolliert, und der Zugriff richtet sich nach den Rollen im CRM. In Logs oder Fehlermeldungen tauchen Passwörter nie auf.',
             ],
             [
                 'type' => 'image',

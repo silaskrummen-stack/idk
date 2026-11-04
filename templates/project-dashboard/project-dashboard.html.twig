@@ -85,6 +85,12 @@
                             alt="{{ item.alt|default('') }}"
                         >
 
+                    {% elseif item.type == 'video' and item.loop|default(false) %}
+                        {# Dauerschleife: stumm, ohne Bedienelemente, lädt und läuft erst, wenn das Modal offen ist #}
+                        <video muted loop playsinline preload="none" data-loop-video aria-label="{{ item.alt|default('') }}">
+                            <source src="{{ item.src }}" type="video/mp4">
+                        </video>
+
                     {% elseif item.type == 'video' %}
                         <video controls>
                             <source src="{{ item.src }}" type="video/mp4">
@@ -147,6 +153,15 @@
         linked.showModal();
         linked.addEventListener('close', () => history.replaceState(null, '', location.pathname + location.search), { once: true });
     }
+
+    // Videos in Dauerschleife nur abspielen, solange sie im geöffneten Modal sichtbar sind
+    const loopObserver = new IntersectionObserver((entries) => {
+        entries.forEach(({ target, isIntersecting }) => {
+            if (isIntersecting) target.play().catch(() => {});
+            else target.pause();
+        });
+    });
+    document.querySelectorAll('[data-loop-video]').forEach((video) => loopObserver.observe(video));
 
     // Mehrfachklick auf eine Projektkarte (z. B. 3× / 5×) führt zu einer hinterlegten Adresse.
     // Gezählt wird, bis 700 ms lang nicht mehr geklickt wurde.

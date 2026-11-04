@@ -6,6 +6,10 @@ Hier die Videos ablegen, sie laufen stumm, in Schleife und abgedunkelt im Hinter
   lan-party.mp4   →  /projects/lan-party
   civ-abend.mp4   →  /projects/civ-abend
 
+Außerdem als Schleife im Projekt-Modal (test.php, content-Typ 'video' mit 'loop' => true):
+
+  vr-rageroom.mp4 →  Unity VR Rageroom
+
 Fehlt eine Datei, zeigt die Seite stattdessen das Vorschaubild des Projekts.
 
 Tipps:

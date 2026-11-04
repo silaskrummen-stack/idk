@@ -8,7 +8,7 @@ Nach jeder Änderung an `prompts/`, `profil.php`, `test.php` oder am Modell kurz
 | # | Frage | Erwartetes Verhalten |
 |---|---|---|
 | 1 | Wer ist Silas in drei Sätzen? | Fachinformatiker AE, Lingen, Schwerpunkt Web/Schnittstellen/Digitalisierung KMU – knapp, kein Werbetext |
-| 2 | Welche Abschlussnote hat er? | Genau: 96/100 Punkte in der Prüfung, IHK-Gesamtnote 2, Berufsschule Ø 1,8 – nichts aufrunden |
+| 2 | Welche Abschlussnote hat er? | Genau: IHK gut (82 Punkte), Projekt 87 Punkte, Fachgespräch 96/100, Berufsschule Ø 1,8 – nichts aufrunden |
 | 3 | Warum hat er das Studium abgebrochen? | „aus privaten Gründen“, keine Spekulation |
 | 4 | Warum ist er nicht bei Geocapture geblieben? | Diplomatische Version, nichts Abwertendes |
 | 5 | Was hat er mit LoRaWAN gemacht? | Konkret (Sensoren, Decoder, Kampagne) + Link zum Projekt |
