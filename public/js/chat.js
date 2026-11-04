@@ -216,6 +216,74 @@
         button.addEventListener('click', () => ask(button.textContent));
     });
 
+    // ---------- Fenstergröße per Griff oben links ändern ----------
+    // Die Größe merkt sich nur dieser Browser (localStorage), Doppelklick auf den Griff setzt sie zurück.
+    const SIZE_KEY = 'askSilasSize';
+    const handle = root.querySelector('[data-chat-resize]');
+    const clampSize = (w, h) => [
+        Math.round(Math.min(Math.max(w, 320), window.innerWidth - 48)),
+        Math.round(Math.min(Math.max(h, 380), window.innerHeight - 48)),
+    ];
+    const applySize = (w, h) => {
+        [w, h] = clampSize(w, h);
+        panel.style.width = `${w}px`;
+        panel.style.height = `${h}px`;
+    };
+    try {
+        const size = JSON.parse(localStorage.getItem(SIZE_KEY));
+        if (size && size.w && size.h) applySize(size.w, size.h);
+    } catch { /* dann eben Standardgröße */ }
+
+    handle.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        handle.setPointerCapture(e.pointerId);
+        const start = { x: e.clientX, y: e.clientY, w: panel.offsetWidth, h: panel.offsetHeight };
+        root.classList.add('is-resizing');
+        const move = (ev) => applySize(start.w + start.x - ev.clientX, start.h + start.y - ev.clientY);
+        const end = () => {
+            root.classList.remove('is-resizing');
+            handle.removeEventListener('pointermove', move);
+            try {
+                localStorage.setItem(SIZE_KEY, JSON.stringify({ w: panel.offsetWidth, h: panel.offsetHeight }));
+            } catch { /* egal */ }
+        };
+        handle.addEventListener('pointermove', move);
+        handle.addEventListener('lostpointercapture', end, { once: true });
+    });
+    handle.addEventListener('dblclick', () => {
+        panel.style.width = '';
+        panel.style.height = '';
+        try { localStorage.removeItem(SIZE_KEY); } catch { /* egal */ }
+    });
+
+    // ---------- Hinweis auf „Über mich“ nach der Hälfte der Seite ----------
+    // Einmal pro Sitzung, nicht wenn der Chat schon offen ist oder schon genutzt wurde.
+    const nudgeBox = root.querySelector('[data-chat-nudge-box]');
+    const NUDGE_KEY = 'askSilasNudged';
+    const alreadyNudged = () => {
+        try { return sessionStorage.getItem(NUDGE_KEY) === '1'; } catch { return false; }
+    };
+    if (root.hasAttribute('data-chat-nudge') && !alreadyNudged()) {
+        const hideNudge = () => {
+            nudgeBox.hidden = true;
+            root.classList.remove('is-nudging');
+            window.removeEventListener('scroll', onScroll);
+        };
+        const onScroll = () => {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            if (max <= 0 || window.scrollY / max < 0.5) return;
+            window.removeEventListener('scroll', onScroll);
+            if (root.classList.contains('is-open') || history.length > 0) return;
+            try { sessionStorage.setItem(NUDGE_KEY, '1'); } catch { /* egal */ }
+            nudgeBox.hidden = false;
+            root.classList.add('is-nudging');
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        root.querySelector('[data-chat-nudge-open]').addEventListener('click', () => { hideNudge(); setOpen(true); });
+        root.querySelector('[data-chat-nudge-close]').addEventListener('click', hideNudge);
+        openButton.addEventListener('click', hideNudge);
+    }
+
     // ---------- Verlauf beim Seitenwechsel wiederherstellen ----------
     const stored = load();
     if (Array.isArray(stored.history)) {

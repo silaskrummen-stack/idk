@@ -50,6 +50,7 @@
 }
 
 .chat__panel {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: min(400px, calc(100vw - 32px));
@@ -63,6 +64,128 @@
 
 .chat__panel[hidden] {
     display: none;
+}
+
+/* Griff oben links: das Fenster sitzt unten rechts, also wächst es nach oben und nach links */
+.chat__resize {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 18px;
+    height: 18px;
+    cursor: nwse-resize;
+    touch-action: none;
+}
+
+.chat__resize::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 7px;
+    height: 7px;
+    border-top: 2px solid var(--color-text-muted);
+    border-left: 2px solid var(--color-text-muted);
+    border-top-left-radius: 3px;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+}
+
+.chat__resize:hover::before,
+.chat.is-resizing .chat__resize::before {
+    opacity: 1;
+    border-color: var(--color-primary-light);
+}
+
+.chat.is-resizing {
+    user-select: none;
+}
+
+/* ----- Hinweis auf „Über mich“ ----- */
+.chat__nudge {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 12px);
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    width: max-content;
+    max-width: min(280px, calc(100vw - 48px));
+    padding: 12px 8px 12px 14px;
+    border: 1px solid var(--color-primary-light);
+    border-radius: 12px;
+    background: var(--color-bg-elevated);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    animation: chat-nudge-in 0.35s ease both;
+}
+
+.chat__nudge[hidden],
+.chat.is-open .chat__nudge {
+    display: none;
+}
+
+/* kleine Sprechblasen-Spitze Richtung Button */
+.chat__nudge::after {
+    content: '';
+    position: absolute;
+    right: 28px;
+    bottom: -7px;
+    width: 12px;
+    height: 12px;
+    border-right: 1px solid var(--color-primary-light);
+    border-bottom: 1px solid var(--color-primary-light);
+    background: var(--color-bg-elevated);
+    transform: rotate(45deg);
+}
+
+.chat__nudge-text {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.chat__nudge-text strong {
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-primary-light);
+}
+
+.chat__nudge-close {
+    flex: none;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.chat__nudge-close:hover {
+    color: var(--color-text);
+}
+
+/* Der Button pulsiert zweimal kurz mit, danach ist Ruhe */
+.chat.is-nudging .chat__launcher {
+    animation: chat-pulse 1.4s ease-out 2;
+}
+
+@keyframes chat-nudge-in {
+    from { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes chat-pulse {
+    0% { box-shadow: 0 8px 30px rgba(78, 48, 227, 0.35), 0 0 0 0 rgba(124, 92, 255, 0.55); }
+    100% { box-shadow: 0 8px 30px rgba(78, 48, 227, 0.35), 0 0 0 16px rgba(124, 92, 255, 0); }
 }
 
 .chat__header {
@@ -261,14 +384,20 @@
     }
 
     .chat__panel {
-        width: 100%;
-        height: calc(100vh - 90px);
+        width: 100% !important;
+        height: calc(100vh - 90px) !important;
+    }
+
+    .chat__resize {
+        display: none;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .chat__launcher,
-    .chat__typing::after {
+    .chat__typing::after,
+    .chat__nudge,
+    .chat.is-nudging .chat__launcher {
         transition: none;
         animation: none;
     }
