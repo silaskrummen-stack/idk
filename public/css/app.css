@@ -1955,12 +1955,15 @@ html.lenis {
     background: var(--color-signal-live);
     border-color: var(--color-signal-live);
     box-shadow: 0 0 12px var(--color-signal-live);
+    /* erst grün, wenn die Leiste angekommen ist (0.5s, siehe .journey__progress); Hover-Zoom ohne Verzögerung */
+    transition-delay: 0.5s, 0.5s, 0.5s, 0s;
 }
 
 .journey__year {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--color-primary-light);
+    transition: color 0.2s ease;
 }
 
 .journey__label {
@@ -1971,6 +1974,7 @@ html.lenis {
 
 .journey__stop[aria-selected="true"] .journey__year {
     color: var(--color-signal-live);
+    transition-delay: 0.5s;
 }
 
 .journey__stop[aria-selected="true"] .journey__label {
@@ -2270,6 +2274,8 @@ html.lenis {
 
 @media (prefers-reduced-motion: reduce) {
     .journey__progress,
+    .journey__dot,
+    .journey__year,
     .journey__panel,
     .hobby-card,
     .hobby-card__face,
