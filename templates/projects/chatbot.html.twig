@@ -60,7 +60,7 @@
         {{ ui.section_title('04', 'Datenschutz & EU-Datenzone') }}
         <div class="project-block__body">
             <p>Das Modell läuft in der EU-Datenzone von Azure. Anfragen werden damit in Rechenzentren innerhalb der EU verarbeitet. Microsoft nutzt sie nicht zum Training von Modellen.</p>
-            <p>Auf dieser Website wird nichts dauerhaft gespeichert: Es gibt keinen Chatverlauf auf dem Server. Der Verlauf liegt nur im geöffneten Browser-Tab und verschwindet, sobald der Tab geschlossen wird.</p>
+            <p>Auf dieser Website wird nichts dauerhaft gespeichert: Der Chatverlauf liegt im sessionStorage des Browsers, nicht in Cookies und nicht in einer Datenbank. Bei jeder Frage geht er mit an den Server, damit das Modell den Zusammenhang kennt, wird dort aber nicht abgelegt. Sobald der Tab geschlossen wird, ist er weg. Serverseitig merkt sich die Login-Session nur, wann Fragen gestellt wurden, für das Limit pro Stunde.</p>
             <ul class="project-chips">
                 {% for item in ['EU-Datenzone', 'Kein Chatverlauf auf dem Server', 'Nur hinter dem Portfolio-Login', 'Keine Weitergabe privater Daten'] %}
                     <li>{{ item }}</li>
