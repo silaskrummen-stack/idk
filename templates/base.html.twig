@@ -23,6 +23,12 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
+{# Farbfilter für weiße PNG-Icons im hellen Modus: färbt jedes Pixel in --color-primary-light (#5534e6), Transparenz bleibt #}
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <filter id="tint-primary" color-interpolation-filters="sRGB">
+        <feColorMatrix type="matrix" values="0 0 0 0 0.333  0 0 0 0 0.204  0 0 0 0 0.902  0 0 0 1 0"/>
+    </filter>
+</svg>
 {# Optionaler Parallax-Hintergrund (gesteuert von /js/scroll.js), bisher nur auf "Über mich" #}
 {% block parallax %}{% endblock %}
 
