@@ -424,17 +424,7 @@ final class LanNightStore
                 break;
 
             case 'game.start':
-                $i = $this->game($s, $in);
-                foreach ($s['games'] as &$g) {
-                    if ($g['status'] === 'running') {
-                        $g['status'] = 'open';
-                    }
-                }
-                unset($g);
-                $s['games'][$i]['status'] = 'running';
-                $s['currentGame'] = $s['games'][$i]['id'];
-                // Quiz / Guess the Game / Guess the Price laufen auf ihrem eigenen Bildschirm
-                $s['screen'] = $s['games'][$i]['segment'] ?? 'game';
+                $s = $this->startGame($s, $this->game($s, $in));
                 break;
 
             case 'game.finish':
@@ -524,6 +514,8 @@ final class LanNightStore
                 $s['slots'] = null;
                 if ($game) {
                     $s['lineup'] = ['gameId' => $game['id'], 'teams' => [[$members[0][$picks[0]]], [$members[1][$picks[1]]]]];
+                    // Ausgelost = dieses Spiel ist dran: läuft der Bildschirm danach direkt aufs Spiel (mit Aufstellung)
+                    $s = $this->startGame($s, $this->game($s, ['id' => $game['id']]));
                 }
                 break;
 
@@ -559,6 +551,7 @@ final class LanNightStore
                     'gameId' => $game['id'],
                     'teams' => [array_map(fn ($i) => $members[0][$i], $picks[0]), array_map(fn ($i) => $members[1][$i], $picks[1])],
                 ];
+                $s = $this->startGame($s, $this->game($s, $in));
                 break;
 
             case 'slots.hide':
@@ -725,6 +718,25 @@ final class LanNightStore
             $label = ['quiz' => 'Quiz', 'guess' => 'Guess the Game', 'price' => 'Guess the Price'][$g['segment']];
             throw new \InvalidArgumentException(sprintf('Die Punkte für „%s“ kommen aus dem %s-Reiter', $g['name'], $label));
         }
+    }
+
+    /** Spiel starten (läuft schon / schon fertig → nur auf den Bildschirm wechseln) */
+    private function startGame(array $s, int $i): array
+    {
+        if ($s['games'][$i]['status'] === 'open') {
+            foreach ($s['games'] as &$g) {
+                if ($g['status'] === 'running') {
+                    $g['status'] = 'open';
+                }
+            }
+            unset($g);
+            $s['games'][$i]['status'] = 'running';
+        }
+        $s['currentGame'] = $s['games'][$i]['id'];
+        // Quiz / Guess the Game / Guess the Price laufen auf ihrem eigenen Bildschirm
+        $s['screen'] = $s['games'][$i]['segment'] ?? 'game';
+
+        return $s;
     }
 
     /**

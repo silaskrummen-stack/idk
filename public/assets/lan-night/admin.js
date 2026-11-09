@@ -151,7 +151,8 @@
       $('slotsResult').innerHTML = `🎰 ${esc(sl.game)}: ` + state.teams.map((t, i) =>
         `<b style="color:${esc(t.color)}">${sl.picks[i].map((p) => esc(sl.members[i][p])).join(', ')}</b>`).join(' · ');
     }
-    if (sl && !state.wheel) $('wheelLive').textContent = 'Spielautomat wird angezeigt';
+    // Der Bildschirm blendet den Automaten nach ~10 s selbst aus und zeigt das Spiel mit Aufstellung
+    if (sl && !state.wheel && (Date.now() / 1000 + offset) - sl.at < 10) $('wheelLive').textContent = 'Spielautomat läuft';
   }
 
   // ---------- Gastauftritte ----------
@@ -938,5 +939,5 @@
   (function loop() {
     setTimeout(() => load().then(loop), ['quiz', 'guess', 'price', 'awards'].includes(state?.screen) || state?.awards?.phase === 'voting' ? 1000 : 3000);
   })();
-  setInterval(() => { renderLive(); renderStatus(); if (state) renderCameos(); }, 1000);
+  setInterval(() => { renderLive(); renderStatus(); if (state) { renderCameos(); renderWheel(); renderSlots(); } }, 1000);
 })();

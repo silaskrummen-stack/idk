@@ -902,7 +902,7 @@ body.has-announce .track {
 }
 
 .reel.is-spinning .reel__strip {
-    filter: blur(0.25vh);
+    filter: blur(0.35vh);
 }
 
 .reel.is-stopped {
@@ -938,7 +938,20 @@ body.has-announce .track {
 }
 
 .slot-machine.is-pulling .slot-machine__lever {
-    animation: lever-pull 0.7s cubic-bezier(0.3, 0, 0.3, 1);
+    animation: lever-pull 0.45s cubic-bezier(0.3, 0, 0.3, 1);
+}
+
+/* Ruckeln, wenn eine Walze einrastet */
+.slot-machine.is-rumble .slot-machine__body {
+    animation: slot-rumble 0.32s linear;
+}
+
+@keyframes slot-rumble {
+    15% { transform: translate(-0.5vh, 0.25vh) rotate(-0.4deg); }
+    35% { transform: translate(0.5vh, -0.25vh) rotate(0.4deg); }
+    55% { transform: translate(-0.35vh, 0.3vh) rotate(-0.2deg); }
+    75% { transform: translate(0.25vh, -0.15vh); }
+    90% { transform: translate(-0.1vh, 0.05vh); }
 }
 
 @keyframes slot-bulbs {
@@ -1104,6 +1117,7 @@ body.has-announce .track {
 @media (prefers-reduced-motion: reduce) {
     .cameo.is-talking .cameo__img,
     .slot-machine__reels,
+    .slot-machine.is-rumble .slot-machine__body,
     .pick__grid.is-entering .pick-tile,
     .pick-tile.is-running,
     .bg__grid,

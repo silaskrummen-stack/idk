@@ -274,10 +274,16 @@
 
   function renderWheel(s) {
     const w = s.wheel, overlay = $('wheels');
-    overlay.hidden = !w;
-    if (!w) { wheelId = null; return; }
+    if (!w) { overlay.hidden = true; wheelId = null; return; }
     if (w.id === wheelId) return;
     wheelId = w.id;
+    overlay.hidden = false;
+    // Für ein bestimmtes Spiel gedreht: Ergebnis kurz stehen lassen, dann weiter zum Spiel-Bildschirm (mit Aufstellung)
+    if (w.game) {
+      const endAt = w.at + Math.max(...w.durations) + SLOT_HOLD;
+      if (now() >= endAt) { overlay.hidden = true; return; }
+      setTimeout(() => { if (wheelId === w.id) overlay.hidden = true; }, (endAt - now()) * 1000);
+    }
     overlay.querySelector('.wheel-overlay__title').textContent = w.game ? `🎡 Wer spielt ${w.game}?` : '🎡 Das Glücksrad entscheidet …';
 
     const cols = [...overlay.querySelectorAll('.wheel-col')];
@@ -326,64 +332,145 @@
     requestAnimationFrame(frame);
   }
 
+  // ---------- Soundeffekte ----------
+  // Web Audio statt <audio>: Tonhöhe pro Ding frei wählbar, Töne überlappen sauber, nichts muss "laden", wenn's losgeht.
+  // spin.mp3 ist optional – fehlt die Datei, läuft der Automat einfach ohne Drehgeräusch.
+  const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3' };
+  const sfxBuf = {};
+  let sfxCtx = null;
+
+  function sfx() {
+    if (!sfxCtx) {
+      try { sfxCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; }
+      Object.entries(SFX_URL).forEach(([k, url]) => {
+        fetch(url).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject()))
+          .then((b) => sfxCtx.decodeAudioData(b)).then((buf) => { sfxBuf[k] = buf; }).catch(() => {});
+      });
+    }
+    if (sfxCtx.state === 'suspended') sfxCtx.resume().catch(() => {});
+    return sfxCtx;
+  }
+
+  function playSfx(name, { rate = 1, gain = 1, offset = 0 } = {}) {
+    const ctx = sfx(), buf = sfxBuf[name];
+    if (!ctx || !buf || offset >= buf.duration) return null;
+    const src = ctx.createBufferSource(), g = ctx.createGain();
+    src.buffer = buf;
+    src.playbackRate.value = rate;   // höher = höherer Ton (und kürzer)
+    g.gain.value = gain;
+    src.connect(g).connect(ctx.destination);
+    src.start(0, Math.max(0, offset));
+    return { src, g };
+  }
+
+  function fadeSfx(h, seconds = 0.35) {
+    if (!h || !sfxCtx) return;
+    const t = sfxCtx.currentTime;
+    h.g.gain.setValueAtTime(h.g.gain.value, t);
+    h.g.gain.linearRampToValueAtTime(0, t + seconds);
+    try { h.src.stop(t + seconds + 0.05); } catch (e) { /* schon aus */ }
+  }
+
   // ---------- Spielautomat ----------
-  // Pro Team ein Automat, eine Walze pro Spieler. Hebel runter, dann stoppt eine Walze nach der anderen
-  // (oben → unten). Gezogen hat der Server; Start (at) ist Serverzeit → alle Bildschirme laufen gleich.
-  const SLOT_LEVER = 0.7, SLOT_FIRST = 1.8, SLOT_STEP = 0.75;   // Sekunden
-  let slotsId = null;
+  // Pro Team ein Automat, eine Walze pro Spieler. Hebel runter → alle Walzen drehen gleich schnell (kein Abbremsen),
+  // dann rastet eine nach der anderen ein (oben → unten) mit Ding + Metall-Schlag + Ruckeln. Jedes Ding einen Ton höher.
+  // Spätestens nach SLOT_LAST_MAX Sekunden steht die letzte Walze (das Drehgeräusch ist ~7 s lang).
+  // Gezogen hat der Server; Start (at) ist Serverzeit → alle Bildschirme laufen gleich.
+  const SLOT_LEVER = 0.4, SLOT_FIRST = 1.6, SLOT_LAST_MAX = 6.4, SLOT_STEP_MAX = 0.65;
+  const SLOT_SPEED = 26;    // Namen pro Sekunde
+  const SLOT_HOLD = 3.5;    // so lange bleibt das Ergebnis stehen, dann geht's auf den Spiel-Bildschirm
+  const SCALE = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19];   // Dur-Tonleiter in Halbtönen: Ding 1, 2, 3 …
+  let slotsId = null, slotsTimer = null, spinSound = null;
+
+  // Zeitpunkt (Sekunden nach at), an dem Walze i einrastet – beide Automaten im Gleichschritt
+  function slotTimes(n) {
+    const step = n > 1 ? Math.min(SLOT_STEP_MAX, (SLOT_LAST_MAX - SLOT_LEVER - SLOT_FIRST) / (n - 1)) : 0;
+    return Array.from({ length: n }, (_, i) => SLOT_LEVER + SLOT_FIRST + i * step);
+  }
 
   function renderSlots(s) {
     const sl = s.slots, overlay = $('slots');
-    overlay.hidden = !sl;
-    if (!sl) { slotsId = null; return; }
-    if (sl.id === slotsId) return;
+    if (!sl) {
+      overlay.hidden = true;
+      slotsId = null;
+      clearTimeout(slotsTimer);
+      fadeSfx(spinSound); spinSound = null;
+      return;
+    }
+    if (sl.id === slotsId) return;   // läuft schon (oder ist schon von selbst ausgeblendet)
     slotsId = sl.id;
+    const id = sl.id;
+
+    const n = Math.max(sl.picks[0].length, sl.picks[1].length);
+    const times = slotTimes(n);
+    const endAt = sl.at + times[n - 1] + SLOT_HOLD;
+    clearTimeout(slotsTimer);
+    if (now() >= endAt) { overlay.hidden = true; return; }
+    overlay.hidden = false;
+    slotsTimer = setTimeout(() => { if (slotsId === id) overlay.hidden = true; }, (endAt - now()) * 1000);
 
     $('slotsTitle').innerHTML = `🎰 Wer spielt ${esc(sl.game)}?<small>${sl.perTeam} pro Team</small>`;
-    const id = sl.id;
     const machines = [...overlay.querySelectorAll('.slot-machine')].map((m, t) => {
-      const team = s.teams[t], names = sl.members[t], picks = sl.picks[t], n = picks.length;
+      const team = s.teams[t], names = sl.members[t], picks = sl.picks[t], len = names.length;
       m.style.setProperty('--c', team.color);
       m.style.setProperty('--rh', `${Math.min(9, 56 / n - 1.2).toFixed(2)}vh`);
-      m.classList.remove('is-done', 'is-pulling');
+      m.classList.remove('is-done', 'is-pulling', 'is-rumble');
       m.querySelector('.slot-machine__team').textContent = team.name;
 
-      // Walzenstreifen: zufällige Namen, am Ende der gezogene (+1 Name für das Nachfedern)
+      // Streifen läuft der Reihe nach durch alle Namen; genau beim Einrasten steht der gezogene im Fenster
       const reels = picks.map((pick, i) => {
-        const len = Math.round(10 + (SLOT_FIRST + i * SLOT_STEP) * 9);
-        const strip = Array.from({ length: len }, (_, k) => names[(pick + 1 + k * 3 + i) % names.length]);
-        strip.push(names[pick], names[(pick + 1) % names.length]);
-        return { strip, stopAt: sl.at + SLOT_LEVER + SLOT_FIRST + i * SLOT_STEP, dur: SLOT_FIRST + i * SLOT_STEP, target: len };
+        const target = Math.round((times[i] - SLOT_LEVER) * SLOT_SPEED);
+        const strip = Array.from({ length: target + 2 }, (_, k) => names[(((pick - target + k) % len) + len) % len]);
+        return { strip, target, stopAt: sl.at + times[i], i };
       });
       const box = m.querySelector('.slot-machine__reels');
       box.innerHTML = reels.map((r) => `<div class="reel"><div class="reel__strip">${r.strip.map((x) => `<div class="reel__cell">${esc(x)}</div>`).join('')}</div></div>`).join('');
       if (now() - sl.at < SLOT_LEVER) { void m.offsetWidth; m.classList.add('is-pulling'); }
-      return { m, t, reels, els: [...box.querySelectorAll('.reel')] };
+      return { m, t, reels, els: [...box.querySelectorAll('.reel')], h: 0 };
     });
 
-    // Leicht über das Ziel hinaus, dann zurück – wie eine einrastende Walze
-    const easeBack = (k) => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+    // Drehgeräusch ab dem Hebel, aus kurz nach der letzten Walze
+    const t0 = now() - sl.at;
+    fadeSfx(spinSound); spinSound = null;
+    if (t0 < times[n - 1]) {
+      const startSpin = () => { if (slotsId === id) spinSound = playSfx('spin', { gain: 0.9, offset: Math.max(0, now() - sl.at - SLOT_LEVER) }); };
+      if (t0 < SLOT_LEVER) setTimeout(startSpin, (SLOT_LEVER - t0) * 1000); else startSpin();
+    }
+
+    const dinged = new Set();
     const frame = () => {
       if (slotsId !== id) return;
+      const t = now() - sl.at;
       let running = false;
       machines.forEach((mc) => {
-        let stopped = 0;
+        if (!mc.h) mc.h = mc.els[0]?.getBoundingClientRect().height || 0;
         mc.reels.forEach((r, i) => {
-          const el = mc.els[i], h = el.getBoundingClientRect().height;
-          const k = Math.min(1, Math.max(0, (now() - (r.stopAt - r.dur)) / r.dur));
-          el.firstElementChild.style.transform = `translateY(${-easeBack(k) * r.target * h}px)`;
-          el.classList.toggle('is-spinning', k > 0 && k < 0.85);
-          if (k >= 1) {
-            stopped++;
-            if (!el.classList.contains('is-stopped')) el.classList.add('is-stopped');
-          } else running = true;
+          const el = mc.els[i], since = now() - r.stopAt;
+          let pos;
+          if (t < SLOT_LEVER) pos = 0;
+          else if (since < 0) pos = (t - SLOT_LEVER) * SLOT_SPEED;                       // volle Fahrt
+          else { const k = Math.min(1, since / 0.28); pos = r.target + 0.35 * Math.sin(k * Math.PI) * (1 - k); }  // rastet ein
+          el.firstElementChild.style.transform = `translateY(${-pos * mc.h}px)`;
+          el.classList.toggle('is-spinning', t >= SLOT_LEVER && since < 0);
+          if (since < 0.3) running = true;
+          if (since >= 0 && !el.classList.contains('is-stopped')) {
+            el.classList.add('is-stopped');
+            if (since < 0.35) {
+              mc.m.classList.remove('is-rumble'); void mc.m.offsetWidth; mc.m.classList.add('is-rumble');
+              if (!dinged.has(i)) {   // beide Automaten rasten gleichzeitig ein → ein Ding pro Reihe
+                dinged.add(i);
+                playSfx('ding', { rate: Math.pow(2, SCALE[Math.min(i, SCALE.length - 1)] / 12), gain: 0.9 });
+                playSfx('hit', { gain: 0.55 });
+              }
+            }
+          }
         });
-        if (stopped === mc.reels.length && !mc.m.classList.contains('is-done')) {
+        if (!mc.m.classList.contains('is-done') && mc.reels.every((r) => now() >= r.stopAt)) {
           mc.m.classList.add('is-done');
-          const last = mc.reels[mc.reels.length - 1].stopAt;
-          if (now() - last < 2) burst(s.teams[mc.t].color, overlay);
+          if (now() - mc.reels[mc.reels.length - 1].stopAt < 1.5) burst(s.teams[mc.t].color, overlay);
         }
       });
+      if (t > times[n - 1] && spinSound) { fadeSfx(spinSound, 0.4); spinSound = null; }
       if (running) requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
@@ -614,6 +701,7 @@
     a.play().then(soundOk).catch((e) => { if (e?.name === 'NotAllowedError') showSoundHint(); });
   }
   function unlockSound() {
+    sfx();   // Web Audio (Spielautomat) braucht den Klick ebenfalls
     if ($('soundHint').hidden && !pendingCameo) return;
     soundOk();
     const p = pendingCameo;
@@ -632,6 +720,7 @@
   document.addEventListener('click', unlockSound);
   document.addEventListener('keydown', unlockSound);
   testSound();
+  sfx();   // Soundeffekte schon mal laden
 
   function renderTimers() {
     const s = state;
