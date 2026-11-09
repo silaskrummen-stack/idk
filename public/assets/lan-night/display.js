@@ -331,6 +331,158 @@
     if (a) $('announceText').textContent = a.text;
   }
 
+  // ---------- Gastauftritt ----------
+  // Figur fährt unten hoch (20 % bleiben verdeckt), spricht ihren Satz, die Blase tippt mit – danach wieder runter.
+  let cameoSeen = undefined;   // beim ersten Laden keinen alten Auftritt nachholen
+  let cameoAudio = null, cameoTimers = [], typeFrame = null, pendingCameo = null;
+
+  function clearCameoTimers() {
+    cameoTimers.forEach(clearTimeout);
+    cameoTimers = [];
+    cancelAnimationFrame(typeFrame);
+  }
+
+  function renderCameo(s) {
+    const c = s.cameo;
+    if (cameoSeen === undefined) { cameoSeen = c?.id ?? null; return; }
+    if (!c) {
+      if (cameoSeen) leaveCameo(true);
+      cameoSeen = null;
+      return;
+    }
+    if (c.id === cameoSeen) return;
+    cameoSeen = c.id;
+    if (now() - c.at > 15) return;
+    const fig = (s.cameoCast || []).find((f) => f.key === c.who);
+    if (fig) playCameo(c, fig);
+  }
+
+  function playCameo(c, fig) {
+    const el = $('cameo'), img = $('cameoImg'), bubble = $('cameoBubble');
+    clearCameoTimers();
+    if (cameoAudio) { cameoAudio.pause(); cameoAudio = null; }
+
+    // Läuft gerade ein anderer Auftritt: sofort weg, ohne Abgang
+    el.classList.remove('is-in', 'is-talking');
+    el.hidden = true;
+    el.dataset.spot = fig.spot;
+    bubble.hidden = true;
+    $('cameoTyped').textContent = '';
+    $('cameoRest').textContent = c.text;
+
+    const audio = new Audio(`/lan-night/cameo/${encodeURIComponent(c.who)}/${c.line + 1}?v=${fig.v}`);
+    audio.preload = 'auto';
+    cameoAudio = audio;
+    img.src = `/lan-night/cameo/${encodeURIComponent(c.who)}/bild?v=${fig.v}`;
+
+    img.decode().catch(() => {}).then(() => {
+      if (cameoAudio !== audio) return;
+      el.hidden = false;
+      void el.offsetWidth;
+      el.classList.add('is-in');
+      cameoTimers.push(setTimeout(() => speak(c, audio), 550));
+    });
+  }
+
+  function speak(c, audio) {
+    const el = $('cameo');
+    let typed = false;
+    const startTyping = (seconds) => {
+      if (typed || !c.text) return;
+      typed = true;
+      $('cameoBubble').hidden = false;
+      typeText(c.text, seconds);
+    };
+    // Ohne Ton (blockiert / Datei fehlt): trotzdem tippen und nach Lesezeit abtreten
+    const silent = () => {
+      el.classList.remove('is-talking');
+      const read = Math.max(3, c.text.length * 0.07);
+      startTyping(read * 0.6);
+      cameoTimers.push(setTimeout(() => leaveCameo(), (read + 1.5) * 1000));
+    };
+
+    audio.onended = () => {
+      if (cameoAudio !== audio) return;
+      el.classList.remove('is-talking');
+      cameoTimers.push(setTimeout(() => leaveCameo(), 1800));
+    };
+    audio.onerror = () => { if (cameoAudio === audio) silent(); };
+
+    audio.play().then(() => {
+      if (cameoAudio !== audio) return;
+      soundOk();
+      el.classList.add('is-talking');
+      const dur = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 4;
+      startTyping(dur * 0.85);
+    }).catch((e) => {
+      if (cameoAudio !== audio) return;
+      if (e?.name === 'NotAllowedError') { pendingCameo = { c, audio }; showSoundHint(); }
+      silent();
+    });
+  }
+
+  // Text erscheint Zeichen für Zeichen über die Sprechdauer verteilt
+  function typeText(text, seconds) {
+    const typed = $('cameoTyped'), rest = $('cameoRest');
+    const perChar = Math.min(0.08, Math.max(0.02, seconds / text.length));
+    const start = performance.now();
+    const step = (t) => {
+      const n = Math.min(text.length, Math.floor((t - start) / 1000 / perChar) + 1);
+      typed.textContent = text.slice(0, n);
+      rest.textContent = text.slice(n);
+      if (n < text.length) typeFrame = requestAnimationFrame(step);
+    };
+    typeFrame = requestAnimationFrame(step);
+  }
+
+  function leaveCameo(instant = false) {
+    const el = $('cameo');
+    clearCameoTimers();
+    if (cameoAudio) { cameoAudio.pause(); cameoAudio = null; }
+    pendingCameo = null;
+    el.classList.remove('is-in', 'is-talking');
+    if (instant) { el.hidden = true; $('cameoBubble').hidden = true; return; }
+    cameoTimers.push(setTimeout(() => { el.hidden = true; $('cameoBubble').hidden = true; }, 700));
+  }
+
+  // ---------- Ton freischalten ----------
+  // Browser spielen ohne einen Klick auf die Seite keinen Ton ab. Beim Laden mit einem stillen Ton testen,
+  // damit der Hinweis schon vor dem ersten Auftritt zu sehen ist (Chrome-Kiosk: --autoplay-policy=no-user-gesture-required).
+  function silentWav() {
+    const n = 800, v = new DataView(new ArrayBuffer(44 + n * 2));
+    const w = (o, str) => [...str].forEach((ch, i) => v.setUint8(o + i, ch.charCodeAt(0)));
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, 8000, true); v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    w(36, 'data'); v.setUint32(40, n * 2, true);
+    return URL.createObjectURL(new Blob([v.buffer], { type: 'audio/wav' }));
+  }
+  const showSoundHint = () => { $('soundHint').hidden = false; };
+  const soundOk = () => { $('soundHint').hidden = true; };
+  function testSound() {
+    const a = new Audio(silentWav());
+    a.play().then(soundOk).catch((e) => { if (e?.name === 'NotAllowedError') showSoundHint(); });
+  }
+  function unlockSound() {
+    if ($('soundHint').hidden && !pendingCameo) return;
+    soundOk();
+    const p = pendingCameo;
+    pendingCameo = null;
+    if (p && cameoAudio === p.audio) {
+      // Auftritt läuft noch stumm: Abgang abblasen, Satz von vorn – abgetreten wird nach dem Ton
+      clearCameoTimers();
+      $('cameoTyped').textContent = p.c.text;
+      $('cameoRest').textContent = '';
+      p.audio.currentTime = 0;
+      p.audio.play().then(() => $('cameo').classList.add('is-talking')).catch(() => leaveCameo());
+    } else {
+      testSound();
+    }
+  }
+  document.addEventListener('click', unlockSound);
+  document.addEventListener('keydown', unlockSound);
+  testSound();
+
   function renderTimers() {
     const s = state;
     const clock = new Date();
@@ -899,6 +1051,7 @@
     renderFlash(s);
     renderAnnounce(s);
     renderWheel(s);
+    renderCameo(s);
     renderTimers();
   }
 

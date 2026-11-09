@@ -1,0 +1,17 @@
+GASTAUFTRITTE – Bilder und Sätze
+================================
+
+Ein Ordner pro Figur. Welche Figur wo am unteren Rand auftaucht, steht in
+src/Domain/LanNight/LanNightCameo.php (CAST):
+
+  uffi/     → links unten
+  bohlen/   → Mitte unten
+  advisor/  → rechts unten  (Berater)
+
+In jeden Ordner:
+  bild.webp (oder .png/.jpg …)  freigestellt, transparenter Hintergrund.
+                                Die unteren 20 % verschwinden unter dem Bildschirmrand.
+  1.mp3, 2.mp3, 3.mp3 …         die Sätze, nach Dateiname sortiert (mp3, ogg, wav, m4a)
+
+Kein Neustart nötig – einfach reinlegen. Im Admin-Panel (Karte "Gastauftritte")
+steht pro Figur eine Zeile je Satz: Text für die Sprechblase eintippen, ▶ drücken.

@@ -15,6 +15,7 @@ final class LanNightStore
 {
     public const SCREENS = ['title', 'scoreboard', 'game', 'pause', 'quiz', 'guess', 'price', 'awards', 'finale'];
     private const IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
+    private const AUDIO_TYPES = ['mp3', 'ogg', 'wav', 'm4a'];
 
     private string $dir;
 
@@ -22,6 +23,7 @@ final class LanNightStore
         #[Autowire('%kernel.project_dir%/var/lan-night')] string $dir,
         #[Autowire('%kernel.project_dir%/lan-night-media/guess-the-game')] private readonly string $guessDir,
         #[Autowire('%kernel.project_dir%/lan-night-media/guess-the-price')] private readonly string $priceDir,
+        #[Autowire('%kernel.project_dir%/lan-night-media/cameos')] private readonly string $cameoDir,
     ) {
         $this->dir = $dir;
     }
@@ -65,6 +67,55 @@ final class LanNightStore
     public function guessCounts(array $state): array
     {
         return array_map(fn ($i) => count($this->guessImages($i)), array_keys($state['guess']['games']));
+    }
+
+    /** Bild einer Gastauftritt-Figur: erste Bilddatei in cameos/<figur>/ */
+    public function cameoImage(string $who): ?string
+    {
+        return $this->cameoFiles($who, self::IMAGE_TYPES)[0] ?? null;
+    }
+
+    /** @return string[] Sätze (Audiodateien) einer Figur, nach Dateiname sortiert */
+    public function cameoLines(string $who): array
+    {
+        return array_slice($this->cameoFiles($who, self::AUDIO_TYPES), 0, LanNightCameo::MAX_LINES);
+    }
+
+    /** Figuren mit Platz, Anzahl Sätze und Version (Änderungszeit → neuer Cache nach Austausch) */
+    public function cameoCast(): array
+    {
+        $cast = [];
+        foreach (LanNightCameo::CAST as $key => $figure) {
+            $files = array_merge($this->cameoLines($key), array_filter([$this->cameoImage($key)]));
+            $cast[] = $figure + [
+                'key' => $key,
+                'lines' => count($this->cameoLines($key)),
+                'image' => $this->cameoImage($key) !== null,
+                'v' => $files ? max(array_map('filemtime', $files)) : 0,
+            ];
+        }
+
+        return $cast;
+    }
+
+    /** @return array<string,int> Anzahl Sätze pro Figur */
+    private function cameoLineCounts(): array
+    {
+        return array_map(fn ($key) => count($this->cameoLines($key)), array_combine(array_keys(LanNightCameo::CAST), array_keys(LanNightCameo::CAST)));
+    }
+
+    private function cameoFiles(string $who, array $types): array
+    {
+        if (!isset(LanNightCameo::CAST[$who])) {
+            return [];
+        }
+        $files = array_filter(
+            glob($this->cameoDir . '/' . $who . '/*') ?: [],
+            fn ($f) => is_file($f) && in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $types, true),
+        );
+        natcasesort($files);
+
+        return array_values($files);
     }
 
     public function read(): array
@@ -170,7 +221,7 @@ final class LanNightStore
     /** Ältere Spielstände um Quiz, Guess the Game, Guess the Price und Awards ergänzen. */
     private static function normalize(array $s): array
     {
-        return LanNightAwards::normalize(LanNightPrice::normalize(LanNightGuess::normalize(LanNightQuiz::normalize($s))));
+        return LanNightCameo::normalize(LanNightAwards::normalize(LanNightPrice::normalize(LanNightGuess::normalize(LanNightQuiz::normalize($s)))));
     }
 
     private function change(array $s, string $action, array $in): array
@@ -186,6 +237,9 @@ final class LanNightStore
         }
         if (str_starts_with($action, 'price.')) {
             return LanNightPrice::apply($s, $action, $in, $this->priceImages($s));
+        }
+        if (str_starts_with($action, 'cameo.')) {
+            return LanNightCameo::apply($s, $action, $in, $this->cameoLineCounts());
         }
 
         switch ($action) {
@@ -388,6 +442,7 @@ final class LanNightStore
                 $s['announcement'] = null;
                 $s['wheel'] = null;
                 $s['wheelHistory'] = [[], []];
+                $s['cameo'] = null;
                 $s['currentGame'] = null;
                 $s['screen'] = 'title';
                 foreach ($s['games'] as &$g) {

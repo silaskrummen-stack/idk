@@ -3,6 +3,7 @@
 namespace App\Domain\LanNight\Controller;
 
 use App\Domain\LanNight\LanNightAwards;
+use App\Domain\LanNight\LanNightCameo;
 use App\Domain\LanNight\LanNightGuess;
 use App\Domain\LanNight\LanNightPrice;
 use App\Domain\LanNight\LanNightQuiz;
@@ -182,11 +183,29 @@ class LanNightController extends AbstractController
         return $this->imageResponse($file);
     }
 
+    /** Gastauftritt: Bild (…/bild) oder Satz Nr. n (…/1, …/2) einer Figur – öffentlich, der Bildschirm braucht beides. */
+    #[Route('/lan-night/cameo/{who}/{file}', name: 'lan_cameo_file', requirements: ['who' => '[a-z]+', 'file' => 'bild|\d+'], methods: ['GET'])]
+    public function cameoFile(string $who, string $file): Response
+    {
+        if (!isset(LanNightCameo::CAST[$who])) {
+            throw $this->createNotFoundException();
+        }
+        $path = $file === 'bild' ? $this->store->cameoImage($who) : ($this->store->cameoLines($who)[(int) $file - 1] ?? null);
+        if (!$path) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->imageResponse($path);
+    }
+
     private function imageResponse(string $file): BinaryFileResponse
     {
         $response = new BinaryFileResponse($file);
         // Typ selbst setzen (symfony/mime ist nicht installiert)
-        $types = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'gif' => 'image/gif', 'avif' => 'image/avif'];
+        $types = [
+            'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp', 'gif' => 'image/gif', 'avif' => 'image/avif',
+            'mp3' => 'audio/mpeg', 'ogg' => 'audio/ogg', 'wav' => 'audio/wav', 'm4a' => 'audio/mp4',
+        ];
         $response->headers->set('Content-Type', $types[strtolower(pathinfo($file, PATHINFO_EXTENSION))] ?? 'application/octet-stream');
         $response->headers->set('Cache-Control', 'private, max-age=600');
 
@@ -229,6 +248,7 @@ class LanNightController extends AbstractController
             $state['guess'] = LanNightGuess::publicView($state['guess'], $this->store->guessCounts($state));
             $state['price'] = LanNightPrice::publicView($state['price'], $this->store->priceImages($state));
         }
+        $state['cameoCast'] = $this->store->cameoCast();
         $state['serverTime'] = microtime(true);
 
         return $this->json($state, headers: ['Cache-Control' => 'no-store']);

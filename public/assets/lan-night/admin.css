@@ -849,3 +849,60 @@
     background: var(--lan-mint);
     color: var(--lan-bg-deep);
 }
+
+/* ----- Gastauftritte ----- */
+.cameos {
+    display: grid;
+    gap: 14px;
+}
+
+.cameo-fig {
+    display: grid;
+    gap: 6px;
+}
+
+.cameo-fig__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+}
+
+.cameo-fig__head img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 50%;
+    background: var(--lan-bg-raised);
+}
+
+.cameo-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 12px;
+}
+
+.cameo-line .linput {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.cameo-line .lbtn {
+    flex: 0 0 auto;
+    min-width: 42px;
+    padding-inline: 10px;
+}
+
+.cameo-line__num {
+    flex: 0 0 1.4em;
+    text-align: center;
+    font: 600 0.85rem var(--font-display);
+    color: var(--lan-text-muted);
+}
+
+.cameo-line.is-live {
+    outline: 2px solid var(--lan-mint);
+    outline-offset: 3px;
+}

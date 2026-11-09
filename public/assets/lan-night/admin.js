@@ -57,6 +57,7 @@
     renderGames();
     renderLog();
     renderWheel();
+    renderCameos();
     renderQuiz();
     renderGuess();
     renderPrice();
@@ -138,6 +139,73 @@
 
   $('wheelSpin').addEventListener('click', () => send('wheel.spin', { fresh: $('wheelFresh').checked }));
   $('wheelHide').addEventListener('click', () => send('wheel.hide'));
+
+  // ---------- Gastauftritte ----------
+  const SPOTS = { left: 'links unten', center: 'Mitte unten', right: 'rechts unten' };
+  const cameoText = (who, line) => state.cameoTexts?.[who]?.[line] ?? '';
+  // Ein Auftritt dauert Satz + Ein-/Abgang, also höchstens ~20 s – danach gilt er als vorbei
+  const cameoRunning = () => (state?.cameo && (Date.now() / 1000 + offset) - state.cameo.at < 20 ? state.cameo : null);
+  let preview = null;
+
+  function renderCameos() {
+    const cast = state.cameoCast || [], c = cameoRunning(), wrap = $('cameos');
+    const fig = c && cast.find((f) => f.key === c.who);
+    $('cameoLive').textContent = fig ? `läuft · ${fig.name} ${c.line + 1}` : '';
+    $('cameoHide').disabled = !c;
+
+    // Nur neu zeichnen, wenn sich Figuren/Sätze geändert haben – sonst wären getippte Texte weg
+    const sig = JSON.stringify(cast);
+    if (wrap._sig !== sig && !busy(wrap)) {
+      wrap._sig = sig;
+      wrap.innerHTML = cast.map((f) => `
+        <div class="cameo-fig">
+          <div class="cameo-fig__head">
+            ${f.image ? `<img src="/lan-night/cameo/${esc(f.key)}/bild?v=${f.v}" alt="">` : ''}
+            <strong>${esc(f.name)}</strong>
+            <span class="card__hint">${SPOTS[f.spot] || ''}</span>
+          </div>
+          ${f.lines ? Array.from({ length: f.lines }, (_, i) => `
+            <form class="cameo-line" data-who="${esc(f.key)}" data-line="${i}">
+              <span class="cameo-line__num">${i + 1}</span>
+              <input class="linput" name="text" maxlength="200" placeholder="Sprechblase …" value="${esc(cameoText(f.key, i))}" aria-label="${esc(f.name)}, Satz ${i + 1}: Sprechblase">
+              <button class="lbtn lbtn--ghost" type="button" data-listen title="Nur hier anhören" aria-label="Satz ${i + 1} anhören">🔈</button>
+              <button class="lbtn lbtn--primary" type="submit" title="Auf den Bildschirm" aria-label="${esc(f.name)} Satz ${i + 1} auftreten lassen">▶</button>
+            </form>`).join('')
+          : `<p class="hint">Keine Sätze gefunden – MP3s nach <code>lan-night-media/cameos/${esc(f.key)}/</code> legen (1.mp3, 2.mp3, …).</p>`}
+        </div>`).join('');
+    }
+    wrap.querySelectorAll('.cameo-line').forEach((form) => {
+      form.classList.toggle('is-live', !!c && c.who === form.dataset.who && c.line === Number(form.dataset.line));
+    });
+  }
+
+  const cameoData = (form) => ({ who: form.dataset.who, line: Number(form.dataset.line), text: form.text.value });
+
+  $('cameos').addEventListener('submit', (e) => {
+    e.preventDefault();
+    send('cameo.play', cameoData(e.target));
+  });
+  // Text merken, sobald das Feld verlassen wird (auch ohne Auftritt)
+  $('cameos').addEventListener('change', (e) => {
+    const form = e.target.closest('.cameo-line');
+    if (form) send('cameo.text', cameoData(form));
+  });
+  $('cameos').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-listen]');
+    if (!btn) return;
+    const form = btn.closest('.cameo-line');
+    const fig = (state.cameoCast || []).find((f) => f.key === form.dataset.who);
+    const src = `/lan-night/cameo/${encodeURIComponent(form.dataset.who)}/${Number(form.dataset.line) + 1}?v=${fig?.v ?? 0}`;
+    const same = preview && preview.btn === btn;
+    if (preview) { preview.audio.pause(); preview.btn.textContent = '🔈'; preview = null; }
+    if (same) return;
+    const audio = new Audio(src);
+    preview = { audio, btn };
+    btn.textContent = '⏹';
+    audio.onended = () => { if (preview?.audio === audio) { btn.textContent = '🔈'; preview = null; } };
+    audio.play().catch(() => { btn.textContent = '🔈'; preview = null; toast('Konnte nicht abspielen'); });
+  });
+  $('cameoHide').addEventListener('click', () => send('cameo.hide'));
 
   // ---------- Segment-Reiter ----------
   // Immer nur ein Segment sichtbar. Wechselt der Bildschirm zu einem Segment, springt der Reiter mit;
@@ -799,5 +867,5 @@
   (function loop() {
     setTimeout(() => load().then(loop), ['quiz', 'guess', 'price', 'awards'].includes(state?.screen) || state?.awards?.phase === 'voting' ? 1000 : 3000);
   })();
-  setInterval(() => { renderLive(); renderStatus(); }, 1000);
+  setInterval(() => { renderLive(); renderStatus(); if (state) renderCameos(); }, 1000);
 })();
