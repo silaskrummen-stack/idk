@@ -17,7 +17,7 @@ security:
                         roles: ['ROLE_PORTFOLIO_VIEWER', 'ROLE_CIV_ADMIN']
                     # Spielleitung der LAN-Night (/lan-night/admin) – bewusst OHNE Portfolio-Zugriff
                     lan_admin:
-                        password: '$2y$13$tKt2ZLwmu/35RSlRKWZH9.pDLLzw7Y91FTIjFRIWh3chbWOmmXaQG'
+                        password: '$2y$13$BjEy3UD2AJxPARe0WI6Mb.w4sKviZ.oawo4tpYkfpeDBG2vRCeSza'
                         roles: ['ROLE_LAN_ADMIN']
 
     firewalls:
