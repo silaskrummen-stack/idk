@@ -519,6 +519,8 @@
 
 .pick__head .eyebrow {
     margin: 0;
+    /* Gelb/Mint sind Teamfarben – hier neutral, sonst sieht es nach einem Team aus */
+    color: var(--lan-text-muted);
 }
 
 .pick__title {
@@ -574,7 +576,14 @@
     color: var(--lan-text-muted);
 }
 
-/* Punkte als Plakette oben rechts – 4er-Spiele leuchten */
+/* Punkte als Plakette oben rechts – bewusst ohne Farbton (Gelb/Mint gehören den Teams).
+   Schrift immer gleich weiß; je mehr Punkte, desto kräftiger Rahmen, Fläche und Schein (--pv: 0 … 1). */
+.pick-tile { --pv: 0.35; }
+.pick-tile.is-p2 { --pv: 0.15; }
+.pick-tile.is-p3 { --pv: 0.35; }
+.pick-tile.is-p4 { --pv: 0.6; }
+.pick-tile.is-p5 { --pv: 0.9; }
+
 .pick-tile__pts {
     position: absolute;
     top: 1.2vh;
@@ -584,18 +593,15 @@
     border-radius: 1.2vh;
     font: 700 3vh/1 var(--font-display);
     text-align: center;
-    color: var(--lan-bg-deep);
-    background: var(--lan-mint);
+    color: #fff;
+    background: rgba(255, 255, 255, calc(0.06 + var(--pv) * 0.2));
+    border: 0.25vh solid rgba(255, 255, 255, calc(0.15 + var(--pv) * 0.75));
+    box-shadow: 0 0 calc(var(--pv) * 3vh) rgba(255, 255, 255, calc(var(--pv) * 0.45));
 }
 
 .pick-tile__pts small {
     font-size: 0.55em;
     margin-left: 0.15em;
-}
-
-.pick-tile.is-big .pick-tile__pts {
-    background: var(--lan-yellow);
-    box-shadow: 0 0 2.4vh color-mix(in srgb, var(--lan-yellow) 60%, transparent);
 }
 
 /* Gewonnen: Kachel in Teamfarbe */
@@ -611,7 +617,8 @@
 
 .pick-tile.is-done .pick-tile__pts {
     background: var(--lan-bg-deep);
-    color: var(--c);
+    border-color: var(--lan-bg-deep);
+    color: #fff;
     box-shadow: none;
 }
 
@@ -620,13 +627,9 @@
     border-color: var(--lan-text);
 }
 
-.pick-tile.is-draw .pick-tile__pts {
-    color: var(--lan-text);
-}
-
 .pick-tile.is-running {
-    border-color: var(--lan-yellow);
-    animation: pulse 1.6s ease-in-out infinite;
+    border-color: #fff;
+    animation: pick-pulse 1.6s ease-in-out infinite;
 }
 
 /* Gerade entschieden: Farbe läuft einmal über die Kachel */
@@ -649,7 +652,7 @@
 
 .pick__grid.is-choosing .pick-tile.is-chosen {
     z-index: 2;
-    border-color: var(--lan-yellow);
+    border-color: #fff;
     animation: pick-chosen 2.6s cubic-bezier(0.2, 1.3, 0.4, 1) both;
 }
 
@@ -675,10 +678,14 @@
 
 @keyframes pick-chosen {
     0% { transform: scale(1); box-shadow: 0 0 0 transparent; }
-    18% { transform: scale(1.35); box-shadow: 0 0 8vh color-mix(in srgb, var(--lan-yellow) 70%, transparent); }
+    18% { transform: scale(1.35); box-shadow: 0 0 8vh rgba(255, 255, 255, 0.55); }
     30%, 50%, 70% { transform: scale(1.25); filter: brightness(1.35); }
     40%, 60% { transform: scale(1.3); filter: brightness(1); }
-    100% { transform: scale(1.3); box-shadow: 0 0 10vh color-mix(in srgb, var(--lan-yellow) 80%, transparent); }
+    100% { transform: scale(1.3); box-shadow: 0 0 10vh rgba(255, 255, 255, 0.6); }
+}
+
+@keyframes pick-pulse {
+    50% { box-shadow: 0 0 3vh rgba(255, 255, 255, 0.4); }
 }
 
 /* ----- Overlay: Punkte / Spielergebnis ----- */
@@ -892,7 +899,7 @@ body.has-announce .track {
     z-index: 30;
     font: 700 2.2vh var(--font-display);
     color: var(--lan-bg-deep);
-    background: var(--lan-yellow);
+    background: #fff;
     border: 0;
     border-radius: 99px;
     padding: 1.2vh 2.2vh;

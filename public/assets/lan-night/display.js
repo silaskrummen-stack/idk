@@ -157,9 +157,10 @@
     grid.style.setProperty('--cols', cols);
     grid.style.setProperty('--name-size', `${Math.min(3, 12 / rows).toFixed(2)}vh`);
 
-    setHTML(grid, s.games.map((g, i) => {
-      let cls = `pick-tile is-${g.status}`, style = `--i:${i}`, state = '';
-      if (g.points >= 4) cls += ' is-big';
+    // Nach Punkten sortiert (wertvollste zuerst), bei gleichen Punkten in der Reihenfolge der Spielleitung
+    const sorted = s.games.map((g, i) => [g, i]).sort((a, b) => b[0].points - a[0].points || a[1] - b[1]).map(([g]) => g);
+    setHTML(grid, sorted.map((g, i) => {
+      let cls = `pick-tile is-${g.status} is-p${Math.min(5, Math.max(2, g.points))}`, style = `--i:${i}`, state = '';
       if (g.status === 'running') state = 'läuft';
       if (g.status === 'done') {
         if (g.result === 'draw') {
