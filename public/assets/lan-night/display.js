@@ -124,9 +124,11 @@
     const g = s.games[i];
     // Gezählt wird in Spielreihenfolge (wie viele schon durch sind), nicht nach Platz in der Liste
     const played = s.games.filter((x) => x.status === 'done').length;
-    $('gameEyebrow').textContent = g ? `Spiel ${played + 1} von ${s.games.length} · um ${g.points} ${g.points === 1 ? 'Punkt' : 'Punkte'}` : 'Nächstes Spiel';
+    // Schnell gestartet → schnelle Regeln statt der normalen
+    const fast = g && g.mode === 'fast' && g.fastRules;
+    $('gameEyebrow').textContent = g ? `Spiel ${played + 1} von ${s.games.length} · um ${g.points} ${g.points === 1 ? 'Punkt' : 'Punkte'}${fast ? ' · ⚡ Schnelle Runde' : ''}` : 'Nächstes Spiel';
     $('gameName').textContent = g ? g.name : 'Gleich geht\'s los';
-    $('gameDesc').textContent = g ? g.description : '';
+    $('gameDesc').textContent = g ? (fast ? g.fastRules : g.description) : '';
 
     // Ausgeloste Aufstellung (Spielautomat / Glücksrad) für dieses Spiel
     const lu = g && s.lineup && s.lineup.gameId === g.id ? s.lineup : null;

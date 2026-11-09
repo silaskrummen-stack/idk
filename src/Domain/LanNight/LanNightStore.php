@@ -231,6 +231,8 @@ final class LanNightStore
         $s['lineup'] ??= null;
         foreach ($s['games'] as &$g) {
             $g['players'] ??= null;   // Spieler gesamt (beide Teams zusammen), null = alle
+            $g['fastRules'] ??= '';   // Regeln für die schnelle Variante (leer = keine)
+            $g['mode'] ??= 'normal';  // wie es gerade gespielt wird: normal / fast
             // Ältere Spielstände: Segment am Namen erkennen ("Trivia Quiz" → Quiz, …)
             if (!array_key_exists('segment', $g)) {
                 $g['segment'] = self::segmentOf($g['name']);
@@ -331,6 +333,7 @@ final class LanNightStore
                     'id' => $this->id(),
                     'name' => $name,
                     'description' => $this->text($in['description'] ?? '', 300),
+                    'fastRules' => $this->text($in['fastRules'] ?? '', 300),
                     'points' => max(1, (int) ($in['points'] ?? 3)),
                     'time' => $this->time($in['time'] ?? ''),
                     'status' => 'open',
@@ -401,6 +404,7 @@ final class LanNightStore
                 $i = $this->game($s, $in);
                 $s['games'][$i]['name'] = $this->text($in['name'] ?? '', 50) ?: $s['games'][$i]['name'];
                 $s['games'][$i]['description'] = $this->text($in['description'] ?? '', 300);
+                $s['games'][$i]['fastRules'] = $this->text($in['fastRules'] ?? '', 300);
                 $s['games'][$i]['points'] = max(1, (int) ($in['points'] ?? $s['games'][$i]['points']));
                 $s['games'][$i]['time'] = $this->time($in['time'] ?? '');
                 $s['games'][$i]['segment'] = self::segmentOf($s['games'][$i]['name']);
@@ -428,7 +432,13 @@ final class LanNightStore
                 break;
 
             case 'game.start':
-                $s = $this->startGame($s, $this->game($s, $in));
+                // Normal oder schnell (dann zeigt der Bildschirm die schnellen Regeln statt der normalen)
+                $i = $this->game($s, $in);
+                $fast = ($in['mode'] ?? 'normal') === 'fast';
+                if ($fast && $s['games'][$i]['fastRules'] === '') {
+                    throw new \InvalidArgumentException('Für dieses Spiel gibt es keine schnellen Regeln');
+                }
+                $s = $this->startGame($s, $i, $fast ? 'fast' : 'normal');
                 break;
 
             case 'game.finish':
@@ -725,8 +735,11 @@ final class LanNightStore
     }
 
     /** Spiel starten (läuft schon / schon fertig → nur auf den Bildschirm wechseln) */
-    private function startGame(array $s, int $i): array
+    private function startGame(array $s, int $i, ?string $mode = null): array
     {
+        if ($mode !== null || $s['games'][$i]['status'] === 'open') {
+            $s['games'][$i]['mode'] = $mode ?? 'normal';
+        }
         if ($s['games'][$i]['status'] === 'open') {
             foreach ($s['games'] as &$g) {
                 if ($g['status'] === 'running') {
@@ -842,7 +855,7 @@ final class LanNightStore
     public static function defaultState(): array
     {
         $game = fn (string $name, string $description, int $points, string $time) => [
-            'id' => bin2hex(random_bytes(6)), 'name' => $name, 'description' => $description,
+            'id' => bin2hex(random_bytes(6)), 'name' => $name, 'description' => $description, 'fastRules' => '', 'mode' => 'normal',
             'points' => $points, 'time' => $time, 'status' => 'open', 'result' => null, 'segment' => self::segmentOf($name),
         ];
 

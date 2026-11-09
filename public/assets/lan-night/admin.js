@@ -601,19 +601,24 @@
     list.innerHTML = state.games.length ? state.games.map((g, i) => {
       const seg = g.segment ? SEGMENT_LABEL[g.segment] : null;
       let info = seg ? `Punkte kommen aus dem Reiter „${seg}“` : 'Noch nicht gespielt';
-      if (g.status === 'running') info = '<b style="--c:var(--lan-yellow)">Läuft gerade</b>';
+      if (g.status === 'running') info = `<b style="--c:var(--lan-yellow)">Läuft gerade${g.mode === 'fast' ? ' · ⚡ schnell' : ''}</b>`;
       if (g.status === 'done') {
         info = g.result === 'draw'
           ? `Unentschieden · je +${Math.ceil(g.points / 2)}`
           : `Sieger: <b style="--c:${esc(state.teams[g.result].color)}">${esc(state.teams[g.result].name)}</b> · +${g.points}`;
       }
+      // Kurz: "Gold gewinnt" statt "Team Gold gewinnt"
+      const short = (t) => esc(t.name.replace(/^team\s+/i, ''));
       const winBtns = `
-        <button class="lbtn lbtn--team" style="--c:${esc(A.color)}" data-game="finish" data-result="0">${esc(A.name)} gewinnt</button>
-        <button class="lbtn lbtn--team" style="--c:${esc(B.color)}" data-game="finish" data-result="1">${esc(B.name)} gewinnt</button>
+        <button class="lbtn lbtn--team" style="--c:${esc(A.color)}" data-game="finish" data-result="0">${short(A)} gewinnt</button>
+        <button class="lbtn lbtn--team" style="--c:${esc(B.color)}" data-game="finish" data-result="1">${short(B)} gewinnt</button>
         <button class="lbtn" data-game="finish" data-result="draw">Unentschieden</button>`;
+      // Normal starten; "Schnell" nur, wenn es schnelle Regeln gibt (der Bildschirm zeigt dann diese)
+      const startBtns = '<button class="lbtn lbtn--mint" data-game="start">▶ Normal</button>'
+        + (g.fastRules ? '<button class="lbtn lbtn--mint" data-game="start-fast">⚡ Schnell</button>' : '');
       let btns = g.status === 'done'
         ? '<button class="lbtn lbtn--ghost" data-game="reopen">Ergebnis zurücknehmen</button>'
-        : (g.status === 'running' ? winBtns : '<button class="lbtn lbtn--mint" data-game="start">▶ Starten</button>' + winBtns);
+        : (g.status === 'running' ? winBtns : startBtns + winBtns);
       // Segment-Spiele: Start springt in den Reiter, Ergebnis bucht das Segment selbst
       if (seg) {
         btns = g.status === 'done'
@@ -646,6 +651,7 @@
           <form class="game__edit" ${open ? '' : 'hidden'}>
             <input class="linput" name="name" value="${esc(g.name)}" maxlength="50" required>
             <textarea class="linput" name="description" maxlength="300" placeholder="Regeln / Beschreibung">${esc(g.description)}</textarea>
+            <textarea class="linput" name="fastRules" maxlength="300" placeholder="Schnelle Regeln (optional) – erscheinen statt der normalen, wenn du „Schnell“ startest">${esc(g.fastRules || '')}</textarea>
             <div class="form__pair">
               <label class="field">Startzeit <input class="linput" name="time" type="time" value="${esc(g.time || '')}"></label>
               <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="${g.points}"></label>
@@ -666,7 +672,8 @@
     const li = b.closest('.game'), id = li.dataset.id;
     const g = state.games.find((x) => x.id === id);
     switch (b.dataset.game) {
-      case 'start': send('game.start', { id }); break;
+      case 'start': send('game.start', { id, mode: 'normal' }); break;
+      case 'start-fast': send('game.start', { id, mode: 'fast' }); break;
       case 'wheel': send('wheel.spin', { fresh: $('wheelFresh').checked, game: id }); break;
       case 'slots': send('slots.spin', { id, fresh: $('wheelFresh').checked }); break;
       case 'finish': {
@@ -696,7 +703,7 @@
     e.preventDefault();
     const f = e.target, id = f.closest('.game').dataset.id;
     document.activeElement?.blur();
-    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
+    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
     if (ok) { openEdits.delete(id); renderGames(); }
   });
 
@@ -790,7 +797,7 @@
     e.preventDefault();
     const f = e.target;
     document.activeElement?.blur();
-    const ok = await send('game.add', { name: f.name.value, description: f.description.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
+    const ok = await send('game.add', { name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
     if (ok) { f.reset(); f.closest('details').open = false; toast('Spiel hinzugefügt', true); }
   });
 
