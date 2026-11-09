@@ -334,7 +334,7 @@
 
   // ---------- Soundeffekte ----------
   // Web Audio statt <audio>: Tonhöhe pro Ding frei wählbar, Töne überlappen sauber, nichts muss "laden", wenn's losgeht.
-  // spin.mp3 ist optional – fehlt die Datei, läuft der Automat einfach ohne Drehgeräusch.
+  // Fehlt eine Datei, läuft alles trotzdem – nur ohne diesen Ton.
   const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3' };
   const sfxBuf = {};
   let sfxCtx = null;
@@ -374,12 +374,15 @@
   // ---------- Spielautomat ----------
   // Pro Team ein Automat, eine Walze pro Spieler. Hebel runter → alle Walzen drehen gleich schnell (kein Abbremsen),
   // dann rastet eine nach der anderen ein (oben → unten) mit Ding + Metall-Schlag + Ruckeln. Jedes Ding einen Ton höher.
-  // Spätestens nach SLOT_LAST_MAX Sekunden steht die letzte Walze (das Drehgeräusch ist ~7 s lang).
+  // Spätestens nach SLOT_LAST_MAX Sekunden steht die letzte Walze; das Drehgeräusch läuft vom Hebel bis dahin.
   // Gezogen hat der Server; Start (at) ist Serverzeit → alle Bildschirme laufen gleich.
   const SLOT_LEVER = 0.4, SLOT_FIRST = 1.6, SLOT_LAST_MAX = 6.4, SLOT_STEP_MAX = 0.65;
   const SLOT_SPEED = 26;    // Namen pro Sekunde
   const SLOT_HOLD = 3.5;    // so lange bleibt das Ergebnis stehen, dann geht's auf den Spiel-Bildschirm
   const SCALE = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19];   // Dur-Tonleiter in Halbtönen: Ding 1, 2, 3 …
+  // Drehgeräusch: startet etwas höher und lauter, wird mit jedem Ding ein Stück langsamer und leiser (p = Anteil gestoppter Reihen)
+  const spinRate = (p) => 1.15 - 0.25 * p;
+  const spinGain = (p) => 1.5 - 0.8 * p;
   let slotsId = null, slotsTimer = null, spinSound = null;
 
   // Zeitpunkt (Sekunden nach at), an dem Walze i einrastet – beide Automaten im Gleichschritt
@@ -433,7 +436,11 @@
     const t0 = now() - sl.at;
     fadeSfx(spinSound); spinSound = null;
     if (t0 < times[n - 1]) {
-      const startSpin = () => { if (slotsId === id) spinSound = playSfx('spin', { gain: 0.9, offset: Math.max(0, now() - sl.at - SLOT_LEVER) }); };
+      const startSpin = () => {
+        if (slotsId !== id) return;
+        const p = times.filter((x) => x <= now() - sl.at).length / n;   // neu geladen mitten im Drehen → passend einsteigen
+        spinSound = playSfx('spin', { rate: spinRate(p), gain: spinGain(p), offset: Math.max(0, now() - sl.at - SLOT_LEVER) });
+      };
       if (t0 < SLOT_LEVER) setTimeout(startSpin, (SLOT_LEVER - t0) * 1000); else startSpin();
     }
 
@@ -461,6 +468,11 @@
                 dinged.add(i);
                 playSfx('ding', { rate: Math.pow(2, SCALE[Math.min(i, SCALE.length - 1)] / 12), gain: 0.9 });
                 playSfx('hit', { gain: 0.55 });
+                if (spinSound && sfxCtx) {
+                  const p = (i + 1) / n, at = sfxCtx.currentTime;
+                  spinSound.src.playbackRate.setTargetAtTime(spinRate(p), at, 0.08);
+                  spinSound.g.gain.setTargetAtTime(spinGain(p), at, 0.08);
+                }
               }
             }
           }
