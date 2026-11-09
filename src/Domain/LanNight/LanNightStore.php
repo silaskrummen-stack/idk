@@ -226,7 +226,10 @@ final class LanNightStore
     {
         $s = LanNightCameo::normalize(LanNightAwards::normalize(LanNightPrice::normalize(LanNightGuess::normalize(LanNightQuiz::normalize($s)))));
         $s['pickOverride'] ??= null;
+        $s['slots'] ??= null;
+        $s['lineup'] ??= null;
         foreach ($s['games'] as &$g) {
+            $g['players'] ??= null;   // Spieler gesamt (beide Teams zusammen), null = alle
             // Ältere Spielstände: Segment am Namen erkennen ("Trivia Quiz" → Quiz, …)
             if (!array_key_exists('segment', $g)) {
                 $g['segment'] = self::segmentOf($g['name']);
@@ -329,6 +332,7 @@ final class LanNightStore
                     'status' => 'open',
                     'result' => null,
                     'segment' => self::segmentOf($name),
+                    'players' => $this->players($in['players'] ?? null),
                 ];
                 break;
 
@@ -349,6 +353,12 @@ final class LanNightStore
                 $games = [];
                 foreach ($lines as $line) {
                     $points = 3;
+                    $players = null;
+                    // Spielerzahl hinten mit | oder / ("Wreckfest 4 | 16") oder als "16 Spieler"
+                    if (preg_match('/^(.*?)(?:\s*[|\/]\s*|\s+)(\d{1,2})\s*spieler\.?$/iu', $line, $m)
+                        || preg_match('/^(.*?)\s*[|\/]\s*(\d{1,2})\.?$/u', $line, $m)) {
+                        [$line, $players] = [trim($m[1]), $this->players($m[2])];
+                    }
                     if (preg_match('/^(.*?)[\s;|:,\-–]+(\d{1,2})\s*(p|pkt|punkte?)?\.?$/iu', $line, $m) && trim($m[1]) !== '') {
                         [$line, $points] = [trim($m[1]), max(1, (int) $m[2])];
                     }
@@ -359,6 +369,7 @@ final class LanNightStore
                     }
                     $g = $old[$key] ?? ['id' => $this->id(), 'name' => $name, 'description' => '', 'time' => '', 'status' => 'open', 'result' => null];
                     $g['points'] = $points;
+                    $g['players'] = $players;
                     $g['segment'] = self::segmentOf($name);
                     $games[$key] = $g;
                     unset($old[$key]);
@@ -389,6 +400,7 @@ final class LanNightStore
                 $s['games'][$i]['points'] = max(1, (int) ($in['points'] ?? $s['games'][$i]['points']));
                 $s['games'][$i]['time'] = $this->time($in['time'] ?? '');
                 $s['games'][$i]['segment'] = self::segmentOf($s['games'][$i]['name']);
+                $s['games'][$i]['players'] = $this->players($in['players'] ?? null);
                 break;
 
             case 'game.delete':
@@ -498,14 +510,59 @@ final class LanNightStore
                     $jitter[] = random_int(-35, 35) / 100; // wo im Feld der Zeiger stehen bleibt
                 }
                 $s['wheelHistory'] = $history;
+                $members = [array_values($s['teams'][0]['members']), array_values($s['teams'][1]['members'])];
+                $game = isset($in['game']) ? $s['games'][$this->game($s, ['id' => $in['game']])] : null;
                 $s['wheel'] = [
                     'id' => $this->id(),
                     'at' => microtime(true),
-                    'members' => [array_values($s['teams'][0]['members']), array_values($s['teams'][1]['members'])],
+                    'members' => $members,
                     'picks' => $picks,
                     'jitter' => $jitter,
                     'durations' => [6.0, 7.5],
+                    'game' => $game['name'] ?? null,
                 ];
+                $s['slots'] = null;
+                if ($game) {
+                    $s['lineup'] = ['gameId' => $game['id'], 'teams' => [[$members[0][$picks[0]]], [$members[1][$picks[1]]]]];
+                }
+                break;
+
+            case 'slots.spin':
+                // Spielautomat: pro Team (Spieler gesamt ÷ 2) Leute, Walze für Walze. Der Server zieht – alle Bildschirme gleich.
+                $game = $s['games'][$this->game($s, $in)];
+                $perTeam = intdiv((int) ($game['players'] ?? 0), 2);
+                if ($perTeam < 2) {
+                    throw new \InvalidArgumentException($perTeam === 1 ? '1 pro Team – dafür das Glücksrad nehmen' : sprintf('Bei „%s“ ist keine Spielerzahl eingetragen', $game['name']));
+                }
+                $history = $s['wheelHistory'] ?? [[], []];
+                $members = [];
+                $picks = [];
+                foreach ([0, 1] as $t) {
+                    $members[$t] = array_values($s['teams'][$t]['members']);
+                    if (!$members[$t]) {
+                        throw new \InvalidArgumentException(sprintf('%s hat noch keine Spieler (Teams → Spieler eintragen)', $s['teams'][$t]['name']));
+                    }
+                    [$names, $history[$t]] = $this->draw($members[$t], $perTeam, $history[$t], !empty($in['fresh']));
+                    $picks[$t] = array_map(fn ($n) => array_search($n, $members[$t], true), $names);
+                }
+                $s['wheelHistory'] = $history;
+                $s['wheel'] = null;
+                $s['slots'] = [
+                    'id' => $this->id(),
+                    'at' => microtime(true),
+                    'game' => $game['name'],
+                    'perTeam' => $perTeam,
+                    'members' => $members,
+                    'picks' => $picks,
+                ];
+                $s['lineup'] = [
+                    'gameId' => $game['id'],
+                    'teams' => [array_map(fn ($i) => $members[0][$i], $picks[0]), array_map(fn ($i) => $members[1][$i], $picks[1])],
+                ];
+                break;
+
+            case 'slots.hide':
+                $s['slots'] = null;
                 break;
 
             case 'wheel.hide':
@@ -530,6 +587,8 @@ final class LanNightStore
                 $s['wheelHistory'] = [[], []];
                 $s['cameo'] = null;
                 $s['pickOverride'] = null;
+                $s['slots'] = null;
+                $s['lineup'] = null;
                 $s['currentGame'] = null;
                 $s['screen'] = 'title';
                 foreach ($s['games'] as &$g) {
@@ -666,6 +725,48 @@ final class LanNightStore
             $label = ['quiz' => 'Quiz', 'guess' => 'Guess the Game', 'price' => 'Guess the Price'][$g['segment']];
             throw new \InvalidArgumentException(sprintf('Die Punkte für „%s“ kommen aus dem %s-Reiter', $g['name'], $label));
         }
+    }
+
+    /**
+     * Zieht $count verschiedene Spieler. Mit $fresh kommen zuerst die dran, die seit dem letzten Durchgang
+     * noch nicht gezogen wurden; reichen die nicht, beginnt ein neuer Durchgang.
+     *
+     * @return array{string[], string[]} [gezogene Namen, neuer Verlauf]
+     */
+    private function draw(array $members, int $count, array $history, bool $fresh): array
+    {
+        $count = min($count, count($members));
+        $shuffle = function (array $a): array {
+            for ($i = count($a) - 1; $i > 0; $i--) {
+                $j = random_int(0, $i);
+                [$a[$i], $a[$j]] = [$a[$j], $a[$i]];
+            }
+
+            return $a;
+        };
+        if (!$fresh) {
+            $names = array_slice($shuffle($members), 0, $count);
+
+            return [$names, array_values(array_unique(array_merge($history, $names)))];
+        }
+        $unseen = $shuffle(array_values(array_diff($members, $history)));
+        if (count($unseen) >= $count) {
+            $names = array_slice($unseen, 0, $count);
+
+            return [$names, array_merge($history, $names)];
+        }
+        // Rest des Durchgangs + Auffüllen aus allen anderen → neuer Durchgang beginnt mit genau diesen
+        $names = array_merge($unseen, array_slice($shuffle(array_values(array_diff($members, $unseen))), 0, $count - count($unseen)));
+
+        return [$names, $names];
+    }
+
+    /** Spieler gesamt für ein Spiel: 2–64, leer = alle */
+    private function players(mixed $v): ?int
+    {
+        $n = (int) $v;
+
+        return $n >= 2 ? min(64, $n) : null;
     }
 
     private function team(array $in): int

@@ -789,6 +789,195 @@ body.has-announce .track {
     transform: translateY(-11vh);
 }
 
+/* ----- Overlay: Spielautomat ----- */
+.slots-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 18;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3.5vh;
+    background: rgba(23, 14, 61, 0.94);
+    backdrop-filter: blur(6px);
+    animation: fade-in 0.4s;
+}
+
+.slots-overlay__title {
+    margin: 0;
+    font: 700 5vh var(--font-display);
+    color: var(--lan-text);
+}
+
+.slots-overlay__title small {
+    display: block;
+    font: 600 2.4vh var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--lan-text-muted);
+    text-align: center;
+    margin-top: 0.6vh;
+}
+
+.slots {
+    display: flex;
+    gap: 6vw;
+    align-items: flex-start;
+}
+
+.slot-machine {
+    --rows: 4;
+    --rh: 8vh;   /* Höhe einer Walze (setzt das JS je nach Anzahl) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vh;
+}
+
+.slot-machine__team {
+    font: 700 4.4vh var(--font-display);
+    color: var(--c);
+}
+
+.slot-machine__body {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Gehäuse: Teamfarbe, Lämpchen-Rand blinkt */
+.slot-machine__reels {
+    display: grid;
+    gap: 1.2vh;
+    width: 34vw;
+    padding: 2.4vh;
+    border-radius: 3vh;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--c) 30%, var(--lan-bg-deep)), var(--lan-bg-deep));
+    border: 0.6vh solid var(--c);
+    box-shadow: 0 0 0 0.6vh rgba(255, 255, 255, 0.06), 0 0 8vh color-mix(in srgb, var(--c) 35%, transparent);
+    outline: 0.5vh dotted rgba(255, 255, 255, 0.6);
+    outline-offset: 0.9vh;
+    animation: slot-bulbs 0.5s steps(2) infinite;
+}
+
+.slot-machine.is-done .slot-machine__reels {
+    animation: none;
+    outline-color: var(--c);
+}
+
+.reel {
+    position: relative;
+    height: var(--rh);
+    overflow: hidden;
+    border-radius: 1.4vh;
+    background: #f4f1ff;
+    box-shadow: inset 0 0 0 0.3vh rgba(0, 0, 0, 0.25);
+}
+
+/* Wölbung der Walze: oben und unten dunkler */
+.reel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(23, 14, 61, 0.55), transparent 32%, transparent 68%, rgba(23, 14, 61, 0.55));
+}
+
+.reel__strip {
+    will-change: transform;
+}
+
+.reel__cell {
+    height: var(--rh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1vw;
+    font: 700 calc(var(--rh) * 0.5)/1 var(--font-display);
+    color: var(--lan-bg-deep);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reel.is-spinning .reel__strip {
+    filter: blur(0.25vh);
+}
+
+.reel.is-stopped {
+    background: var(--c);
+    animation: reel-hit 0.5s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+.reel.is-stopped::after {
+    background: none;
+}
+
+/* Hebel rechts am Gehäuse: wird zum Start runtergezogen */
+.slot-machine__lever {
+    position: relative;
+    width: 1.6vh;
+    height: 16vh;
+    margin: 6vh 0 0 1.2vh;
+    border-radius: 1vh;
+    background: linear-gradient(90deg, #8f88b8, #f4f1ff, #8f88b8);
+    transform-origin: 50% 100%;
+}
+
+.slot-machine__knob {
+    position: absolute;
+    top: -2.6vh;
+    left: 50%;
+    width: 5vh;
+    height: 5vh;
+    margin-left: -2.5vh;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff, var(--c) 45%, color-mix(in srgb, var(--c) 50%, #000));
+    box-shadow: 0 0.6vh 1.6vh rgba(0, 0, 0, 0.5);
+}
+
+.slot-machine.is-pulling .slot-machine__lever {
+    animation: lever-pull 0.7s cubic-bezier(0.3, 0, 0.3, 1);
+}
+
+@keyframes slot-bulbs {
+    50% { outline-color: rgba(255, 255, 255, 0.15); }
+}
+
+@keyframes reel-hit {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.06); }
+}
+
+@keyframes lever-pull {
+    45% { transform: perspective(60vh) rotateX(150deg); }
+}
+
+/* Aufstellung auf dem Spiel-Bildschirm */
+.lineup {
+    display: flex;
+    gap: 4vw;
+    margin-top: 4vh;
+}
+
+.lineup__team {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1vh;
+    max-width: 40vw;
+}
+
+.lineup__name {
+    font: 700 2.8vh var(--font-display);
+    padding: 0.8vh 1.8vh;
+    border-radius: 99px;
+    border: 0.3vh solid var(--c);
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 12%, transparent);
+}
+
 /* ----- Overlay: Gastauftritt (lugt unten aus dem Rand) ----- */
 .cameo {
     --cameo-h: 62vh;
@@ -914,6 +1103,7 @@ body.has-announce .track {
 
 @media (prefers-reduced-motion: reduce) {
     .cameo.is-talking .cameo__img,
+    .slot-machine__reels,
     .pick__grid.is-entering .pick-tile,
     .pick-tile.is-running,
     .bg__grid,

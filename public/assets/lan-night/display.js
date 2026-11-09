@@ -127,6 +127,12 @@
     $('gameEyebrow').textContent = g ? `Spiel ${played + 1} von ${s.games.length} · um ${g.points} ${g.points === 1 ? 'Punkt' : 'Punkte'}` : 'Nächstes Spiel';
     $('gameName').textContent = g ? g.name : 'Gleich geht\'s los';
     $('gameDesc').textContent = g ? g.description : '';
+
+    // Ausgeloste Aufstellung (Spielautomat / Glücksrad) für dieses Spiel
+    const lu = g && s.lineup && s.lineup.gameId === g.id ? s.lineup : null;
+    $('gameLineup').hidden = !lu;
+    setHTML($('gameLineup'), lu ? lu.teams.map((names, t) => `
+      <div class="lineup__team" ${teamStyle(s.teams[t])}>${names.map((n) => `<span class="lineup__name">${esc(n)}</span>`).join('')}</div>`).join('') : '');
     setHTML($('gameScores'), minibar(s));
   }
 
@@ -272,6 +278,7 @@
     if (!w) { wheelId = null; return; }
     if (w.id === wheelId) return;
     wheelId = w.id;
+    overlay.querySelector('.wheel-overlay__title').textContent = w.game ? `🎡 Wer spielt ${w.game}?` : '🎡 Das Glücksrad entscheidet …';
 
     const cols = [...overlay.querySelectorAll('.wheel-col')];
     const finals = [], segs = [];
@@ -312,6 +319,69 @@
           col.classList.add('is-done');
           col.querySelector('.wheel-col__pick').textContent = w.members[t][w.picks[t]];
           if (now() - w.at < dur + 2) burst(s.teams[t].color, overlay);
+        }
+      });
+      if (running) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- Spielautomat ----------
+  // Pro Team ein Automat, eine Walze pro Spieler. Hebel runter, dann stoppt eine Walze nach der anderen
+  // (oben → unten). Gezogen hat der Server; Start (at) ist Serverzeit → alle Bildschirme laufen gleich.
+  const SLOT_LEVER = 0.7, SLOT_FIRST = 1.8, SLOT_STEP = 0.75;   // Sekunden
+  let slotsId = null;
+
+  function renderSlots(s) {
+    const sl = s.slots, overlay = $('slots');
+    overlay.hidden = !sl;
+    if (!sl) { slotsId = null; return; }
+    if (sl.id === slotsId) return;
+    slotsId = sl.id;
+
+    $('slotsTitle').innerHTML = `🎰 Wer spielt ${esc(sl.game)}?<small>${sl.perTeam} pro Team</small>`;
+    const id = sl.id;
+    const machines = [...overlay.querySelectorAll('.slot-machine')].map((m, t) => {
+      const team = s.teams[t], names = sl.members[t], picks = sl.picks[t], n = picks.length;
+      m.style.setProperty('--c', team.color);
+      m.style.setProperty('--rh', `${Math.min(9, 56 / n - 1.2).toFixed(2)}vh`);
+      m.classList.remove('is-done', 'is-pulling');
+      m.querySelector('.slot-machine__team').textContent = team.name;
+
+      // Walzenstreifen: zufällige Namen, am Ende der gezogene (+1 Name für das Nachfedern)
+      const reels = picks.map((pick, i) => {
+        const len = Math.round(10 + (SLOT_FIRST + i * SLOT_STEP) * 9);
+        const strip = Array.from({ length: len }, (_, k) => names[(pick + 1 + k * 3 + i) % names.length]);
+        strip.push(names[pick], names[(pick + 1) % names.length]);
+        return { strip, stopAt: sl.at + SLOT_LEVER + SLOT_FIRST + i * SLOT_STEP, dur: SLOT_FIRST + i * SLOT_STEP, target: len };
+      });
+      const box = m.querySelector('.slot-machine__reels');
+      box.innerHTML = reels.map((r) => `<div class="reel"><div class="reel__strip">${r.strip.map((x) => `<div class="reel__cell">${esc(x)}</div>`).join('')}</div></div>`).join('');
+      if (now() - sl.at < SLOT_LEVER) { void m.offsetWidth; m.classList.add('is-pulling'); }
+      return { m, t, reels, els: [...box.querySelectorAll('.reel')] };
+    });
+
+    // Leicht über das Ziel hinaus, dann zurück – wie eine einrastende Walze
+    const easeBack = (k) => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+    const frame = () => {
+      if (slotsId !== id) return;
+      let running = false;
+      machines.forEach((mc) => {
+        let stopped = 0;
+        mc.reels.forEach((r, i) => {
+          const el = mc.els[i], h = el.getBoundingClientRect().height;
+          const k = Math.min(1, Math.max(0, (now() - (r.stopAt - r.dur)) / r.dur));
+          el.firstElementChild.style.transform = `translateY(${-easeBack(k) * r.target * h}px)`;
+          el.classList.toggle('is-spinning', k > 0 && k < 0.85);
+          if (k >= 1) {
+            stopped++;
+            if (!el.classList.contains('is-stopped')) el.classList.add('is-stopped');
+          } else running = true;
+        });
+        if (stopped === mc.reels.length && !mc.m.classList.contains('is-done')) {
+          mc.m.classList.add('is-done');
+          const last = mc.reels[mc.reels.length - 1].stopAt;
+          if (now() - last < 2) burst(s.teams[mc.t].color, overlay);
         }
       });
       if (running) requestAnimationFrame(frame);
@@ -1148,6 +1218,7 @@
     renderFlash(s);
     renderAnnounce(s);
     renderWheel(s);
+    renderSlots(s);
     renderCameo(s);
     renderTimers();
   }

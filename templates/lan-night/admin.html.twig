@@ -171,6 +171,7 @@
                     <label class="field">Startzeit <input class="linput" name="time" type="time"></label>
                     <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="3"></label>
                 </div>
+                <label class="field">Spieler gesamt (beide Teams, leer = alle) <input class="linput" name="players" type="number" min="2" max="64" placeholder="z. B. 8 → 4 pro Team"></label>
                 <button class="lbtn lbtn--primary" type="submit">Hinzufügen</button>
             </form>
         </details>
@@ -179,7 +180,7 @@
             <summary class="lbtn lbtn--ghost">Ganze Liste einfügen</summary>
             <form class="form" id="importForm">
                 <textarea class="linput" name="source" rows="14" placeholder="Wreckfest 4&#10;Trivia Quiz 2&#10;Mario Kart 3"></textarea>
-                <p class="hint">Eine Zeile pro Spiel, Punkte hinten (ohne Zahl: 3). Gleichnamige Spiele behalten ihr Ergebnis, Spiele, die in der Liste fehlen, werden gelöscht – samt ihren Punkten. Spiele mit „Quiz“, „Guess the Game“ oder „Guess the Price“ im Namen werden mit ihrem Reiter verknüpft.</p>
+                <p class="hint">Eine Zeile pro Spiel, Punkte hinten (ohne Zahl: 3), Spieler gesamt optional nach einem Strich: <code>Rainbow Six Siege 3 | 10</code>. Gleichnamige Spiele behalten ihr Ergebnis, Spiele, die in der Liste fehlen, werden gelöscht – samt ihren Punkten. Spiele mit „Quiz“, „Guess the Game“ oder „Guess the Price“ im Namen werden mit ihrem Reiter verknüpft.</p>
                 <button class="lbtn lbtn--primary" type="submit">Liste übernehmen</button>
             </form>
         </details>
@@ -226,13 +227,16 @@
 
     {# ---------- Glücksrad ---------- #}
     <section class="card">
-        <h2 class="card__title">Glücksrad <span class="card__live" id="wheelLive"></span></h2>
+        <h2 class="card__title">Glücksrad &amp; Spielautomat <span class="card__live" id="wheelLive"></span></h2>
         <label class="check"><input type="checkbox" id="wheelFresh"> Schon Gezogene erst wieder, wenn alle dran waren</label>
         <div class="seg">
             <button class="lbtn lbtn--primary" id="wheelSpin">🎡 Drehen</button>
             <button class="lbtn lbtn--danger" id="wheelHide">Ausblenden</button>
+            <button class="lbtn lbtn--danger" id="slotsHide">🎰 Ausblenden</button>
         </div>
         <p class="hint" id="wheelResult">Zieht aus jedem Team zufällig einen Spieler – zwei Räder groß auf dem Bildschirm.</p>
+        <p class="hint" id="slotsResult" hidden></p>
+        <p class="hint">Für ein bestimmtes Spiel: bei „Spiele“ die Spielerzahl eintragen und dort auslosen – 1 pro Team dreht das Glücksrad, ab 2 pro Team läuft der Spielautomat.</p>
     </section>
 
     {# ---------- Teams ---------- #}

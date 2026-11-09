@@ -51,6 +51,7 @@
     <p class="eyebrow" id="gameEyebrow"></p>
     <h1 class="game__name" id="gameName"></h1>
     <p class="game__desc" id="gameDesc"></p>
+    <div class="lineup" id="gameLineup" hidden></div>
     <div class="big-timer" id="gameTimer" hidden></div>
     <div class="minibar" id="gameScores"></div>
 </section>
@@ -149,6 +150,22 @@
                 <div class="wheel__hub"></div>
             </div>
             <div class="wheel-col__pick"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{# Spielautomat: zieht pro Team mehrere Spieler – Walze für Walze, von oben nach unten #}
+<div class="slots-overlay" id="slots" hidden>
+    <p class="slots-overlay__title" id="slotsTitle"></p>
+    <div class="slots">
+        {% for i in 0..1 %}
+        <div class="slot-machine" data-m="{{ i }}">
+            <div class="slot-machine__team"></div>
+            <div class="slot-machine__body">
+                <div class="slot-machine__reels"></div>
+                <div class="slot-machine__lever" aria-hidden="true"><span class="slot-machine__knob"></span></div>
+            </div>
         </div>
         {% endfor %}
     </div>

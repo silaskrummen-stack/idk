@@ -58,6 +58,7 @@
     renderPicker();
     renderLog();
     renderWheel();
+    renderSlots();
     renderCameos();
     renderQuiz();
     renderGuess();
@@ -140,6 +141,18 @@
 
   $('wheelSpin').addEventListener('click', () => send('wheel.spin', { fresh: $('wheelFresh').checked }));
   $('wheelHide').addEventListener('click', () => send('wheel.hide'));
+  $('slotsHide').addEventListener('click', () => send('slots.hide'));
+
+  function renderSlots() {
+    const sl = state.slots;
+    $('slotsHide').disabled = !sl;
+    $('slotsResult').hidden = !sl;
+    if (sl) {
+      $('slotsResult').innerHTML = `🎰 ${esc(sl.game)}: ` + state.teams.map((t, i) =>
+        `<b style="color:${esc(t.color)}">${sl.picks[i].map((p) => esc(sl.members[i][p])).join(', ')}</b>`).join(' · ');
+    }
+    if (sl && !state.wheel) $('wheelLive').textContent = 'Spielautomat wird angezeigt';
+  }
 
   // ---------- Gastauftritte ----------
   const SPOTS = { left: 'links unten', center: 'Mitte unten', right: 'rechts unten' };
@@ -606,6 +619,13 @@
           ? `<span class="hint">Zurücksetzen im Reiter „${seg}“</span>`
           : `<button class="lbtn lbtn--mint" data-game="start">▶ Starten → ${seg}</button>`;
       }
+      // Auslosen: Spieler gesamt ÷ 2 pro Team – 1 pro Team → Glücksrad, mehr → Spielautomat
+      const perTeam = g.players ? Math.floor(g.players / 2) : 0;
+      if (perTeam && g.status !== 'done') {
+        btns += perTeam === 1
+          ? '<button class="lbtn" data-game="wheel">🎡 Glücksrad: 1 pro Team</button>'
+          : `<button class="lbtn" data-game="slots">🎰 Auslosen: ${perTeam} pro Team</button>`;
+      }
       const open = openEdits.has(g.id);
       return `
         <li class="game is-${g.status}" data-id="${g.id}">
@@ -614,6 +634,7 @@
             <span class="game__num">${i + 1}</span>
             <span class="game__title">${esc(g.name)}${seg ? ` <span class="game__seg" title="Verknüpft mit dem Reiter „${seg}“">🔗 Reiter</span>` : ''}</span>
             ${g.time ? `<span class="game__time" data-time="${esc(g.time)}">${esc(g.time)}</span>` : ''}
+            ${g.players ? `<span class="game__players" title="Spieler gesamt">👥 ${g.players}</span>` : ''}
             <span class="game__pts">${g.points} P</span>
           </div>
           <div class="game__state">${info}</div>
@@ -628,6 +649,7 @@
               <label class="field">Startzeit <input class="linput" name="time" type="time" value="${esc(g.time || '')}"></label>
               <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="${g.points}"></label>
             </div>
+            <label class="field">Spieler gesamt (beide Teams, leer = alle) <input class="linput" name="players" type="number" min="2" max="64" value="${g.players ?? ''}"></label>
             <div class="seg">
               <button class="lbtn lbtn--primary" type="submit">Speichern</button>
               <button class="lbtn lbtn--danger" type="button" data-game="delete">Löschen</button>
@@ -644,6 +666,8 @@
     const g = state.games.find((x) => x.id === id);
     switch (b.dataset.game) {
       case 'start': send('game.start', { id }); break;
+      case 'wheel': send('wheel.spin', { fresh: $('wheelFresh').checked, game: id }); break;
+      case 'slots': send('slots.spin', { id, fresh: $('wheelFresh').checked }); break;
       case 'finish': {
         const r = b.dataset.result === 'draw' ? 'draw' : Number(b.dataset.result);
         const who = r === 'draw' ? 'Unentschieden' : `${state.teams[r].name} gewinnt`;
@@ -671,7 +695,7 @@
     e.preventDefault();
     const f = e.target, id = f.closest('.game').dataset.id;
     document.activeElement?.blur();
-    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, points: Number(f.points.value), time: f.time.value });
+    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
     if (ok) { openEdits.delete(id); renderGames(); }
   });
 
@@ -746,13 +770,15 @@
 
   // ---------- Ganze Spieleliste ----------
   $('importGames').addEventListener('toggle', (e) => {
-    if (e.target.open) $('importForm').source.value = state.games.map((g) => `${g.name} ${g.points}`).join('\n');
+    if (e.target.open) $('importForm').source.value = state.games.map((g) => `${g.name} ${g.points}${g.players ? ` | ${g.players}` : ''}`).join('\n');
   });
 
   $('importForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const source = e.target.source.value;
-    const keep = new Set(source.split('\n').map((l) => l.trim().replace(/[\s;|:,\-–]+\d{1,2}\s*(p|pkt|punkte?)?\.?$/i, '').toLowerCase()));
+    const keep = new Set(source.split('\n').map((l) => l.trim()
+      .replace(/(\s*[|/]\s*|\s+)\d{1,2}\s*spieler\.?$/i, '').replace(/\s*[|/]\s*\d{1,2}\.?$/, '')
+      .replace(/[\s;|:,\-–]+\d{1,2}\s*(p|pkt|punkte?)?\.?$/i, '').toLowerCase()));
     const gone = state.games.filter((g) => !keep.has(g.name.toLowerCase()));
     if (gone.length && !confirm(`Diese Spiele werden gelöscht:\n${gone.map((g) => '· ' + g.name).join('\n')}\n\nWeiter?`)) return;
     const ok = await send('games.import', { source });
@@ -763,7 +789,7 @@
     e.preventDefault();
     const f = e.target;
     document.activeElement?.blur();
-    const ok = await send('game.add', { name: f.name.value, description: f.description.value, points: Number(f.points.value), time: f.time.value });
+    const ok = await send('game.add', { name: f.name.value, description: f.description.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
     if (ok) { f.reset(); f.closest('details').open = false; toast('Spiel hinzugefügt', true); }
   });
 

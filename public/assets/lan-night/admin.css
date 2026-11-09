@@ -322,6 +322,17 @@
     min-width: 0;
 }
 
+.game__players {
+    font: 600 0.8rem var(--font-display);
+    color: var(--lan-text-muted);
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+.game__players + .game__pts {
+    margin-left: 0;
+}
+
 .game__pts {
     font: 600 0.8rem var(--font-display);
     color: var(--lan-yellow);
