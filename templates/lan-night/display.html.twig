@@ -43,8 +43,27 @@
         <h1 class="pick__title" id="pickTitle"></h1>
     </header>
     <ol class="pick__grid" id="pickGrid"></ol>
+    {# Wettlauf zur Mitte: beide Balken wachsen auf die Ziellinie (Siegpunkte) zu #}
+    <div class="race" id="pickRace">
+        <div class="race__side race__side--0"><span class="race__name"></span><span class="race__score"></span></div>
+        <div class="race__track">
+            <div class="race__ghost race__ghost--0"></div>
+            <div class="race__ghost race__ghost--1"></div>
+            <div class="race__bar race__bar--0"></div>
+            <div class="race__bar race__bar--1"></div>
+            <div class="race__goal"><span class="race__goal-label"></span></div>
+        </div>
+        <div class="race__side race__side--1"><span class="race__score"></span><span class="race__name"></span></div>
+    </div>
     <p class="pick__foot" id="pickFoot"></p>
 </section>
+
+{# Matchball: ein offenes Spiel kann ein Team auf die Siegpunkte bringen #}
+<div class="matchball" id="matchball" hidden>
+    <p class="matchball__title">Matchball!</p>
+    <p class="matchball__text" id="matchballText"></p>
+    <p class="matchball__sub" id="matchballSub"></p>
+</div>
 
 {# ---------- Aktuelles Spiel ---------- #}
 <section class="screen screen--game" data-screen="game">

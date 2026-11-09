@@ -226,6 +226,7 @@ final class LanNightStore
     {
         $s = LanNightCameo::normalize(LanNightAwards::normalize(LanNightPrice::normalize(LanNightGuess::normalize(LanNightQuiz::normalize($s)))));
         $s['pickOverride'] ??= null;
+        $s['target'] ??= 40;   // Siegbedingung: wer zuerst so viele Punkte hat
         $s['slots'] ??= null;
         $s['lineup'] ??= null;
         foreach ($s['games'] as &$g) {
@@ -316,6 +317,9 @@ final class LanNightStore
             case 'settings':
                 $s['title'] = $this->text($in['title'] ?? '', 40) ?: 'LAN Night';
                 $s['subtitle'] = $this->text($in['subtitle'] ?? '', 80);
+                if (isset($in['target'])) {
+                    $s['target'] = min(999, max(1, (int) $in['target']));
+                }
                 break;
 
             case 'game.add':
@@ -844,10 +848,11 @@ final class LanNightStore
 
         return [
             'title' => 'LAN Night',
+            'target' => 40,
             'subtitle' => '',
             'screen' => 'title',
             'teams' => [
-                ['name' => 'Team Gelb', 'color' => '#FFCA22', 'members' => []],
+                ['name' => 'Team Gold', 'color' => '#FFCA22', 'members' => []],
                 ['name' => 'Team Mint', 'color' => '#5BFEC4', 'members' => []],
             ],
             // Kein fester Zeitplan: der Verlierer des letzten Spiels wählt das nächste (Bildschirm "Spielauswahl")

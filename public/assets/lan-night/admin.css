@@ -189,6 +189,11 @@
     font-variant-numeric: tabular-nums;
 }
 
+.score__value small {
+    font-size: 0.45em;
+    color: var(--lan-text-muted);
+}
+
 .score__btns {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

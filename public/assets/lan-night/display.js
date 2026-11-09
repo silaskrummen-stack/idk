@@ -153,10 +153,19 @@
       tie: 'Gleichstand',
       first: 'Los geht\'s',
     }[p.why] || '';
-    $('pickEyebrow').textContent = team ? `${team.name} ${why}` : why;
-    setHTML($('pickTitle'), team
-      ? `<span class="pick__team" ${teamStyle(team)}>${esc(team.name)}</span> wählt das nächste Spiel`
-      : 'Welches Spiel kommt als Nächstes?');
+    const target = s.target || 40;
+    const winner = [0, 1].find((t) => s.scores[t] >= target);
+    if (winner !== undefined) {
+      // Ziel erreicht → kein "wer wählt", sondern der Sieger
+      $('pickEyebrow').textContent = `Ziel erreicht · ${target} Punkte`;
+      setHTML($('pickTitle'), `🏆 <span class="pick__team" ${teamStyle(s.teams[winner])}>${esc(s.teams[winner].name)}</span> gewinnt das Turnier`);
+    } else {
+      $('pickEyebrow').textContent = team ? `${team.name} ${why}` : why;
+      setHTML($('pickTitle'), team
+        ? `<span class="pick__team" ${teamStyle(team)}>${esc(team.name)}</span> wählt das nächste Spiel`
+        : 'Welches Spiel kommt als Nächstes?');
+    }
+    const mb = matchballs(s);
 
     const grid = $('pickGrid'), n = s.games.length;
     const cols = Math.max(3, Math.ceil(Math.sqrt(n * 1.5))), rows = Math.max(1, Math.ceil(n / cols));
@@ -165,6 +174,7 @@
 
     // Nach Punkten sortiert (wertvollste zuerst), bei gleichen Punkten in der Reihenfolge der Spielleitung
     const sorted = s.games.map((g, i) => [g, i]).sort((a, b) => b[0].points - a[0].points || a[1] - b[1]).map(([g]) => g);
+    grid.classList.toggle('has-mb', mb[0].length + mb[1].length > 0);
     setHTML(grid, sorted.map((g, i) => {
       let cls = `pick-tile is-${g.status} is-p${Math.min(5, Math.max(2, g.points))}`, style = `--i:${i}`, state = '';
       if (g.status === 'running') state = 'läuft';
@@ -178,10 +188,19 @@
           state = `✓ ${esc(s.teams[g.result].name)}`;
         }
       }
+      // Matchball: mit diesem Spiel kann ein Team (oder beide) das Turnier gewinnen
+      const mbTeams = [0, 1].filter((t) => mb[t].includes(g.id));
+      let mbLabel = '';
+      if (mbTeams.length) {
+        const c = mbTeams.map((t) => esc(s.teams[t].color));
+        cls += mbTeams.length === 2 ? ' is-mb is-mb-both' : ' is-mb';
+        style += `;--mb1:${c[0]};--mb2:${c[c.length - 1]}`;
+        mbLabel = `<span class="pick-tile__mb">🎯 Matchball${mbTeams.length === 2 ? ' für beide' : ''}</span>`;
+      }
       return `<li class="${cls}" style="${style}" data-id="${esc(g.id)}">
         <span class="pick-tile__pts">${g.points}<small>P</small></span>
         <span class="pick-tile__name">${esc(g.name)}</span>
-        ${state ? `<span class="pick-tile__state">${state}</span>` : ''}
+        ${state ? `<span class="pick-tile__state">${state}</span>` : mbLabel}
       </li>`;
     }).join(''));
 
@@ -197,8 +216,73 @@
 
     const open = s.games.filter((g) => g.status !== 'done');
     const left = open.reduce((sum, g) => sum + g.points, 0);
-    setHTML($('pickFoot'), `<b ${teamStyle(s.teams[0])}>${esc(s.teams[0].name)} ${s.scores[0]}</b> : <b ${teamStyle(s.teams[1])}>${s.scores[1]} ${esc(s.teams[1].name)}</b>`
-      + ` · ${open.length} von ${n} Spielen offen · noch ${left} Punkte zu holen`);
+    $('pickFoot').textContent = `${open.length} von ${n} Spielen offen · noch ${left} Punkte zu holen`;
+    renderRace(s, mb, open);
+  }
+
+  // Beide Balken wachsen zur Mitte, wo die Ziellinie liegt. Gestrichelt: so weit käme das Team mit dem wertvollsten offenen Spiel.
+  function renderRace(s, mb, open) {
+    const race = $('pickRace'), target = s.target || 40;
+    const best = open.reduce((m, g) => Math.max(m, g.points), 0);
+    race.style.setProperty('--target', target);
+    race.querySelector('.race__goal-label').textContent = `🏁 ${target}`;
+    [0, 1].forEach((t) => {
+      const c = s.teams[t].color, score = s.scores[t];
+      const side = race.querySelector(`.race__side--${t}`), bar = race.querySelector(`.race__bar--${t}`), ghost = race.querySelector(`.race__ghost--${t}`);
+      [side, bar, ghost].forEach((el) => el.style.setProperty('--c', c));
+      side.querySelector('.race__name').textContent = s.teams[t].name;
+      side.querySelector('.race__score').textContent = score;
+      bar.style.width = `${Math.min(1, Math.max(0, score) / target) * 50}%`;
+      bar.classList.toggle('is-win', score >= target);
+      ghost.style.width = `${Math.min(1, Math.max(0, score + best) / target) * 50}%`;
+      ghost.hidden = !best || score >= target;
+      ghost.classList.toggle('is-mb', mb[t].length > 0);
+    });
+  }
+
+  // Pro Team: offene Spiele, deren Punkte reichen, um die Siegpunkte zu erreichen (hat schon jemand gewonnen: keine)
+  function matchballs(s) {
+    const target = s.target || 40;
+    if (s.scores.some((x) => x >= target)) return [[], []];
+    const open = s.games.filter((g) => g.status !== 'done');
+    return [0, 1].map((t) => open.filter((g) => s.scores[t] + g.points >= target).map((g) => g.id));
+  }
+
+  // Beim Betreten der Spielauswahl: erst groß "Matchball!", danach leuchten die Spiele, mit denen ein Team gewinnen kann.
+  // Läuft gerade die Punkte-Einblendung vom letzten Spiel, wartet der Matchball, bis sie weg ist.
+  let mbTimers = [];
+  function stopMatchball() {
+    mbTimers.forEach(clearTimeout);
+    mbTimers = [];
+    $('matchball').hidden = true;
+  }
+
+  function playMatchball(s) {
+    stopMatchball();
+    const grid = $('pickGrid'), el = $('matchball'), mb = matchballs(s);
+    const teams = [0, 1].filter((t) => mb[t].length);
+    if (!teams.length) { grid.classList.add('mb-on'); return; }
+    grid.classList.remove('mb-on');
+
+    const target = s.target || 40, c = teams.map((t) => s.teams[t].color);
+    el.style.setProperty('--c1', c[0]);
+    el.style.setProperty('--c2', c[c.length - 1]);
+    setHTML($('matchballText'), teams.length === 2
+      ? 'Beide Teams können mit dem nächsten Spiel das Turnier gewinnen'
+      : `<b ${teamStyle(s.teams[teams[0]])}>${esc(s.teams[teams[0]].name)}</b> kann mit dem nächsten Spiel das Turnier gewinnen`);
+    const count = new Set([...mb[0], ...mb[1]]).size;
+    $('matchballSub').textContent = `${count} ${count === 1 ? 'Spiel reicht' : 'Spiele reichen'} dafür · Ziel: ${target} Punkte`;
+
+    const f = s.flash;
+    const flashEnd = f ? f.at + (f.kind === 'result' ? 6.6 : 4.6) : 0;
+    const wait = Math.max(0.6, flashEnd - now());
+    mbTimers.push(setTimeout(() => {
+      el.classList.remove('is-out');
+      el.hidden = false;
+      el.querySelectorAll('p').forEach((p) => { p.style.animation = 'none'; void p.offsetWidth; p.style.animation = ''; });
+    }, wait * 1000));
+    mbTimers.push(setTimeout(() => el.classList.add('is-out'), (wait + 3.8) * 1000));
+    mbTimers.push(setTimeout(() => { el.hidden = true; grid.classList.add('mb-on'); }, (wait + 4.4) * 1000));
   }
 
   // Bildschirm wird gezeigt → Kacheln fallen nacheinander rein
@@ -213,7 +297,7 @@
   // Spiel gewählt → die Kachel feiern, erst danach auf das Spiel umschalten
   function choosePick(id) {
     const grid = $('pickGrid'), tile = grid.querySelector(`[data-id="${CSS.escape(id)}"]`);
-    grid.classList.remove('is-entering');
+    grid.classList.remove('is-entering', 'mb-on');
     grid.classList.add('is-choosing');
     tile?.classList.add('is-chosen');
   }
@@ -1300,7 +1384,8 @@
     }
     if (s.screen === 'pick') { clearTimeout(pickHold); pickHold = null; if (!s.currentGame) celebrated = null; }
     const screen = pickHold ? 'pick' : s.screen;
-    if (screen === 'pick' && shownScreen !== 'pick') enterPick();
+    if (screen === 'pick' && shownScreen !== 'pick') { enterPick(); playMatchball(s); }
+    if (screen !== 'pick' || pickHold) stopMatchball();
     shownScreen = screen;
 
     document.querySelectorAll('.screen').forEach((el) => el.classList.toggle('is-active', el.dataset.screen === screen));

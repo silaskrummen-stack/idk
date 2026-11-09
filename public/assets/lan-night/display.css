@@ -519,7 +519,7 @@
 
 .pick__head .eyebrow {
     margin: 0;
-    /* Gelb/Mint sind Teamfarben – hier neutral, sonst sieht es nach einem Team aus */
+    /* Gold/Mint sind Teamfarben – hier neutral, sonst sieht es nach einem Team aus */
     color: var(--lan-text-muted);
 }
 
@@ -576,7 +576,7 @@
     color: var(--lan-text-muted);
 }
 
-/* Punkte als Plakette oben rechts – bewusst ohne Farbton (Gelb/Mint gehören den Teams).
+/* Punkte als Plakette oben rechts – bewusst ohne Farbton (Gold/Mint gehören den Teams).
    Schrift immer gleich weiß; je mehr Punkte, desto kräftiger Rahmen, Fläche und Schein (--pv: 0 … 1). */
 .pick-tile { --pv: 0.35; }
 .pick-tile.is-p2 { --pv: 0.15; }
@@ -657,13 +657,225 @@
 }
 
 .pick__foot {
-    margin: 0;
-    font: 600 2.6vh var(--font-display);
+    margin: -1vh 0 0;
+    font: 600 2vh var(--font-display);
     color: var(--lan-text-muted);
 }
 
-.pick__foot b {
-    color: var(--c, var(--lan-text));
+/* ----- Wettlauf zur Ziellinie ----- */
+.race {
+    --target: 40;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 22vw 1fr 22vw;
+    align-items: center;
+    gap: 2vw;
+}
+
+.race__side {
+    display: flex;
+    align-items: baseline;
+    gap: 1.2vw;
+    color: var(--c);
+    font-family: var(--font-display);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.race__side--0 { justify-content: flex-end; }
+.race__side--1 { justify-content: flex-start; }
+
+.race__name {
+    font-size: 3vh;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.race__score {
+    font-size: 6vh;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 3vh color-mix(in srgb, var(--c) 50%, transparent);
+}
+
+.race__track {
+    position: relative;
+    height: 3.8vh;
+    border-radius: 99px;
+    background:
+        /* Strich alle 5 Punkte, von beiden Seiten gezählt */
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 0.2vh, transparent 0.2vh calc(50% / var(--target) * 5)),
+        rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 0 0.2vh rgba(255, 255, 255, 0.1);
+}
+
+.race__bar,
+.race__ghost {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    transition: width 1.1s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.race__bar--0, .race__ghost--0 { left: 0; border-radius: 99px 0 0 99px; }
+.race__bar--1, .race__ghost--1 { right: 0; border-radius: 0 99px 99px 0; }
+
+.race__bar {
+    background: var(--c);
+    box-shadow: 0 0 2.4vh color-mix(in srgb, var(--c) 55%, transparent);
+}
+
+.race__bar--0 { background: linear-gradient(90deg, color-mix(in srgb, var(--c) 55%, transparent), var(--c)); }
+.race__bar--1 { background: linear-gradient(270deg, color-mix(in srgb, var(--c) 55%, transparent), var(--c)); }
+
+/* Wie weit das wertvollste offene Spiel das Team bringen könnte */
+.race__ghost {
+    border: 0.25vh dashed color-mix(in srgb, var(--c) 55%, transparent);
+    background: color-mix(in srgb, var(--c) 10%, transparent);
+}
+
+.race__ghost.is-mb {
+    border-color: var(--c);
+    background: color-mix(in srgb, var(--c) 22%, transparent);
+    animation: race-mb 1.2s ease-in-out infinite;
+}
+
+.race__bar.is-win {
+    animation: race-mb 1s ease-in-out infinite;
+}
+
+/* Ziellinie in der Mitte */
+.race__goal {
+    position: absolute;
+    left: 50%;
+    top: -1.4vh;
+    bottom: -1.4vh;
+    width: 0.6vh;
+    margin-left: -0.3vh;
+    border-radius: 0.3vh;
+    background: repeating-linear-gradient(180deg, #fff 0 0.8vh, var(--lan-bg-deep) 0.8vh 1.6vh);
+    box-shadow: 0 0 2vh rgba(255, 255, 255, 0.5);
+    z-index: 1;
+}
+
+/* Zielmarke als Plakette mitten auf der Linie – dort treffen sich die Balken */
+.race__goal-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0.4vh 1.1vh;
+    border-radius: 99px;
+    border: 0.25vh solid #fff;
+    background: var(--lan-bg-deep);
+    font: 700 1.9vh/1 var(--font-display);
+    color: var(--lan-text);
+    white-space: nowrap;
+}
+
+@keyframes race-mb {
+    50% { filter: brightness(1.5); box-shadow: 0 0 3.5vh color-mix(in srgb, var(--c) 70%, transparent); }
+}
+
+/* ----- Matchball-Kacheln ----- */
+.pick-tile__mb {
+    font: 700 1.7vh var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mb1);
+}
+
+.pick-tile.is-mb-both .pick-tile__mb {
+    color: var(--lan-text);
+}
+
+/* Erst nach der Matchball-Einblendung leuchten die Spiele, mit denen ein Team gewinnen kann */
+.pick-tile__mb { visibility: hidden; }
+.pick__grid.mb-on .pick-tile__mb { visibility: visible; }
+
+.pick__grid.mb-on .pick-tile.is-mb {
+    border-color: transparent;
+    box-shadow: 0 0 0 0.4vh var(--mb1), 0 0 0 0.8vh var(--mb2), 0 0 5vh color-mix(in srgb, var(--mb1) 50%, transparent);
+    animation: mb-tile 1.4s ease-in-out infinite;
+}
+
+.pick__grid.mb-on.has-mb .pick-tile:not(.is-mb) {
+    opacity: 0.45;
+}
+
+@keyframes mb-tile {
+    50% { transform: scale(1.03); filter: brightness(1.2); }
+}
+
+/* ----- Overlay: Matchball ----- */
+.matchball {
+    position: fixed;
+    inset: 0;
+    z-index: 17;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2vh;
+    text-align: center;
+    background: radial-gradient(ellipse at center, rgba(23, 14, 61, 0.88), rgba(23, 14, 61, 0.97));
+    backdrop-filter: blur(5px);
+    animation: fade-in 0.25s;
+}
+
+.matchball.is-out {
+    animation: fade-out 0.6s forwards;
+}
+
+.matchball__title {
+    margin: 0;
+    font: 700 19vh/1 var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    background: linear-gradient(90deg, var(--c1), #fff 50%, var(--c2));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 4vh color-mix(in srgb, var(--c1) 60%, transparent));
+    animation: mb-slam 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) both, mb-shine 1.8s linear 0.7s infinite;
+}
+
+.matchball__text {
+    margin: 0;
+    max-width: 70vw;
+    font: 700 4.4vh/1.25 var(--font-display);
+    animation: mb-rise 0.5s 0.45s both;
+}
+
+.matchball__text b {
+    color: var(--c);
+}
+
+.matchball__sub {
+    margin: 0;
+    font: 600 2.4vh var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--lan-text-muted);
+    animation: mb-rise 0.5s 0.7s both;
+}
+
+@keyframes mb-slam {
+    0% { transform: scale(3); opacity: 0; }
+    60% { transform: scale(0.94); opacity: 1; }
+    75% { transform: scale(1.04) rotate(-1deg); }
+    88% { transform: scale(0.99) rotate(0.6deg); }
+}
+
+@keyframes mb-shine {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+}
+
+@keyframes mb-rise {
+    from { opacity: 0; transform: translateY(2vh); }
 }
 
 @keyframes pick-in {
@@ -1120,6 +1332,9 @@ body.has-announce .track {
     .slot-machine.is-rumble .slot-machine__body,
     .pick__grid.is-entering .pick-tile,
     .pick-tile.is-running,
+    .pick__grid.mb-on .pick-tile.is-mb,
+    .race__ghost.is-mb,
+    .race__bar.is-win,
     .bg__grid,
     .track__item.is-running {
         animation: none;

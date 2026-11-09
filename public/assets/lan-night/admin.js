@@ -105,7 +105,7 @@
       const i = Number(el.dataset.team), t = state.teams[i];
       el.style.setProperty('--c', t.color);
       el.querySelector('.score__name').textContent = t.name;
-      el.querySelector('.score__value').textContent = state.scores[i];
+      el.querySelector('.score__value').innerHTML = `${state.scores[i]}<small> / ${state.target ?? 40}</small>`;
     });
   }
 
@@ -918,12 +918,13 @@
     const f = $('settingsForm');
     f.title.value = state.title;
     f.subtitle.value = state.subtitle || '';
+    f.target.value = state.target ?? 40;
   }
 
   $('settingsForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = e.target;
-    if (await send('settings', { title: f.title.value, subtitle: f.subtitle.value })) toast('Gespeichert', true);
+    if (await send('settings', { title: f.title.value, subtitle: f.subtitle.value, target: Number(f.target.value) })) toast('Gespeichert', true);
   });
 
   $('resetScores').addEventListener('click', () => {
