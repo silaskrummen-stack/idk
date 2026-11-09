@@ -22,21 +22,6 @@
     return h ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
   };
 
-  // "HH:MM" → Zeitpunkt (Sekunden) innerhalb von ±12 h um jetzt – so klappt auch 01:00 nach Mitternacht
-  function resolveTime(hhmm) {
-    if (!hhmm) return null;
-    const [h, m] = hhmm.split(':').map(Number);
-    const d = new Date(now() * 1000);
-    d.setHours(h, m, 0, 0);
-    let t = d.getTime() / 1000;
-    if (t - now() > 12 * 3600) t -= 86400;
-    if (now() - t > 12 * 3600) t += 86400;
-    return t;
-  }
-
-  // Nächstes Spiel = erstes offenes MIT Startzeit. Ohne Zeitplan (Verlierer wählt) gibt es kein festes "Nächstes Spiel".
-  const nextGame = (s) => s.games.find((g) => g.status === 'open' && g.time) || null;
-
   const teamStyle = (t) => `style="--c:${esc(t.color)}"`;
 
   // ---------- Bildschirme ----------
@@ -78,24 +63,6 @@
       el.querySelector('.team__members').textContent = t.members.join(' · ');
       countTo(el.querySelector('.team__score'), i, s.scores[i]);
     });
-
-    setHTML($('track'), s.games.map((g, i) => {
-      let cls = 'track__item', style = '', pts = '';
-      if (g.status === 'running') cls += ' is-running';
-      if (g.status === 'done') {
-        cls += ' is-done';
-        if (g.result === 'draw') {
-          cls += ' is-draw';
-          style = `style="--c:var(--lan-text-muted);--c1:${esc(s.teams[0].color)};--c2:${esc(s.teams[1].color)}"`;
-          pts = '<span class="track__pts">=</span>';
-        } else {
-          style = teamStyle(s.teams[g.result]);
-          pts = `<span class="track__pts">+${g.points}</span>`;
-        }
-      }
-      const time = g.status === 'open' && g.time ? `<span class="track__time">${esc(g.time)}</span>` : '';
-      return `<li class="${cls}" ${style} data-id="${g.id}"><span class="track__num">${i + 1}</span>${esc(g.name)}${time}${pts}</li>`;
-    }).join(''));
   }
 
   // Punkte hochzählen statt springen
@@ -840,7 +807,6 @@
       }
     });
 
-    renderNext(s);
     renderQuizTimer(s);
     renderGuessTimer(s);
     renderPriceTimer(s);
@@ -849,32 +815,6 @@
     pill.hidden = !t || !!big || s.screen === 'finale';
     pill.textContent = (t?.label ? t.label + ' · ' : '') + text;
     pill.classList.toggle('is-over', left <= 0);
-  }
-
-  function renderNext(s) {
-    const g = nextGame(s);
-    const at = g ? resolveTime(g.time) : null;
-    const left = at === null ? null : at - now();
-    const overdue = left !== null && left <= 0;
-    const timeText = left === null ? '' : (overdue ? 'sollte schon laufen' : `um ${g.time} · in ${fmt(left)}`);
-
-    ['nextTitle', 'nextBoard', 'nextPause'].forEach((id) => {
-      const el = $(id);
-      // Läuft gerade ein Spiel, zeigt das Punktestand-Bild kein "Nächstes Spiel" – sonst verwirrend
-      el.hidden = !g || (s.currentGame && id === 'nextBoard');
-      if (el.hidden) return;
-      el.classList.toggle('is-overdue', overdue);
-      el.querySelector('.next__label').textContent = id === 'nextPause' ? 'Weiter mit' : 'Nächstes Spiel';
-      el.querySelector('.next__name').textContent = g.name;
-      el.querySelector('.next__time').textContent = timeText;
-    });
-
-    // Überfällige Spiele im Verlauf unten markieren
-    $('track').querySelectorAll('.track__item').forEach((li) => {
-      const game = s.games.find((x) => x.id === li.dataset.id);
-      const t = game && game.status === 'open' ? resolveTime(game.time) : null;
-      li.classList.toggle('is-overdue', t !== null && t <= now());
-    });
   }
 
   // ---------- Quiz ----------

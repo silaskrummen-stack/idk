@@ -67,9 +67,24 @@
         grid-template-columns: 1fr 1fr;
         align-items: start;
     }
-    .card--scores {
+    .card--scores,
+    .card--wide,
+    .acols {
         grid-column: 1 / -1;
     }
+    .acols {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+/* Zwei Spalten, die unabhängig voneinander wachsen */
+.acols,
+.acol {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    min-width: 0;
 }
 
 .card {

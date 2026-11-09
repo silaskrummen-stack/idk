@@ -639,7 +639,6 @@
             <span class="game__handle" aria-label="Ziehen zum Sortieren">⠿</span>
             <span class="game__num">${i + 1}</span>
             <span class="game__title">${esc(g.name)}${seg ? ` <span class="game__seg" title="Verknüpft mit dem Reiter „${seg}“">🔗 Reiter</span>` : ''}</span>
-            ${g.time ? `<span class="game__time" data-time="${esc(g.time)}">${esc(g.time)}</span>` : ''}
             ${g.players ? `<span class="game__players" title="Spieler gesamt">👥 ${g.players}</span>` : ''}
             <span class="game__pts">${g.points} P</span>
           </div>
@@ -653,10 +652,9 @@
             <textarea class="linput" name="description" maxlength="300" placeholder="Regeln / Beschreibung">${esc(g.description)}</textarea>
             <textarea class="linput" name="fastRules" maxlength="300" placeholder="Schnelle Regeln (optional) – erscheinen statt der normalen, wenn du „Schnell“ startest">${esc(g.fastRules || '')}</textarea>
             <div class="form__pair">
-              <label class="field">Startzeit <input class="linput" name="time" type="time" value="${esc(g.time || '')}"></label>
               <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="${g.points}"></label>
+              <label class="field">Spieler gesamt (leer = alle) <input class="linput" name="players" type="number" min="2" max="64" value="${g.players ?? ''}"></label>
             </div>
-            <label class="field">Spieler gesamt (beide Teams, leer = alle) <input class="linput" name="players" type="number" min="2" max="64" value="${g.players ?? ''}"></label>
             <div class="seg">
               <button class="lbtn lbtn--primary" type="submit">Speichern</button>
               <button class="lbtn lbtn--danger" type="button" data-game="delete">Löschen</button>
@@ -703,7 +701,7 @@
     e.preventDefault();
     const f = e.target, id = f.closest('.game').dataset.id;
     document.activeElement?.blur();
-    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
+    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), players: Number(f.players.value) || null });
     if (ok) { openEdits.delete(id); renderGames(); }
   });
 
@@ -797,7 +795,7 @@
     e.preventDefault();
     const f = e.target;
     document.activeElement?.blur();
-    const ok = await send('game.add', { name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), time: f.time.value, players: Number(f.players.value) || null });
+    const ok = await send('game.add', { name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), players: Number(f.players.value) || null });
     if (ok) { f.reset(); f.closest('details').open = false; toast('Spiel hinzugefügt', true); }
   });
 
@@ -842,19 +840,6 @@
       let live = q.index >= 0 ? `${PHASES[q.phase]} · Frage ${q.index + 1}/${q.total}` : PHASES[q.phase];
       if (q.phase === 'question') live += ` · ${Math.max(0, Math.ceil(q.endsAt - (Date.now() / 1000 + offset)))} s`;      $('quizLive').textContent = live;
     }
-
-    // Geplante Startzeit verpasst? Zeit-Chip gelb (gleiche ±12-h-Logik wie der Bildschirm)
-    const nowS = Date.now() / 1000 + offset;
-    document.querySelectorAll('.game.is-open .game__time').forEach((el) => {
-      const [h, m] = el.dataset.time.split(':').map(Number);
-      const d = new Date(nowS * 1000);
-      d.setHours(h, m, 0, 0);
-      let t = d.getTime() / 1000;
-      if (t - nowS > 12 * 3600) t -= 86400;
-      if (nowS - t > 12 * 3600) t += 86400;
-      el.classList.toggle('is-overdue', t <= nowS);
-      el.title = t <= nowS ? 'Sollte schon laufen' : '';
-    });
   }
 
   const startTimer = (minutes) => {

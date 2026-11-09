@@ -30,7 +30,7 @@
     </section>
 
     {# ---------- Bildschirm ---------- #}
-    <section class="card">
+    <section class="card card--wide">
         <h2 class="card__title">Bildschirm</h2>
         <div class="seg" id="screens">
             <button class="lbtn" data-screen="title">Titel</button>
@@ -156,6 +156,11 @@
         <p class="hint">Zur Wahl stehen alle Spieler aus „Teams“. Gleicher QR-Code wie beim Quiz. Awards geben keine Punkte.</p>
     </section>
 
+    {# Ab hier zwei eigenständige Spalten: die lange Spieleliste links, alles andere rechts –
+       so entsteht neben der Liste keine leere Fläche #}
+    <div class="acols">
+    <div class="acol">
+
     {# ---------- Spiele ---------- #}
     <section class="card">
         <h2 class="card__title">Spiele <span class="card__hint">am ⠿ ziehen zum Sortieren</span></h2>
@@ -169,10 +174,9 @@
                 <textarea class="linput" name="description" placeholder="Regeln / Beschreibung (für den Bildschirm)" maxlength="300"></textarea>
                 <textarea class="linput" name="fastRules" placeholder="Schnelle Regeln (optional) – erscheinen statt der normalen, wenn du „Schnell“ startest" maxlength="300"></textarea>
                 <div class="form__pair">
-                    <label class="field">Startzeit <input class="linput" name="time" type="time"></label>
                     <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="3"></label>
+                    <label class="field">Spieler gesamt (leer = alle) <input class="linput" name="players" type="number" min="2" max="64" placeholder="8 → 4 pro Team"></label>
                 </div>
-                <label class="field">Spieler gesamt (beide Teams, leer = alle) <input class="linput" name="players" type="number" min="2" max="64" placeholder="z. B. 8 → 4 pro Team"></label>
                 <button class="lbtn lbtn--primary" type="submit">Hinzufügen</button>
             </form>
         </details>
@@ -186,6 +190,9 @@
             </form>
         </details>
     </section>
+
+    </div>
+    <div class="acol">
 
     {# ---------- Timer ---------- #}
     <section class="card">
@@ -270,6 +277,9 @@
             <a href="{{ path('portfolio_logout') }}">Abmelden</a>
         </p>
     </section>
+
+    </div>
+    </div>
 </main>
 
 <script src="{{ lan_asset('admin.js') }}"></script>
