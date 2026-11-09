@@ -13,7 +13,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  */
 final class LanNightStore
 {
-    public const SCREENS = ['title', 'scoreboard', 'game', 'pause', 'quiz', 'guess', 'price', 'awards', 'finale'];
+    public const SCREENS = ['title', 'scoreboard', 'pick', 'game', 'pause', 'quiz', 'guess', 'price', 'awards', 'finale'];
+    /** Spiele, deren Punkte aus einem eigenen Segment kommen (Quiz, Guess the Game, Guess the Price) */
+    public const SEGMENTS = ['quiz', 'guess', 'price'];
+    private const MAX_GAMES = 60;
     private const IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
     private const AUDIO_TYPES = ['mp3', 'ogg', 'wav', 'm4a'];
 
@@ -221,22 +224,49 @@ final class LanNightStore
     /** Ältere Spielstände um Quiz, Guess the Game, Guess the Price und Awards ergänzen. */
     private static function normalize(array $s): array
     {
-        return LanNightCameo::normalize(LanNightAwards::normalize(LanNightPrice::normalize(LanNightGuess::normalize(LanNightQuiz::normalize($s)))));
+        $s = LanNightCameo::normalize(LanNightAwards::normalize(LanNightPrice::normalize(LanNightGuess::normalize(LanNightQuiz::normalize($s)))));
+        $s['pickOverride'] ??= null;
+        foreach ($s['games'] as &$g) {
+            // Ältere Spielstände: Segment am Namen erkennen ("Trivia Quiz" → Quiz, …)
+            if (!array_key_exists('segment', $g)) {
+                $g['segment'] = self::segmentOf($g['name']);
+            }
+            // Die Spieleliste bestimmt, was der Sieg im Segment wert ist
+            if ($g['segment']) {
+                $s[$g['segment']]['points'] = min(50, max(1, (int) $g['points']));
+            }
+        }
+        unset($g);
+
+        return $s;
+    }
+
+    /** "Trivia Quiz" → quiz, "Guess the Game" → guess, "Guess the Price" → price, sonst null */
+    private static function segmentOf(string $name): ?string
+    {
+        $n = mb_strtolower($name);
+
+        return match (true) {
+            str_contains($n, 'guess the game') || str_contains($n, 'errate das spiel') => 'guess',
+            str_contains($n, 'guess the price') || str_contains($n, 'errate den preis') => 'price',
+            str_contains($n, 'quiz') => 'quiz',
+            default => null,
+        };
     }
 
     private function change(array $s, string $action, array $in): array
     {
         if (str_starts_with($action, 'quiz.')) {
-            return LanNightQuiz::apply($s, $action, $in);
+            return self::pointsFromSegment(LanNightQuiz::apply($s, $action, $in), 'quiz');
         }
         if (str_starts_with($action, 'awards.')) {
             return LanNightAwards::apply($s, $action, $in);
         }
         if (str_starts_with($action, 'guess.')) {
-            return LanNightGuess::apply($s, $action, $in, $this->guessCounts($s));
+            return self::pointsFromSegment(LanNightGuess::apply($s, $action, $in, $this->guessCounts($s)), 'guess');
         }
         if (str_starts_with($action, 'price.')) {
-            return LanNightPrice::apply($s, $action, $in, $this->priceImages($s));
+            return self::pointsFromSegment(LanNightPrice::apply($s, $action, $in, $this->priceImages($s)), 'price');
         }
         if (str_starts_with($action, 'cameo.')) {
             return LanNightCameo::apply($s, $action, $in, $this->cameoLineCounts());
@@ -298,7 +328,58 @@ final class LanNightStore
                     'time' => $this->time($in['time'] ?? ''),
                     'status' => 'open',
                     'result' => null,
+                    'segment' => self::segmentOf($name),
                 ];
+                break;
+
+            case 'games.import':
+                // Ganze Liste auf einmal: eine Zeile pro Spiel, Punkte hinten ("Wreckfest 4", "Wreckfest; 4").
+                // Gleichnamige Spiele behalten Ergebnis und Beschreibung, fehlende fliegen raus (samt ihren Punkten).
+                $lines = array_filter(array_map('trim', preg_split('/\R/u', (string) ($in['source'] ?? ''))));
+                if (!$lines) {
+                    throw new \InvalidArgumentException('Liste ist leer');
+                }
+                if (count($lines) > self::MAX_GAMES) {
+                    throw new \InvalidArgumentException(sprintf('Höchstens %d Spiele', self::MAX_GAMES));
+                }
+                $old = [];
+                foreach ($s['games'] as $g) {
+                    $old[mb_strtolower($g['name'])] = $g;
+                }
+                $games = [];
+                foreach ($lines as $line) {
+                    $points = 3;
+                    if (preg_match('/^(.*?)[\s;|:,\-–]+(\d{1,2})\s*(p|pkt|punkte?)?\.?$/iu', $line, $m) && trim($m[1]) !== '') {
+                        [$line, $points] = [trim($m[1]), max(1, (int) $m[2])];
+                    }
+                    $name = $this->text($line, 50);
+                    $key = mb_strtolower($name);
+                    if (isset($games[$key])) {
+                        continue;
+                    }
+                    $g = $old[$key] ?? ['id' => $this->id(), 'name' => $name, 'description' => '', 'time' => '', 'status' => 'open', 'result' => null];
+                    $g['points'] = $points;
+                    $g['segment'] = self::segmentOf($name);
+                    $games[$key] = $g;
+                    unset($old[$key]);
+                }
+                foreach ($old as $gone) {
+                    $s = $this->unbookGame($s, $gone['id']);
+                    if ($s['currentGame'] === $gone['id']) {
+                        $s['currentGame'] = null;
+                    }
+                }
+                $s['games'] = array_values($games);
+                break;
+
+            case 'pick.team':
+                // Wer wählt das nächste Spiel? Standard: Verlierer des letzten Spiels. Hier von Hand überschreiben.
+                $team = $in['team'] ?? null;
+                if ($team === 'auto') {
+                    $s['pickOverride'] = null;
+                } else {
+                    $s['pickOverride'] = ['team' => $this->team($in), 'at' => microtime(true)];
+                }
                 break;
 
             case 'game.update':
@@ -307,6 +388,7 @@ final class LanNightStore
                 $s['games'][$i]['description'] = $this->text($in['description'] ?? '', 300);
                 $s['games'][$i]['points'] = max(1, (int) ($in['points'] ?? $s['games'][$i]['points']));
                 $s['games'][$i]['time'] = $this->time($in['time'] ?? '');
+                $s['games'][$i]['segment'] = self::segmentOf($s['games'][$i]['name']);
                 break;
 
             case 'game.delete':
@@ -339,12 +421,14 @@ final class LanNightStore
                 unset($g);
                 $s['games'][$i]['status'] = 'running';
                 $s['currentGame'] = $s['games'][$i]['id'];
-                $s['screen'] = 'game';
+                // Quiz / Guess the Game / Guess the Price laufen auf ihrem eigenen Bildschirm
+                $s['screen'] = $s['games'][$i]['segment'] ?? 'game';
                 break;
 
             case 'game.finish':
                 $i = $this->game($s, $in);
                 $g = $s['games'][$i];
+                $this->notSegment($g);
                 $result = $in['result'] ?? null;
                 if (!in_array($result, [0, 1, 'draw'], true)) {
                     throw new \InvalidArgumentException('Ergebnis fehlt');
@@ -362,12 +446,14 @@ final class LanNightStore
                 if ($s['currentGame'] === $g['id']) {
                     $s['currentGame'] = null;
                 }
-                $s['screen'] = 'scoreboard';
+                // Nach jedem Spiel: Verlierer wählt das nächste
+                $s['screen'] = 'pick';
                 $s['flash'] = ['id' => $this->id(), 'at' => microtime(true), 'kind' => 'result', 'team' => $result, 'delta' => $result === 'draw' ? intdiv($g['points'] + 1, 2) : $g['points'], 'text' => $g['name']];
                 break;
 
             case 'game.reopen':
                 $i = $this->game($s, $in);
+                $this->notSegment($s['games'][$i]);
                 $s = $this->unbookGame($s, $s['games'][$i]['id']);
                 $s['games'][$i]['status'] = 'open';
                 $s['games'][$i]['result'] = null;
@@ -443,6 +529,7 @@ final class LanNightStore
                 $s['wheel'] = null;
                 $s['wheelHistory'] = [[], []];
                 $s['cameo'] = null;
+                $s['pickOverride'] = null;
                 $s['currentGame'] = null;
                 $s['screen'] = 'title';
                 foreach ($s['games'] as &$g) {
@@ -483,7 +570,102 @@ final class LanNightStore
             $s['scores'][$e['team']] += $e['delta'];
         }
 
+        // Segment-Spiele: Punkte und Ergebnis kommen aus Quiz / Guess the Game / Guess the Price
+        foreach ($s['games'] as &$g) {
+            if (!($g['segment'] ?? null)) {
+                continue;
+            }
+            $won = self::deltas($s, $g['segment']);
+            if ($won !== null) {
+                $g['status'] = 'done';
+                $g['result'] = $won[0] === $won[1] ? 'draw' : ($won[0] > $won[1] ? 0 : 1);
+            } elseif ($g['status'] === 'done') {
+                $g['status'] = 'open';
+                $g['result'] = null;
+            }
+        }
+        unset($g);
+
+        $s['picker'] = self::picker($s);
+
         return $s;
+    }
+
+    /** @return int[]|null Punkte pro Team für ein Spiel (Spiel-ID oder Segment), null = noch nichts gebucht */
+    private static function deltas(array $s, string $game): ?array
+    {
+        $d = null;
+        foreach ($s['log'] as $e) {
+            if (($e['game'] ?? null) === $game) {
+                $d ??= [0, 0];
+                $d[$e['team']] += $e['delta'];
+            }
+        }
+
+        return $d;
+    }
+
+    /**
+     * Wer wählt das nächste Spiel?
+     *  - von Hand gesetzt (nach dem letzten Ergebnis) → das gilt
+     *  - letztes Spiel hatte einen Sieger → der Verlierer
+     *  - Unentschieden / noch nichts gespielt → das Team, das hinten liegt (Gleichstand: offen)
+     *
+     * @return array{team: int|null, why: string, game: string|null}
+     */
+    private static function picker(array $s): array
+    {
+        $last = null;
+        foreach ($s['log'] as $e) {
+            if (($e['game'] ?? null) !== null && (!$last || $e['at'] >= $last['at'])) {
+                $last = $e;
+            }
+        }
+        $name = null;
+        if ($last) {
+            foreach ($s['games'] as $g) {
+                if ($g['id'] === $last['game'] || ($g['segment'] ?? null) === $last['game']) {
+                    $name = $g['name'];
+                }
+            }
+        }
+
+        $o = $s['pickOverride'] ?? null;
+        if ($o && (!$last || $o['at'] > $last['at'])) {
+            return ['team' => $o['team'], 'why' => 'manual', 'game' => $name];
+        }
+        if ($last) {
+            $d = self::deltas($s, $last['game']);
+            if ($d[0] !== $d[1]) {
+                return ['team' => $d[0] > $d[1] ? 1 : 0, 'why' => 'lost', 'game' => $name];
+            }
+        }
+        if ($s['scores'][0] !== $s['scores'][1]) {
+            return ['team' => $s['scores'][0] < $s['scores'][1] ? 0 : 1, 'why' => 'behind', 'game' => $name];
+        }
+
+        return ['team' => null, 'why' => $last ? 'tie' : 'first', 'game' => $name];
+    }
+
+    /** Punkte im Segment-Reiter geändert → in die Spieleliste übernehmen (die gilt danach wieder für beide) */
+    private static function pointsFromSegment(array $s, string $segment): array
+    {
+        foreach ($s['games'] as &$g) {
+            if (($g['segment'] ?? null) === $segment) {
+                $g['points'] = max(1, (int) $s[$segment]['points']);
+            }
+        }
+        unset($g);
+
+        return $s;
+    }
+
+    private function notSegment(array $g): void
+    {
+        if ($g['segment'] ?? null) {
+            $label = ['quiz' => 'Quiz', 'guess' => 'Guess the Game', 'price' => 'Guess the Price'][$g['segment']];
+            throw new \InvalidArgumentException(sprintf('Die Punkte für „%s“ kommen aus dem %s-Reiter', $g['name'], $label));
+        }
     }
 
     private function team(array $in): int
@@ -532,11 +714,19 @@ final class LanNightStore
         return $this->dir . '/state.json';
     }
 
+    private const DEFAULT_GAMES = [
+        ['Wreckfest', 4], ['Trivia Quiz', 2], ['Call of Duty 2', 4], ['Battlefield 2142', 4], ['Fling to the Finish', 3],
+        ['Guess the Game', 2], ['Guess the Price', 2], ['Overwatch 2', 4], ['FlatOut 2', 3], ['Star Wars: Empire at War', 3],
+        ['Rainbow Six Siege', 3], ['Counter-Strike 2', 3], ['Teeworlds', 3], ['SWAT 4', 3], ['Stronghold Crusader', 3],
+        ['Carrier Command 2', 3], ['Mario Kart', 3], ['Left 4 Dead 2', 3], ['Golf With Your Friends', 3], ['Crab Game', 3],
+        ['Stumble Guys', 3], ['Fistful of Frags', 3],
+    ];
+
     public static function defaultState(): array
     {
         $game = fn (string $name, string $description, int $points, string $time) => [
             'id' => bin2hex(random_bytes(6)), 'name' => $name, 'description' => $description,
-            'points' => $points, 'time' => $time, 'status' => 'open', 'result' => null,
+            'points' => $points, 'time' => $time, 'status' => 'open', 'result' => null, 'segment' => self::segmentOf($name),
         ];
 
         return [
@@ -547,12 +737,8 @@ final class LanNightStore
                 ['name' => 'Team Gelb', 'color' => '#FFCA22', 'members' => []],
                 ['name' => 'Team Mint', 'color' => '#5BFEC4', 'members' => []],
             ],
-            'games' => [
-                $game('Mario Kart', 'Grand Prix – die Platzierungen aller Fahrer werden pro Team addiert.', 3, '19:30'),
-                $game('Rocket League', '3 gegen 3, Best of 3.', 3, '20:30'),
-                $game('Counter-Strike 2', 'Wingman oder 5v5 – erstes Team mit 9 Runden.', 5, '21:30'),
-                $game('Quiz', 'Allgemeinwissen & Gaming-Fragen. Wer zuerst buzzert, antwortet.', 3, '23:00'),
-            ],
+            // Kein fester Zeitplan: der Verlierer des letzten Spiels wählt das nächste (Bildschirm "Spielauswahl")
+            'games' => array_map(fn ($g) => $game($g[0], '', $g[1], ''), self::DEFAULT_GAMES),
             'currentGame' => null,
             'log' => [],
             'flash' => null,
@@ -560,6 +746,7 @@ final class LanNightStore
             'announcement' => null,
             'wheel' => null,
             'wheelHistory' => [[], []],
+            'pickOverride' => null,
             'finaleAt' => null,
             'updatedAt' => microtime(true),
         ];

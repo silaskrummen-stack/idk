@@ -35,6 +35,7 @@
         <div class="seg" id="screens">
             <button class="lbtn" data-screen="title">Titel</button>
             <button class="lbtn" data-screen="scoreboard">Punktestand</button>
+            <button class="lbtn" data-screen="pick">Spielauswahl 🎯</button>
             <button class="lbtn" data-screen="game">Spiel</button>
             <button class="lbtn" data-screen="pause">Pause</button>
             <button class="lbtn" data-screen="quiz">Quiz</button>
@@ -158,6 +159,7 @@
     {# ---------- Spiele ---------- #}
     <section class="card">
         <h2 class="card__title">Spiele <span class="card__hint">am ⠿ ziehen zum Sortieren</span></h2>
+        <div class="picker" id="picker"></div>
         <ol class="games" id="games"></ol>
 
         <details class="add">
@@ -170,6 +172,15 @@
                     <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="3"></label>
                 </div>
                 <button class="lbtn lbtn--primary" type="submit">Hinzufügen</button>
+            </form>
+        </details>
+
+        <details class="add" id="importGames">
+            <summary class="lbtn lbtn--ghost">Ganze Liste einfügen</summary>
+            <form class="form" id="importForm">
+                <textarea class="linput" name="source" rows="14" placeholder="Wreckfest 4&#10;Trivia Quiz 2&#10;Mario Kart 3"></textarea>
+                <p class="hint">Eine Zeile pro Spiel, Punkte hinten (ohne Zahl: 3). Gleichnamige Spiele behalten ihr Ergebnis, Spiele, die in der Liste fehlen, werden gelöscht – samt ihren Punkten. Spiele mit „Quiz“, „Guess the Game“ oder „Guess the Price“ im Namen werden mit ihrem Reiter verknüpft.</p>
+                <button class="lbtn lbtn--primary" type="submit">Liste übernehmen</button>
             </form>
         </details>
     </section>

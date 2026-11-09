@@ -505,6 +505,182 @@
     pointer-events: none;
 }
 
+/* ----- Spielauswahl ----- */
+.screen--pick {
+    padding: 5vh 4vw 4vh;
+    justify-content: flex-start;
+    gap: 2.4vh;
+}
+
+.pick__head {
+    display: grid;
+    gap: 0.6vh;
+}
+
+.pick__head .eyebrow {
+    margin: 0;
+}
+
+.pick__title {
+    font-size: 6.4vh;
+    line-height: 1.05;
+}
+
+.pick__team {
+    color: var(--c);
+    text-shadow: 0 0 4vh color-mix(in srgb, var(--c) 45%, transparent);
+}
+
+.pick__grid {
+    --cols: 6;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr);
+    gap: 1.4vh;
+}
+
+.pick-tile {
+    --c: var(--lan-text-muted);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.6vh;
+    padding: 1.4vh 1.6vh 1.6vh 2vh;
+    text-align: left;
+    border-radius: 2vh;
+    background: var(--lan-bg-raised);
+    border: 0.3vh solid var(--lan-border);
+    overflow: hidden;
+    transition: opacity 0.5s, transform 0.5s, filter 0.5s;
+}
+
+.pick-tile__name {
+    font: 700 var(--name-size, 2.9vh)/1.1 var(--font-display);
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.pick-tile__state {
+    font: 600 1.8vh var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--lan-text-muted);
+}
+
+/* Punkte als Plakette oben rechts – 4er-Spiele leuchten */
+.pick-tile__pts {
+    position: absolute;
+    top: 1.2vh;
+    right: 1.2vh;
+    min-width: 5.2vh;
+    padding: 0.5vh 0.9vh;
+    border-radius: 1.2vh;
+    font: 700 3vh/1 var(--font-display);
+    text-align: center;
+    color: var(--lan-bg-deep);
+    background: var(--lan-mint);
+}
+
+.pick-tile__pts small {
+    font-size: 0.55em;
+    margin-left: 0.15em;
+}
+
+.pick-tile.is-big .pick-tile__pts {
+    background: var(--lan-yellow);
+    box-shadow: 0 0 2.4vh color-mix(in srgb, var(--lan-yellow) 60%, transparent);
+}
+
+/* Gewonnen: Kachel in Teamfarbe */
+.pick-tile.is-done {
+    background: color-mix(in srgb, var(--c) 82%, var(--lan-bg-deep));
+    border-color: var(--c);
+    color: var(--lan-bg-deep);
+}
+
+.pick-tile.is-done .pick-tile__state {
+    color: color-mix(in srgb, var(--lan-bg-deep) 75%, transparent);
+}
+
+.pick-tile.is-done .pick-tile__pts {
+    background: var(--lan-bg-deep);
+    color: var(--c);
+    box-shadow: none;
+}
+
+.pick-tile.is-draw {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 80%, var(--lan-bg-deep)) 50%, color-mix(in srgb, var(--c2) 80%, var(--lan-bg-deep)) 50%);
+    border-color: var(--lan-text);
+}
+
+.pick-tile.is-draw .pick-tile__pts {
+    color: var(--lan-text);
+}
+
+.pick-tile.is-running {
+    border-color: var(--lan-yellow);
+    animation: pulse 1.6s ease-in-out infinite;
+}
+
+/* Gerade entschieden: Farbe läuft einmal über die Kachel */
+.pick-tile.is-fresh {
+    animation: pick-fresh 1.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+/* Bildschirm erscheint: Kacheln fallen nacheinander rein */
+.pick__grid.is-entering .pick-tile {
+    animation: pick-in 0.55s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+    animation-delay: calc(var(--i) * 35ms);
+}
+
+/* Spiel gewählt: Rest tritt zurück, die Wahl springt nach vorn */
+.pick__grid.is-choosing .pick-tile:not(.is-chosen) {
+    opacity: 0.18;
+    transform: scale(0.94);
+    filter: grayscale(0.6);
+}
+
+.pick__grid.is-choosing .pick-tile.is-chosen {
+    z-index: 2;
+    border-color: var(--lan-yellow);
+    animation: pick-chosen 2.6s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.pick__foot {
+    margin: 0;
+    font: 600 2.6vh var(--font-display);
+    color: var(--lan-text-muted);
+}
+
+.pick__foot b {
+    color: var(--c, var(--lan-text));
+}
+
+@keyframes pick-in {
+    from { opacity: 0; transform: translateY(3vh) scale(0.9); }
+}
+
+@keyframes pick-fresh {
+    0% { transform: scale(1); filter: brightness(2.2); }
+    30% { transform: scale(1.08); }
+    100% { transform: scale(1); filter: none; }
+}
+
+@keyframes pick-chosen {
+    0% { transform: scale(1); box-shadow: 0 0 0 transparent; }
+    18% { transform: scale(1.35); box-shadow: 0 0 8vh color-mix(in srgb, var(--lan-yellow) 70%, transparent); }
+    30%, 50%, 70% { transform: scale(1.25); filter: brightness(1.35); }
+    40%, 60% { transform: scale(1.3); filter: brightness(1); }
+    100% { transform: scale(1.3); box-shadow: 0 0 10vh color-mix(in srgb, var(--lan-yellow) 80%, transparent); }
+}
+
 /* ----- Overlay: Punkte / Spielergebnis ----- */
 .flash {
     position: fixed;
@@ -731,6 +907,8 @@ body.has-announce .track {
 
 @media (prefers-reduced-motion: reduce) {
     .cameo.is-talking .cameo__img,
+    .pick__grid.is-entering .pick-tile,
+    .pick-tile.is-running,
     .bg__grid,
     .track__item.is-running {
         animation: none;

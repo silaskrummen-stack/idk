@@ -906,3 +906,39 @@
     outline: 2px solid var(--lan-mint);
     outline-offset: 3px;
 }
+
+/* ----- Wer wählt das nächste Spiel? ----- */
+.picker {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--lan-bg-raised);
+}
+
+.picker__who {
+    margin: 0;
+    font-family: var(--font-display);
+}
+
+.picker__who span {
+    color: var(--lan-text-muted);
+    font: 400 0.85rem var(--font-body);
+}
+
+.picker .lbtn.is-on {
+    outline: 2px solid var(--c);
+    outline-offset: 2px;
+}
+
+.game__seg {
+    font: 600 0.7rem var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--lan-mint);
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    padding: 1px 6px;
+    vertical-align: middle;
+}
+

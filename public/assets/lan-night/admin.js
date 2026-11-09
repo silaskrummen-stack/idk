@@ -55,6 +55,7 @@
     renderScores();
     renderScreens();
     renderGames();
+    renderPicker();
     renderLog();
     renderWheel();
     renderCameos();
@@ -584,7 +585,8 @@
     if (busy(list) || drag) return;
     const [A, B] = state.teams;
     list.innerHTML = state.games.length ? state.games.map((g, i) => {
-      let info = 'Noch nicht gespielt';
+      const seg = g.segment ? SEGMENT_LABEL[g.segment] : null;
+      let info = seg ? `Punkte kommen aus dem Reiter „${seg}“` : 'Noch nicht gespielt';
       if (g.status === 'running') info = '<b style="--c:var(--lan-yellow)">Läuft gerade</b>';
       if (g.status === 'done') {
         info = g.result === 'draw'
@@ -595,16 +597,22 @@
         <button class="lbtn lbtn--team" style="--c:${esc(A.color)}" data-game="finish" data-result="0">${esc(A.name)} gewinnt</button>
         <button class="lbtn lbtn--team" style="--c:${esc(B.color)}" data-game="finish" data-result="1">${esc(B.name)} gewinnt</button>
         <button class="lbtn" data-game="finish" data-result="draw">Unentschieden</button>`;
-      const btns = g.status === 'done'
+      let btns = g.status === 'done'
         ? '<button class="lbtn lbtn--ghost" data-game="reopen">Ergebnis zurücknehmen</button>'
         : (g.status === 'running' ? winBtns : '<button class="lbtn lbtn--mint" data-game="start">▶ Starten</button>' + winBtns);
+      // Segment-Spiele: Start springt in den Reiter, Ergebnis bucht das Segment selbst
+      if (seg) {
+        btns = g.status === 'done'
+          ? `<span class="hint">Zurücksetzen im Reiter „${seg}“</span>`
+          : `<button class="lbtn lbtn--mint" data-game="start">▶ Starten → ${seg}</button>`;
+      }
       const open = openEdits.has(g.id);
       return `
         <li class="game is-${g.status}" data-id="${g.id}">
           <div class="game__head">
             <span class="game__handle" aria-label="Ziehen zum Sortieren">⠿</span>
             <span class="game__num">${i + 1}</span>
-            <span class="game__title">${esc(g.name)}</span>
+            <span class="game__title">${esc(g.name)}${seg ? ` <span class="game__seg" title="Verknüpft mit dem Reiter „${seg}“">🔗 Reiter</span>` : ''}</span>
             ${g.time ? `<span class="game__time" data-time="${esc(g.time)}">${esc(g.time)}</span>` : ''}
             <span class="game__pts">${g.points} P</span>
           </div>
@@ -713,6 +721,43 @@
   };
   $('games').addEventListener('pointerup', endDrag);
   $('games').addEventListener('pointercancel', endDrag);
+
+  // ---------- Wer wählt das nächste Spiel? ----------
+  const SEGMENT_LABEL = { quiz: 'Quiz', guess: 'Guess the Game', price: 'Guess the Price' };
+
+  function renderPicker() {
+    const p = state.picker || {}, team = p.team === null || p.team === undefined ? null : state.teams[p.team];
+    const why = { lost: p.game ? `hat ${esc(p.game)} verloren` : 'hat verloren', behind: 'liegt hinten', manual: 'von Hand gesetzt', tie: 'Gleichstand – bitte festlegen', first: 'erstes Spiel – bitte festlegen' }[p.why] || '';
+    $('picker').innerHTML = `
+      <p class="picker__who">Wählt als Nächstes: ${team ? `<b style="color:${esc(team.color)}">${esc(team.name)}</b>` : '<b>offen</b>'} <span>· ${why}</span></p>
+      <div class="seg">
+        ${state.teams.map((t, i) => `<button class="lbtn lbtn--team${p.team === i ? ' is-on' : ''}" style="--c:${esc(t.color)}" data-pick="${i}">${esc(t.name)}</button>`).join('')}
+        <button class="lbtn lbtn--ghost" data-pick="auto"${p.why === 'manual' ? '' : ' disabled'}>Automatisch</button>
+        <button class="lbtn lbtn--primary" data-pick="show">🎯 Auswahl zeigen</button>
+      </div>`;
+  }
+
+  $('picker').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-pick]');
+    if (!b) return;
+    if (b.dataset.pick === 'show') send('screen', { screen: 'pick' });
+    else send('pick.team', { team: b.dataset.pick === 'auto' ? 'auto' : Number(b.dataset.pick) });
+  });
+
+  // ---------- Ganze Spieleliste ----------
+  $('importGames').addEventListener('toggle', (e) => {
+    if (e.target.open) $('importForm').source.value = state.games.map((g) => `${g.name} ${g.points}`).join('\n');
+  });
+
+  $('importForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const source = e.target.source.value;
+    const keep = new Set(source.split('\n').map((l) => l.trim().replace(/[\s;|:,\-–]+\d{1,2}\s*(p|pkt|punkte?)?\.?$/i, '').toLowerCase()));
+    const gone = state.games.filter((g) => !keep.has(g.name.toLowerCase()));
+    if (gone.length && !confirm(`Diese Spiele werden gelöscht:\n${gone.map((g) => '· ' + g.name).join('\n')}\n\nWeiter?`)) return;
+    const ok = await send('games.import', { source });
+    if (ok) { e.target.closest('details').open = false; toast(`${ok.games.length} Spiele übernommen`, true); }
+  });
 
   $('addGame').addEventListener('submit', async (e) => {
     e.preventDefault();

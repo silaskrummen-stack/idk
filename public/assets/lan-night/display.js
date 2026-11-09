@@ -34,8 +34,8 @@
     return t;
   }
 
-  // Nächstes Spiel = erstes noch nicht gespieltes in der Reihenfolge der Spielleitung
-  const nextGame = (s) => s.games.find((g) => g.status === 'open') || null;
+  // Nächstes Spiel = erstes offenes MIT Startzeit. Ohne Zeitplan (Verlierer wählt) gibt es kein festes "Nächstes Spiel".
+  const nextGame = (s) => s.games.find((g) => g.status === 'open' && g.time) || null;
 
   const teamStyle = (t) => `style="--c:${esc(t.color)}"`;
 
@@ -122,7 +122,9 @@
   function renderGame(s) {
     const i = s.games.findIndex((g) => g.id === s.currentGame);
     const g = s.games[i];
-    $('gameEyebrow').textContent = g ? `Spiel ${i + 1} von ${s.games.length} · um ${g.points} ${g.points === 1 ? 'Punkt' : 'Punkte'}` : 'Nächstes Spiel';
+    // Gezählt wird in Spielreihenfolge (wie viele schon durch sind), nicht nach Platz in der Liste
+    const played = s.games.filter((x) => x.status === 'done').length;
+    $('gameEyebrow').textContent = g ? `Spiel ${played + 1} von ${s.games.length} · um ${g.points} ${g.points === 1 ? 'Punkt' : 'Punkte'}` : 'Nächstes Spiel';
     $('gameName').textContent = g ? g.name : 'Gleich geht\'s los';
     $('gameDesc').textContent = g ? g.description : '';
     setHTML($('gameScores'), minibar(s));
@@ -130,6 +132,83 @@
 
   function renderPause(s) {
     setHTML($('pauseScores'), minibar(s));
+  }
+
+  // ---------- Spielauswahl ----------
+  // Alle Spiele als Kacheln: offene neutral, gewonnene in Teamfarbe. Der Verlierer des letzten Spiels wählt.
+  const pickStatus = new Map();   // Spiel → Status beim letzten Zeichnen (für die "gerade entschieden"-Animation)
+
+  function renderPick(s) {
+    const p = s.picker || {}, team = p.team === null || p.team === undefined ? null : s.teams[p.team];
+    const why = {
+      lost: p.game ? `hat ${p.game} verloren` : 'hat das letzte Spiel verloren',
+      behind: 'liegt hinten',
+      manual: 'darf wählen',
+      tie: 'Gleichstand',
+      first: 'Los geht\'s',
+    }[p.why] || '';
+    $('pickEyebrow').textContent = team ? `${team.name} ${why}` : why;
+    setHTML($('pickTitle'), team
+      ? `<span class="pick__team" ${teamStyle(team)}>${esc(team.name)}</span> wählt das nächste Spiel`
+      : 'Welches Spiel kommt als Nächstes?');
+
+    const grid = $('pickGrid'), n = s.games.length;
+    const cols = Math.max(3, Math.ceil(Math.sqrt(n * 1.5))), rows = Math.max(1, Math.ceil(n / cols));
+    grid.style.setProperty('--cols', cols);
+    grid.style.setProperty('--name-size', `${Math.min(3, 12 / rows).toFixed(2)}vh`);
+
+    setHTML(grid, s.games.map((g, i) => {
+      let cls = `pick-tile is-${g.status}`, style = `--i:${i}`, state = '';
+      if (g.points >= 4) cls += ' is-big';
+      if (g.status === 'running') state = 'läuft';
+      if (g.status === 'done') {
+        if (g.result === 'draw') {
+          cls += ' is-draw';
+          style += `;--c1:${esc(s.teams[0].color)};--c2:${esc(s.teams[1].color)}`;
+          state = 'Unentschieden';
+        } else {
+          style += `;--c:${esc(s.teams[g.result].color)}`;
+          state = `✓ ${esc(s.teams[g.result].name)}`;
+        }
+      }
+      return `<li class="${cls}" style="${style}" data-id="${esc(g.id)}">
+        <span class="pick-tile__pts">${g.points}<small>P</small></span>
+        <span class="pick-tile__name">${esc(g.name)}</span>
+        ${state ? `<span class="pick-tile__state">${state}</span>` : ''}
+      </li>`;
+    }).join(''));
+
+    // Gerade entschieden → Kachel blitzt einmal in Teamfarbe auf
+    s.games.forEach((g) => {
+      const before = pickStatus.get(g.id);
+      if (before && before !== 'done' && g.status === 'done') {
+        const el = grid.querySelector(`[data-id="${CSS.escape(g.id)}"]`);
+        if (el) { el.classList.remove('is-fresh'); void el.offsetWidth; el.classList.add('is-fresh'); }
+      }
+      pickStatus.set(g.id, g.status);
+    });
+
+    const open = s.games.filter((g) => g.status !== 'done');
+    const left = open.reduce((sum, g) => sum + g.points, 0);
+    setHTML($('pickFoot'), `<b ${teamStyle(s.teams[0])}>${esc(s.teams[0].name)} ${s.scores[0]}</b> : <b ${teamStyle(s.teams[1])}>${s.scores[1]} ${esc(s.teams[1].name)}</b>`
+      + ` · ${open.length} von ${n} Spielen offen · noch ${left} Punkte zu holen`);
+  }
+
+  // Bildschirm wird gezeigt → Kacheln fallen nacheinander rein
+  function enterPick() {
+    const grid = $('pickGrid');
+    grid.classList.remove('is-entering', 'is-choosing');
+    grid.querySelectorAll('.is-chosen').forEach((el) => el.classList.remove('is-chosen'));
+    void grid.offsetWidth;
+    grid.classList.add('is-entering');
+  }
+
+  // Spiel gewählt → die Kachel feiern, erst danach auf das Spiel umschalten
+  function choosePick(id) {
+    const grid = $('pickGrid'), tile = grid.querySelector(`[data-id="${CSS.escape(id)}"]`);
+    grid.classList.remove('is-entering');
+    grid.classList.add('is-choosing');
+    tile?.classList.add('is-chosen');
   }
 
   // ---------- Finale ----------
@@ -1034,9 +1113,26 @@
     requestAnimationFrame(frame);
   }
 
+  const PICK_HOLD_MS = 2800;
+  let shownScreen = null, pickHold = null, celebrated = null;
+
   function render(s) {
-    document.querySelectorAll('.screen').forEach((el) => el.classList.toggle('is-active', el.dataset.screen === s.screen));
-    $('topbar').classList.toggle('is-hidden', ['title', 'finale', 'quiz', 'guess', 'price', 'awards'].includes(s.screen));
+    renderPick(s);
+
+    // Aus der Spielauswahl heraus gestartet: erst die gewählte Kachel zeigen, dann umschalten
+    if (shownScreen === 'pick' && s.screen !== 'pick' && s.currentGame && s.currentGame !== celebrated && !pickHold
+        && $('pickGrid').querySelector(`[data-id="${CSS.escape(s.currentGame)}"]`)) {
+      celebrated = s.currentGame;
+      choosePick(s.currentGame);
+      pickHold = setTimeout(() => { pickHold = null; render(state); }, PICK_HOLD_MS);
+    }
+    if (s.screen === 'pick') { clearTimeout(pickHold); pickHold = null; if (!s.currentGame) celebrated = null; }
+    const screen = pickHold ? 'pick' : s.screen;
+    if (screen === 'pick' && shownScreen !== 'pick') enterPick();
+    shownScreen = screen;
+
+    document.querySelectorAll('.screen').forEach((el) => el.classList.toggle('is-active', el.dataset.screen === screen));
+    $('topbar').classList.toggle('is-hidden', ['title', 'pick', 'finale', 'quiz', 'guess', 'price', 'awards'].includes(screen));
 
     renderTitle(s);
     renderBoard(s);
