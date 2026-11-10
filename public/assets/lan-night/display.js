@@ -392,7 +392,11 @@
   // ---------- Soundeffekte ----------
   // Web Audio statt <audio>: Tonhöhe pro Ding frei wählbar, Töne überlappen sauber, nichts muss "laden", wenn's losgeht.
   // Fehlt eine Datei, läuft alles trotzdem – nur ohne diesen Ton.
-  const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3', snap: '/assets/lan-night/sounds/snap.mp3' };
+  const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3', snap: '/assets/lan-night/sounds/snap.mp3',
+    timer: '/assets/lan-night/sounds/timer.mp3', lockIn: '/assets/lan-night/sounds/lock-in.mp3',
+    quizMusic: '/assets/lan-night/sounds/quiz-music.mp3', quizCorrect: '/assets/lan-night/sounds/quiz-correct.mp3',
+    quizWrong: '/assets/lan-night/sounds/quiz-wrong.mp3', guessSuccess: '/assets/lan-night/sounds/guess-success.mp3',
+    priceReveal: '/assets/lan-night/sounds/price-reveal.mp3' };
   const sfxBuf = {};
   let sfxCtx = null;
 
@@ -408,15 +412,17 @@
     return sfxCtx;
   }
 
-  function playSfx(name, { rate = 1, gain = 1, offset = 0 } = {}) {
+  // at: Startzeitpunkt in Audio-Zeit (0 = sofort), loop: endlos (Hintergrundmusik)
+  function playSfx(name, { rate = 1, gain = 1, offset = 0, at = 0, loop = false } = {}) {
     const ctx = sfx(), buf = sfxBuf[name];
-    if (!ctx || !buf || offset >= buf.duration) return null;
+    if (!ctx || !buf || (!loop && offset >= buf.duration)) return null;
     const src = ctx.createBufferSource(), g = ctx.createGain();
     src.buffer = buf;
     src.playbackRate.value = rate;   // höher = höherer Ton (und kürzer)
     g.gain.value = gain;
+    src.loop = loop;
     src.connect(g).connect(ctx.destination);
-    src.start(0, Math.max(0, offset));
+    src.start(at ? Math.max(at, ctx.currentTime) : 0, loop ? Math.max(0, offset) % buf.duration : Math.max(0, offset));
     return { src, g };
   }
 
@@ -427,6 +433,98 @@
     h.g.gain.linearRampToValueAtTime(0, t + seconds);
     try { h.src.stop(t + seconds + 0.05); } catch (e) { /* schon aus */ }
   }
+
+  // ---------- Töne für Quiz, Guess the Game, Guess the Price ----------
+  // Läuft alle 50 ms gegen den aktuellen Stand. Zeitkritisches (Timer, Piepen) wird auf die Audio-Uhr vorausgeplant,
+  // damit es auf die Zehntel genau zur Anzeige passt. Was beim Laden der Seite schon passiert war, wird nicht nachgespielt.
+  const TIMER_LEAD = 5;         // so viele Sekunden vor Schluss startet der Timer-Sound
+  const MUSIC_GAIN = 0.45, MUSIC_DUCK = 0.28;   // Quiz-Musik, leiser solange der Timer läuft
+  const ctxAt = (serverT) => sfxCtx.currentTime + (serverT - now());
+  const sndPlayed = new Set();
+  let sndPrev = null, timerSnd = null, timerKey = null, musicSnd = null;
+
+  function beep(at, freq = 880, gain = 0.14) {
+    if (!sfxCtx) return;
+    const o = sfxCtx.createOscillator(), g = sfxCtx.createGain(), t = Math.max(at, sfxCtx.currentTime);
+    o.type = 'sine';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(gain, t + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    o.connect(g).connect(sfxCtx.destination);
+    o.start(t);
+    o.stop(t + 0.13);
+  }
+
+  // Die Ratephase, die gerade auf dem Bildschirm läuft (Zeit tickt, Teams tippen)
+  function guessRound(s) {
+    if (s.screen === 'quiz' && s.quiz.phase === 'question') return { endsAt: s.quiz.endsAt, seconds: s.quiz.seconds, beeps: false };
+    if (s.screen === 'guess' && s.guess.phase === 'picture') return { endsAt: s.guess.endsAt, seconds: s.guess.seconds, beeps: true };
+    if (s.screen === 'price' && s.price.phase === 'item') return { endsAt: s.price.endsAt, seconds: s.price.seconds, beeps: false };
+    return null;
+  }
+  // Runde + Phase + wer schon getippt hat – daran erkennt der Bildschirm Einloggen und Auflösen
+  function sndSnapshot(s) {
+    const g = s.screen === 'quiz' ? s.quiz : s.screen === 'guess' ? s.guess : s.screen === 'price' ? s.price : null;
+    if (!g) return { screen: s.screen };
+    const round = s.screen === 'quiz' ? g.index : s.screen === 'guess' ? `${g.game}.${g.picture}` : g.item;
+    return { screen: s.screen, round, phase: g.phase, locked: [...(g.locked || [false, false])] };
+  }
+
+  function soundTick() {
+    const s = state;
+    if (!s || !sfxCtx) return;
+    const live = sfxCtx.state === 'running';
+
+    // 1) Timer in den letzten 5 Sekunden + (nur Guess the Game) leises Piepen jede Sekunde davor
+    const r = guessRound(s);
+    const rk = r ? `${s.screen}@${r.endsAt}` : null;
+    if (timerKey && timerKey !== rk) { fadeSfx(timerSnd, 0.25); timerSnd = null; timerKey = null; }
+    if (r && live && r.endsAt) {
+      const left = r.endsAt - now();
+      if (!timerKey && left <= TIMER_LEAD + 0.15 && left > 0.1) {
+        timerSnd = playSfx('timer', { at: ctxAt(r.endsAt - TIMER_LEAD), offset: Math.max(0, TIMER_LEAD - left) });
+        if (timerSnd) timerKey = rk;
+      }
+      if (r.beeps) {
+        const n = Math.floor(left);   // nächster Sekundenwechsel der Anzeige
+        if (n > TIMER_LEAD && n < r.seconds && left - n < 0.15 && !sndPlayed.has(`${rk}#${n}`)) {
+          sndPlayed.add(`${rk}#${n}`);
+          beep(ctxAt(r.endsAt - n));
+        }
+      }
+    }
+
+    // 2) Quiz-Musik: läuft vom Intro bis zur letzten Auflösung, unter dem Timer etwas leiser
+    const musicOn = s.screen === 'quiz' && ['intro', 'question', 'locked', 'reveal'].includes(s.quiz.phase);
+    if (musicOn && !musicSnd && live) musicSnd = playSfx('quizMusic', { gain: MUSIC_GAIN, loop: true });
+    if (!musicOn && musicSnd) { fadeSfx(musicSnd, 1.5); musicSnd = null; }
+    if (musicSnd) {
+      const want = timerSnd && timerKey ? MUSIC_DUCK : MUSIC_GAIN;
+      if (musicSnd._want !== want) { musicSnd._want = want; musicSnd.g.gain.setTargetAtTime(want, sfxCtx.currentTime, 0.25); }
+    }
+
+    // 3) Ereignisse: Team loggt ein, Auflösung
+    const cur = sndSnapshot(s), prev = sndPrev;
+    sndPrev = cur;
+    if (!prev || !live || prev.screen !== cur.screen || cur.phase === undefined) return;
+    const sameRound = prev.round === cur.round;
+    let clicked = false;
+    if (sameRound && ['question', 'picture', 'item', 'locked', 'shown'].includes(cur.phase)) {
+      cur.locked.forEach((on, i) => { if (on && !prev.locked[i]) { playSfx('lockIn', { gain: 0.9 }); clicked = true; } });
+    }
+    const after = clicked ? sfxCtx.currentTime + 0.45 : 0;   // Einlogg-Klick erst ausklingen lassen
+    if (prev.phase === cur.phase && sameRound) return;
+    if (s.screen === 'quiz' && cur.phase === 'reveal') {
+      const right = s.quiz.answers.some((a) => a !== null && a === s.quiz.correct);
+      playSfx(right ? 'quizCorrect' : 'quizWrong');
+    } else if (s.screen === 'guess' && cur.phase === 'shown' && s.guess.guesses.some((g) => g?.correct)) {
+      playSfx('guessSuccess', { at: after });
+    } else if (s.screen === 'price' && cur.phase === 'reveal') {
+      playSfx('priceReveal');
+    }
+  }
+  setInterval(soundTick, 50);
 
   // ---------- Spielautomat ----------
   // Pro Team ein Automat, eine Walze pro Spieler. Hebel runter → alle Walzen drehen gleich schnell (kein Abbremsen),
