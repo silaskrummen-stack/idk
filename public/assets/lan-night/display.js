@@ -395,8 +395,7 @@
   const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3', snap: '/assets/lan-night/sounds/snap.mp3',
     timer: '/assets/lan-night/sounds/timer.mp3', lockIn: '/assets/lan-night/sounds/lock-in.mp3',
     quizMusic: '/assets/lan-night/sounds/quiz-music.mp3', quizCorrect: '/assets/lan-night/sounds/quiz-correct.mp3',
-    quizWrong: '/assets/lan-night/sounds/quiz-wrong.mp3', guessSuccess: '/assets/lan-night/sounds/guess-success.mp3',
-    priceReveal: '/assets/lan-night/sounds/price-reveal.mp3' };
+    quizWrong: '/assets/lan-night/sounds/quiz-wrong.mp3', guessSuccess: '/assets/lan-night/sounds/guess-success.mp3' };
   const sfxBuf = {};
   let sfxCtx = null;
 
@@ -438,10 +437,10 @@
   // Läuft alle 50 ms gegen den aktuellen Stand. Zeitkritisches (Timer, Piepen) wird auf die Audio-Uhr vorausgeplant,
   // damit es auf die Zehntel genau zur Anzeige passt. Was beim Laden der Seite schon passiert war, wird nicht nachgespielt.
   const TIMER_LEAD = 5;         // so viele Sekunden vor Schluss startet der Timer-Sound
-  const MUSIC_GAIN = 0.45, MUSIC_DUCK = 0.28;   // Quiz-Musik, leiser solange der Timer läuft
+  const MUSIC_GAIN = 0.45, MUSIC_DUCK = 0.28;   // Hintergrundmusik, leiser solange Timer oder Preis-Glocken laufen
   const ctxAt = (serverT) => sfxCtx.currentTime + (serverT - now());
   const sndPlayed = new Set();
-  let sndPrev = null, timerSnd = null, timerKey = null, musicSnd = null;
+  let sndPrev = null, timerSnd = null, timerKey = null, musicSnd = null, duckUntil = 0;
 
   function beep(at, freq = 880, gain = 0.14) {
     if (!sfxCtx) return;
@@ -495,12 +494,13 @@
       }
     }
 
-    // 2) Quiz-Musik: läuft vom Intro bis zur letzten Auflösung, unter dem Timer etwas leiser
-    const musicOn = s.screen === 'quiz' && ['intro', 'question', 'locked', 'reveal'].includes(s.quiz.phase);
+    // 2) Hintergrundmusik (Quiz & Guess the Price): vom Intro bis zur letzten Auflösung, unter Timer/Glocken etwas leiser
+    const musicOn = (s.screen === 'quiz' && ['intro', 'question', 'locked', 'reveal'].includes(s.quiz.phase))
+      || (s.screen === 'price' && ['intro', 'item', 'locked', 'reveal'].includes(s.price.phase));
     if (musicOn && !musicSnd && live) musicSnd = playSfx('quizMusic', { gain: MUSIC_GAIN, loop: true });
     if (!musicOn && musicSnd) { fadeSfx(musicSnd, 1.5); musicSnd = null; }
     if (musicSnd) {
-      const want = timerSnd && timerKey ? MUSIC_DUCK : MUSIC_GAIN;
+      const want = (timerSnd && timerKey) || sfxCtx.currentTime < duckUntil ? MUSIC_DUCK : MUSIC_GAIN;
       if (musicSnd._want !== want) { musicSnd._want = want; musicSnd.g.gain.setTargetAtTime(want, sfxCtx.currentTime, 0.25); }
     }
 
@@ -520,8 +520,6 @@
       playSfx(right ? 'quizCorrect' : 'quizWrong');
     } else if (s.screen === 'guess' && cur.phase === 'shown' && s.guess.guesses.some((g) => g?.correct)) {
       playSfx('guessSuccess', { at: after });
-    } else if (s.screen === 'price' && cur.phase === 'reveal') {
-      playSfx('priceReveal');
     }
   }
   setInterval(soundTick, 50);
@@ -1177,6 +1175,36 @@
   const eurShort = (v) => (v >= 1e6 ? new Intl.NumberFormat('de-DE', { notation: 'compact', compactDisplay: 'long', maximumFractionDigits: 2 }).format(v) + ' Euro' : '');
   const COUNT_MS = 2600;   // so lange zählt der Preis hoch
 
+  // Zeitpunkte (ms) der Zählschritte: anfangs schnell, dann immer langsamer; der letzte genau bei COUNT_MS
+  function priceSteps() {
+    const out = [];
+    let t = 0, d = 70;
+    while (t < COUNT_MS) { t += d; out.push(t); d *= 1.2; }
+    return out.map((x) => Math.round((x / out[out.length - 1]) * COUNT_MS));
+  }
+
+  function priceBells(at) {
+    const ctx = sfx();
+    if (!ctx || ctx.state !== 'running' || !sfxBuf.quizCorrect) return;
+    const t0 = ctx.currentTime + 0.02, n = at.length;
+    at.forEach((ms, i) => {
+      const when = t0 + ms / 1000, last = i === n - 1;
+      if (last) {
+        // Auflösung: volle Glocke + Quinte drüber
+        playSfx('quizCorrect', { at: when, gain: 1.1 });
+        playSfx('quizCorrect', { at: when, gain: 0.45, rate: Math.pow(2, 7 / 12) });
+        return;
+      }
+      const h = playSfx('quizCorrect', { at: when, gain: 0.45 + 0.35 * (i / n), rate: Math.pow(2, -(n - 1 - i) / 12) });
+      if (!h) return;
+      const len = Math.min(0.35, (at[i + 1] - ms) / 1000 + 0.12);   // kurz anklingen lassen, dann weg
+      h.g.gain.setValueAtTime(h.g.gain.value, when + len * 0.6);
+      h.g.gain.linearRampToValueAtTime(0, when + len);
+      h.src.stop(when + len + 0.05);
+    });
+    duckUntil = t0 + at[n - 1] / 1000 + 1.2;
+  }
+
   function renderPrice(s) {
     const p = s.price;
     const playing = ['item', 'locked', 'reveal'].includes(p.phase);
@@ -1250,14 +1278,29 @@
       box._done = false;
       box.innerHTML = `<span class="pr__price-label">Der Preis</span><span class="pr__price-value" id="prCount"></span><span class="pr__price-short">${esc(eurShort(p.price))}</span>`;
       box._html = null;
-      const el = $('prCount'), start = performance.now(), target = p.price;
+      // In Schritten hochzählen, die immer langsamer werden – jeder Schritt mit Glocke (Halbton für Halbton höher),
+      // die letzte Glocke voll und klar, wenn der echte Preis dasteht. Nur Ton, wenn die Auflösung live passiert (nicht beim Neuladen).
+      const el = $('prCount'), start = performance.now(), target = p.price, item = p.item;
+      const at = priceSteps();
+      const n = at.length;
+      const vals = at.map((_, i) => (i === n - 1 ? target
+        : Math.round(target * Math.min(0.97, ((i + 1) / n) * (0.97 + Math.random() * 0.06)))));
+      if (sndPrev) priceBells(at);
+      let shown = -1;
       const step = (t) => {
-        const k = Math.min(1, (t - start) / COUNT_MS);
-        const eased = 1 - Math.pow(1 - k, 4);
-        el.textContent = eur(k < 1 ? Math.round(target * eased) : target);
-        if (k < 1 && box._countFor === p.item) requestAnimationFrame(step);
-        else if (k >= 1) { box._done = true; box.classList.add('is-done'); renderPriceTeams(s); }
+        if (box._countFor !== item) return;
+        const ms = t - start;
+        let i = shown;
+        while (i + 1 < n && at[i + 1] <= ms) i++;
+        if (i !== shown) {
+          shown = i;
+          el.textContent = eur(vals[i]);
+          el.classList.remove('is-tick'); void el.offsetWidth; el.classList.add('is-tick');
+        }
+        if (i < n - 1) requestAnimationFrame(step);
+        else { box._done = true; box.classList.add('is-done'); renderPriceTeams(s); }
       };
+      el.textContent = eur(0);
       box.classList.remove('is-done');
       requestAnimationFrame(step);
     }
