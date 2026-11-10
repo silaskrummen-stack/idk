@@ -370,6 +370,10 @@
         if (lastSeg[t] !== null && under !== lastSeg[t] && k < 1) {
           const ptr = col.querySelector('.wheel__pointer');
           ptr.classList.remove('is-tick'); void ptr.offsetWidth; ptr.classList.add('is-tick');
+          // Klick bei jedem Feld – je schneller das Rad, desto höher (und etwas leiser, damit's kein Dauerrattern wird)
+          const tps = (finals[t] * 4 * Math.pow(1 - k, 3) / dur) / segs[t];   // Felder pro Sekunde gerade
+          const fast = Math.min(1, Math.max(0, (tps - 3) / 17));
+          playSfx('snap', { rate: (1 + 0.3 * fast) * (0.98 + Math.random() * 0.04), gain: 1 - 0.3 * fast });
         }
         lastSeg[t] = under;
 
@@ -388,7 +392,7 @@
   // ---------- Soundeffekte ----------
   // Web Audio statt <audio>: Tonhöhe pro Ding frei wählbar, Töne überlappen sauber, nichts muss "laden", wenn's losgeht.
   // Fehlt eine Datei, läuft alles trotzdem – nur ohne diesen Ton.
-  const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3' };
+  const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3', snap: '/assets/lan-night/sounds/snap.mp3' };
   const sfxBuf = {};
   let sfxCtx = null;
 
