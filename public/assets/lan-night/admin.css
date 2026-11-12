@@ -730,6 +730,14 @@
     display: none;
 }
 
+.field code {
+    display: block;
+    font-size: 0.8em;
+    opacity: 0.75;
+    white-space: normal;
+    margin: 2px 0 4px;
+}
+
 .aw-row {
     display: flex;
     align-items: center;

@@ -319,6 +319,13 @@
     font: 700 1.05rem var(--font-display);
 }
 
+.aw-cat__desc {
+    margin: -4px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: var(--lan-text-muted);
+}
+
 .aw-cat__emoji {
     font-size: 1.6rem;
 }

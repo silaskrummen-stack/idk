@@ -1747,6 +1747,27 @@ body.has-announce .track {
     margin-top: 2vh;
 }
 
+.award__desc {
+    font: 500 3.6vh/1.35 var(--font-display);
+    color: var(--lan-text);
+    opacity: 0.85;
+    max-width: 70vw;
+    text-align: center;
+    margin: 2vh 0 0;
+}
+
+.award.is-revealed .award__desc {
+    font-size: 2.8vh;
+    opacity: 0.6;
+}
+
+.award-list__desc {
+    display: block;
+    font: 500 2vh/1.3 var(--font-display);
+    color: var(--lan-text-muted);
+    margin-top: 0.3vh;
+}
+
 .award__drum {
     font: 600 4.4vh var(--font-display);
     color: var(--lan-text-muted);
@@ -2143,6 +2164,15 @@ body.has-announce .track {
     font: 600 2.4vh var(--font-display);
     color: var(--lan-text-muted);
     min-height: 1em;
+}
+
+/* Kurzform ("512 Millionen Euro") erst, wenn fertig hochgezählt ist – sonst verrät sie den Preis vorher */
+.pr__price:not(.is-done) .pr__price-short {
+    visibility: hidden;
+}
+
+.pr__price.is-done .pr__price-short {
+    animation: fade-in 0.4s ease-out;
 }
 
 .pr__teams {

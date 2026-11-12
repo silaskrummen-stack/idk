@@ -395,7 +395,8 @@
   const SFX_URL = { ding: '/assets/lan-night/sounds/ding.mp3', hit: '/assets/lan-night/sounds/hit.mp3', spin: '/assets/lan-night/sounds/spin.mp3', snap: '/assets/lan-night/sounds/snap.mp3',
     timer: '/assets/lan-night/sounds/timer.mp3', lockIn: '/assets/lan-night/sounds/lock-in.mp3',
     quizMusic: '/assets/lan-night/sounds/quiz-music.mp3', quizCorrect: '/assets/lan-night/sounds/quiz-correct.mp3',
-    quizWrong: '/assets/lan-night/sounds/quiz-wrong.mp3', guessSuccess: '/assets/lan-night/sounds/guess-success.mp3' };
+    quizWrong: '/assets/lan-night/sounds/quiz-wrong.mp3', guessSuccess: '/assets/lan-night/sounds/guess-success.mp3',
+    drumroll: '/assets/lan-night/sounds/drumroll.mp3', fanfare: '/assets/lan-night/sounds/fanfare.mp3' };
   const sfxBuf = {};
   let sfxCtx = null;
 
@@ -441,6 +442,7 @@
   const ctxAt = (serverT) => sfxCtx.currentTime + (serverT - now());
   const sndPlayed = new Set();
   let sndPrev = null, timerSnd = null, timerKey = null, musicSnd = null, duckUntil = 0;
+  let drumSnd = null, drumKey = null, awSeen;   // Award-Verleihung: Trommelwirbel, zuletzt gesehener Stand
 
   function beep(at, freq = 880, gain = 0.14) {
     if (!sfxCtx) return;
@@ -504,7 +506,31 @@
       if (musicSnd._want !== want) { musicSnd._want = want; musicSnd.g.gain.setTargetAtTime(want, sfxCtx.currentTime, 0.25); }
     }
 
-    // 3) Ereignisse: Team loggt ein, Auflösung
+    // 3) Award-Verleihung: DRUM_DELAY s nach dem Aufrufen setzt der Trommelwirbel ein (eingeblendet, wird langsam lauter)
+    //    und läuft, bis die Spielleitung den Gewinner zeigt – dann bricht er ab und sofort kommt die Fanfare.
+    const aw = s.awards;
+    const awKey = s.screen === 'awards' && aw?.phase === 'reveal' ? String(aw.index) : null;
+    if (awSeen !== undefined && awKey && awSeen === `${awKey}:0` && aw.revealed && live) {
+      if (drumSnd) { fadeSfx(drumSnd, 0.04); drumSnd = null; drumKey = null; }
+      playSfx('fanfare');
+    }
+    awSeen = awKey ? `${awKey}:${aw.revealed ? 1 : 0}` : null;
+
+    const dk = awKey && !aw.revealed && aw.drumAt ? `${awKey}@${aw.drumAt}` : null;
+    if (drumKey && drumKey !== dk) { fadeSfx(drumSnd, 0.5); drumSnd = null; drumKey = null; }
+    if (dk && !drumKey && live && aw.drumAt - now() < 0.3) {
+      const late = Math.max(0, now() - aw.drumAt);
+      drumSnd = playSfx('drumroll', { at: ctxAt(aw.drumAt), loop: true, gain: 0, offset: late });
+      if (drumSnd) {
+        drumKey = dk;
+        const t = Math.max(ctxAt(aw.drumAt), sfxCtx.currentTime), g = drumSnd.g.gain;
+        g.setValueAtTime(0.0001, t);
+        g.linearRampToValueAtTime(0.75, t + (late > 1 ? 0.4 : 2));   // einblenden (nach Neuladen schneller)
+        g.linearRampToValueAtTime(1, t + 12);                         // dann langsam lauter, je länger es dauert
+      }
+    }
+
+    // 4) Ereignisse: Team loggt ein, Auflösung
     const cur = sndSnapshot(s), prev = sndPrev;
     sndPrev = cur;
     if (!prev || !live || prev.screen !== cur.screen || cur.phase === undefined) return;
@@ -1376,7 +1402,7 @@
             <p class="eyebrow">Award-Verleihung</p>
             <h1 class="quiz-title">Die Awards 🏆</h1>
             <ul class="award-list">
-              ${aw.categories.map((c) => `<li><span class="award-list__emoji">${esc(c.emoji)}</span>${esc(c.title)}</li>`).join('')}
+              ${aw.categories.map((c) => `<li><span class="award-list__emoji">${esc(c.emoji)}</span><span>${esc(c.title)}${c.description ? `<small class="award-list__desc">${esc(c.description)}</small>` : ''}</span></li>`).join('')}
             </ul>
           </div>
           ${open ? `
@@ -1409,13 +1435,14 @@
       return;
     }
 
-    // reveal: ein Award groß – erst Trommelwirbel, dann (wenn der Server ihn freigibt) der Gewinner
+    // reveal: ein Award groß – Kategorie + Satz, Trommelwirbel, und erst wenn die Spielleitung es freigibt der Gewinner
     const c = aw.categories[aw.index], r = aw.results[aw.index];
     setHTML(el, `
       <div class="award ${r ? 'is-revealed' : ''}">
         <p class="eyebrow">Award ${aw.index + 1} / ${aw.categories.length}</p>
         <div class="award__emoji">${esc(c.emoji)}</div>
         <h1 class="award__title">${esc(c.title)}</h1>
+        ${c.description ? `<p class="award__desc">${esc(c.description)}</p>` : ''}
         ${r ? `
           <div class="award__winners">${winnerHtml(r)}</div>
           <p class="award__votes">${r.votes ? `mit ${r.votes} ${r.votes === 1 ? 'Stimme' : 'Stimmen'}` : ''}</p>`
@@ -1506,7 +1533,7 @@
         if (!state || s.updatedAt !== state.updatedAt) { state = s; render(s); }
       }
     } catch (e) { /* kurz offline – nächster Versuch */ }
-    setTimeout(poll, ['quiz', 'guess', 'price', 'awards'].includes(state?.screen) ? 400 : 1000);
+    setTimeout(poll, state?.screen === 'awards' ? 250 : ['quiz', 'guess', 'price'].includes(state?.screen) ? 400 : 1000);
   }
 
   setInterval(renderTimers, 250);

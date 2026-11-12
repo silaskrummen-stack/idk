@@ -541,10 +541,16 @@
 
     if (aw.phase === 'off') btns.push(btn('awards.open', 'Abstimmung starten', 'lbtn--primary'));
     if (aw.phase === 'voting') btns.push(btn('awards.close', 'Abstimmung beenden'));
-    if (['voting', 'closed', 'reveal'].includes(aw.phase) && hasNext) {
-      btns.push(btn('awards.next', aw.index < 0 ? '▶ Ersten Award aufdecken' : `▶ Nächster Award (${aw.index + 2}/${n})`, 'lbtn--mint'));
+    // Pro Award: erst aufrufen (Bildschirm zeigt Kategorie + Satz, nach 3 s Trommelwirbel), dann Gewinner zeigen (Fanfare)
+    const waiting = aw.phase === 'reveal' && !aw.revealed;
+    if (waiting) {
+      btns.push(btn('awards.show', `🥁 Gewinner zeigen (${aw.index + 1}/${n})`, 'lbtn--primary'));
+    } else {
+      if (['voting', 'closed', 'reveal'].includes(aw.phase) && hasNext) {
+        btns.push(btn('awards.next', aw.index < 0 ? '▶ Ersten Award aufrufen' : `▶ Nächster Award (${aw.index + 2}/${n})`, 'lbtn--mint'));
+      }
+      if (aw.phase === 'reveal' && !hasNext) btns.push(btn('awards.summary', 'Alle Gewinner zeigen', 'lbtn--primary'));
     }
-    if (aw.phase === 'reveal' && !hasNext) btns.push(btn('awards.summary', 'Alle Gewinner zeigen', 'lbtn--primary'));
     if (!onScreen && aw.phase !== 'off') btns.push(btn('show', 'Auf den Bildschirm'));
     if (onScreen) btns.push(btn('awards.hide', 'Zurück zum Punktestand', 'lbtn--ghost'));
     $('awCtl').innerHTML = btns.join('');
@@ -555,7 +561,7 @@
       const tally = r.tally.length
         ? r.tally.slice(0, 3).map((t, k) => (k === 0 || t.votes === r.votes ? `<b>${esc(t.name)} ${t.votes}</b>` : `${esc(t.name)} ${t.votes}`)).join(' · ')
         : 'noch keine Stimmen';
-      const cls = i === aw.index && aw.phase === 'reveal' ? 'is-current' : (i < aw.index ? 'is-shown' : '');
+      const cls = i === aw.index && aw.phase === 'reveal' ? (aw.revealed ? 'is-current is-shown' : 'is-current') : (i < aw.index ? 'is-shown' : '');
       return `<div class="aw-row ${cls}"><span class="aw-row__emoji">${esc(c.emoji)}</span><span class="aw-row__title">${esc(c.title)}</span><span class="aw-row__tally">${tally}</span></div>`;
     }).join('');
   }
@@ -832,7 +838,8 @@
 
     const aw = state?.awards;
     if (aw) {
-      $('awLive').textContent = AW_PHASES[aw.phase] + (aw.phase === 'off' ? '' : ` · ${aw.voterCount} ${aw.voterCount === 1 ? 'Handy' : 'Handys'}`);
+      $('awLive').textContent = AW_PHASES[aw.phase] + (aw.phase === 'reveal' && !aw.revealed ? ' · Gewinner noch verdeckt' : '')
+        + (aw.phase === 'off' ? '' : ` · ${aw.voterCount} ${aw.voterCount === 1 ? 'Handy' : 'Handys'}`);
     }
 
     const q = state?.quiz;

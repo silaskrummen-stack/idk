@@ -160,6 +160,7 @@
     const html = aw.categories.map((c, i) => `
       <div class="aw-cat ${ballot[i] ? 'is-done' : ''}">
         <div class="aw-cat__head"><span class="aw-cat__emoji">${esc(c.emoji)}</span>${esc(c.title)}${ballot[i] ? '<span class="aw-cat__check">✓</span>' : ''}</div>
+        ${c.description ? `<p class="aw-cat__desc">${esc(c.description)}</p>` : ''}
         <div class="aw-players">
           ${aw.players.map((p) => `<button class="aw-player ${ballot[i] === p.name ? 'is-mine' : ''}" style="--c:${esc(s.teams[p.team].color)}" data-cat="${i}" data-player="${esc(p.name)}">${esc(p.name)}</button>`).join('')}
         </div>
