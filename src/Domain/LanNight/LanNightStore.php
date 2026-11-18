@@ -19,6 +19,8 @@ final class LanNightStore
     private const MAX_GAMES = 60;
     /** Einrichtungs-Anleitung pro Spiel (mehrzeilig, nur für die Spielleitung) */
     private const SETUP_MAX = 2000;
+    /** Einrichtungs-Anleitung für die Spieler (auf dem Bildschirm einblendbar) */
+    private const PLAYER_SETUP_MAX = 1200;
     private const IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
     private const AUDIO_TYPES = ['mp3', 'ogg', 'wav', 'm4a'];
 
@@ -231,10 +233,12 @@ final class LanNightStore
         $s['target'] ??= 40;   // Siegbedingung: wer zuerst so viele Punkte hat
         $s['slots'] ??= null;
         $s['lineup'] ??= null;
+        $s['setupShown'] ??= null;   // Spiel-ID, deren Spieler-Anleitung gerade auf dem Bildschirm steht
         foreach ($s['games'] as &$g) {
             $g['players'] ??= null;   // Spieler gesamt (beide Teams zusammen), null = alle
             $g['fastRules'] ??= '';   // Regeln für die schnelle Variante (leer = keine)
             $g['setup'] ??= '';       // Einrichtung für die Spielleitung (nur Admin, leer = keine)
+            $g['playerSetup'] ??= ''; // Einrichtung für die Spieler (Bildschirm, leer = keine)
             $g['mode'] ??= 'normal';  // wie es gerade gespielt wird: normal / fast
             // Ältere Spielstände: Segment am Namen erkennen ("Trivia Quiz" → Quiz, …)
             if (!array_key_exists('segment', $g)) {
@@ -338,6 +342,7 @@ final class LanNightStore
                     'description' => $this->text($in['description'] ?? '', 300),
                     'fastRules' => $this->text($in['fastRules'] ?? '', 300),
                     'setup' => $this->multiline($in['setup'] ?? '', self::SETUP_MAX),
+                    'playerSetup' => $this->multiline($in['playerSetup'] ?? '', self::PLAYER_SETUP_MAX),
                     'points' => max(1, (int) ($in['points'] ?? 3)),
                     'time' => $this->time($in['time'] ?? ''),
                     'status' => 'open',
@@ -378,7 +383,7 @@ final class LanNightStore
                     if (isset($games[$key])) {
                         continue;
                     }
-                    $g = $old[$key] ?? ['id' => $this->id(), 'name' => $name, 'description' => '', 'fastRules' => '', 'setup' => '', 'time' => '', 'status' => 'open', 'result' => null];
+                    $g = $old[$key] ?? ['id' => $this->id(), 'name' => $name, 'description' => '', 'fastRules' => '', 'setup' => '', 'playerSetup' => '', 'time' => '', 'status' => 'open', 'result' => null];
                     $g['points'] = $points;
                     $g['players'] = $players;
                     $g['segment'] = self::segmentOf($name);
@@ -410,6 +415,10 @@ final class LanNightStore
                 $s['games'][$i]['description'] = $this->text($in['description'] ?? '', 300);
                 $s['games'][$i]['fastRules'] = $this->text($in['fastRules'] ?? '', 300);
                 $s['games'][$i]['setup'] = $this->multiline($in['setup'] ?? '', self::SETUP_MAX);
+                $s['games'][$i]['playerSetup'] = $this->multiline($in['playerSetup'] ?? '', self::PLAYER_SETUP_MAX);
+                if ($s['games'][$i]['playerSetup'] === '' && $s['setupShown'] === $s['games'][$i]['id']) {
+                    $s['setupShown'] = null;
+                }
                 $s['games'][$i]['points'] = max(1, (int) ($in['points'] ?? $s['games'][$i]['points']));
                 $s['games'][$i]['time'] = $this->time($in['time'] ?? '');
                 $s['games'][$i]['segment'] = self::segmentOf($s['games'][$i]['name']);
@@ -444,6 +453,23 @@ final class LanNightStore
                     throw new \InvalidArgumentException('Für dieses Spiel gibt es keine schnellen Regeln');
                 }
                 $s = $this->startGame($s, $i, $fast ? 'fast' : 'normal');
+                break;
+
+            case 'game.setup':
+                // Spieler-Anleitung des laufenden Spiels ein-/ausblenden (gleicher Knopf)
+                $i = $this->game($s, $in);
+                $id = $s['games'][$i]['id'];
+                if ($s['setupShown'] === $id) {
+                    $s['setupShown'] = null;
+                } else {
+                    if ($s['currentGame'] !== $id) {
+                        throw new \InvalidArgumentException('Die Anleitung gibt es nur für das laufende Spiel');
+                    }
+                    if ($s['games'][$i]['playerSetup'] === '') {
+                        throw new \InvalidArgumentException('Für dieses Spiel gibt es keine Spieler-Anleitung');
+                    }
+                    $s['setupShown'] = $id;
+                }
                 break;
 
             case 'game.finish':
@@ -754,6 +780,9 @@ final class LanNightStore
             unset($g);
             $s['games'][$i]['status'] = 'running';
         }
+        if ($s['currentGame'] !== $s['games'][$i]['id']) {
+            $s['setupShown'] = null;   // neues Spiel startet ohne eingeblendete Anleitung
+        }
         $s['currentGame'] = $s['games'][$i]['id'];
         // Quiz / Guess the Game / Guess the Price laufen auf ihrem eigenen Bildschirm
         $s['screen'] = $s['games'][$i]['segment'] ?? 'game';
@@ -885,6 +914,7 @@ final class LanNightStore
             // Kein fester Zeitplan: der Verlierer des letzten Spiels wählt das nächste (Bildschirm "Spielauswahl")
             'games' => array_map(fn ($g) => $game($g[0], '', $g[1], ''), self::DEFAULT_GAMES),
             'currentGame' => null,
+            'setupShown' => null,
             'log' => [],
             'flash' => null,
             'timer' => null,

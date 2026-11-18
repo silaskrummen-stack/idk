@@ -654,12 +654,14 @@
           <div class="game__btns">${btns}</div>
           <div class="game__tools">
             <button class="lbtn lbtn--ghost" data-game="edit">${open ? 'Schließen' : 'Bearbeiten'}</button>
+            ${g.playerSetup && state.currentGame === g.id ? `<button class="lbtn lbtn--ghost game__show${state.setupShown === g.id ? ' is-on' : ''}" data-game="show-setup" title="Spieler-Anleitung auf dem Bildschirm (Szene „Spiel“)">📺 Anleitung ${state.setupShown === g.id ? 'ausblenden' : 'zeigen'}</button>` : ''}
             ${g.setup ? `<button class="lbtn lbtn--ghost game__setup${setupOpen === g.id ? ' is-on' : ''}" data-game="setup" aria-expanded="${setupOpen === g.id}" aria-controls="setupPop">🛠 Einrichtung</button>` : ''}
           </div>
           <form class="game__edit" ${open ? '' : 'hidden'}>
             <input class="linput" name="name" value="${esc(g.name)}" maxlength="50" required>
             <textarea class="linput" name="description" maxlength="300" placeholder="Regeln / Beschreibung">${esc(g.description)}</textarea>
             <textarea class="linput" name="fastRules" maxlength="300" placeholder="Schnelle Regeln (optional) – erscheinen statt der normalen, wenn du „Schnell“ startest">${esc(g.fastRules || '')}</textarea>
+            <textarea class="linput" name="playerSetup" rows="4" maxlength="1200" placeholder="Anleitung für die Spieler (optional) – z. B. Server-IP, Lobby, Passwort, Einstellungen. Erscheint auf dem Bildschirm, wenn du sie einblendest">${esc(g.playerSetup || '')}</textarea>
             <textarea class="linput" name="setup" rows="4" maxlength="2000" placeholder="Einrichtung (optional, nur für dich) – z. B. Server starten, Lobby-Name, Passwort, Map, Einstellungen">${esc(g.setup || '')}</textarea>
             <div class="form__pair">
               <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="${g.points}"></label>
@@ -693,6 +695,7 @@
       case 'reopen':
         if (confirm(`Ergebnis von „${g.name}“ zurücknehmen? Die Punkte werden wieder abgezogen.`)) send('game.reopen', { id });
         break;
+      case 'show-setup': send('game.setup', { id }); break;
       case 'setup':
         setupOpen = setupOpen === id ? null : id;
         renderSetup();
@@ -715,7 +718,7 @@
     e.preventDefault();
     const f = e.target, id = f.closest('.game').dataset.id;
     document.activeElement?.blur();
-    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, setup: f.setup.value, points: Number(f.points.value), players: Number(f.players.value) || null });
+    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, setup: f.setup.value, playerSetup: f.playerSetup.value, points: Number(f.points.value), players: Number(f.players.value) || null });
     if (ok) { openEdits.delete(id); renderGames(); }
   });
 
@@ -831,7 +834,7 @@
     e.preventDefault();
     const f = e.target;
     document.activeElement?.blur();
-    const ok = await send('game.add', { name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, setup: f.setup.value, points: Number(f.points.value), players: Number(f.players.value) || null });
+    const ok = await send('game.add', { name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, setup: f.setup.value, playerSetup: f.playerSetup.value, points: Number(f.points.value), players: Number(f.players.value) || null });
     if (ok) { f.reset(); f.closest('details').open = false; toast('Spiel hinzugefügt', true); }
   });
 

@@ -103,6 +103,19 @@
     setHTML($('gameLineup'), lu ? lu.teams.map((names, t) => `
       <div class="lineup__team" ${teamStyle(s.teams[t])}>${names.map((n) => `<span class="lineup__name">${esc(n)}</span>`).join('')}</div>`).join('') : '');
     setHTML($('gameScores'), minibar(s));
+
+    // Spieler-Anleitung: blendet die Spielleitung mit einem Knopf ein und mit demselben wieder aus
+    const setup = g && s.setupShown === g.id && g.playerSetup ? g.playerSetup : '';
+    const card = $('gameSetup');
+    if (setup && card.hidden) card.classList.remove('is-in'), void card.offsetWidth, card.classList.add('is-in');
+    card.hidden = !setup;
+    if (setup) {
+      $('gameSetupTitle').textContent = g.name;
+      const body = $('gameSetupBody');
+      body.textContent = setup;
+      // Lange Anleitungen kleiner setzen – scrollen kann am Fernseher niemand
+      body.style.fontSize = setup.length > 700 ? '2.5vh' : setup.length > 350 ? '3vh' : '3.6vh';
+    }
   }
 
   function renderPause(s) {

@@ -2401,3 +2401,56 @@ body.has-announce .track {
 .wheel-col.is-done .wheel__svg {
     box-shadow: 0 0 0 1vh var(--c), 0 0 10vh color-mix(in srgb, var(--c) 55%, transparent);
 }
+
+/* ----- Spieler-Anleitung zum Einrichten (über der Spiel-Szene) ----- */
+.setup-card {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    padding: 6vh 6vw;
+    background: rgba(23, 14, 61, 0.72);
+    backdrop-filter: blur(6px);
+}
+
+.setup-card__panel {
+    width: min(78vw, 140vh);
+    max-height: 86vh;
+    overflow: hidden;
+    text-align: left;
+    background: var(--lan-bg-raised);
+    border: 0.3vh solid var(--lan-yellow);
+    border-radius: 3vh;
+    padding: 4vh 5vh;
+    box-shadow: 0 3vh 8vh rgba(0, 0, 0, 0.55), 0 0 6vh rgba(255, 202, 34, 0.18);
+}
+
+.setup-card.is-in .setup-card__panel {
+    animation: setup-card-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.setup-card__kicker {
+    margin: 0;
+    font: 600 2.4vh var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--lan-mint);
+}
+
+.setup-card__title {
+    margin: 0.6vh 0 2.4vh;
+    font: 700 6vh/1.05 var(--font-display);
+    color: var(--lan-yellow);
+}
+
+.setup-card__body {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+    color: var(--lan-text);
+}
+
+@keyframes setup-card-in {
+    from { opacity: 0; transform: translateY(4vh) scale(0.96); }
+}

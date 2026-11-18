@@ -983,8 +983,19 @@
 
 
 /* ----- Einrichtung pro Spiel: schwebendes Fenster, der Knopf am Spiel öffnet und schließt es ----- */
-.game__setup {
+.game__setup,
+.game__show {
     margin-left: auto;
+}
+
+.game__show + .game__setup {
+    margin-left: 0;
+}
+
+.game__show.is-on {
+    color: var(--lan-bg-deep);
+    background: var(--lan-mint);
+    border-color: var(--lan-mint);
 }
 
 .game__setup.is-on {
