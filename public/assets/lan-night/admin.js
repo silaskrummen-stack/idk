@@ -7,6 +7,7 @@
   let state = null;
   let offset = 0;
   const openEdits = new Set();   // Spiele, deren Bearbeiten-Formular gerade offen ist
+  let setupOpen = null;          // Spiel, dessen Einrichtung gerade als Fenster offen ist
 
   // ---------- Server ----------
   async function load() {
@@ -601,6 +602,7 @@
 
   // ---------- Spiele ----------
   function renderGames() {
+    renderSetup();
     const list = $('games');
     if (busy(list) || drag) return;
     const [A, B] = state.teams;
@@ -652,11 +654,13 @@
           <div class="game__btns">${btns}</div>
           <div class="game__tools">
             <button class="lbtn lbtn--ghost" data-game="edit">${open ? 'Schließen' : 'Bearbeiten'}</button>
+            ${g.setup ? `<button class="lbtn lbtn--ghost game__setup${setupOpen === g.id ? ' is-on' : ''}" data-game="setup" aria-expanded="${setupOpen === g.id}" aria-controls="setupPop">🛠 Einrichtung</button>` : ''}
           </div>
           <form class="game__edit" ${open ? '' : 'hidden'}>
             <input class="linput" name="name" value="${esc(g.name)}" maxlength="50" required>
             <textarea class="linput" name="description" maxlength="300" placeholder="Regeln / Beschreibung">${esc(g.description)}</textarea>
             <textarea class="linput" name="fastRules" maxlength="300" placeholder="Schnelle Regeln (optional) – erscheinen statt der normalen, wenn du „Schnell“ startest">${esc(g.fastRules || '')}</textarea>
+            <textarea class="linput" name="setup" rows="4" maxlength="2000" placeholder="Einrichtung (optional, nur für dich) – z. B. Server starten, Lobby-Name, Passwort, Map, Einstellungen">${esc(g.setup || '')}</textarea>
             <div class="form__pair">
               <label class="field">Punkte für den Sieg <input class="linput" name="points" type="number" min="1" value="${g.points}"></label>
               <label class="field">Spieler gesamt (leer = alle) <input class="linput" name="players" type="number" min="2" max="64" value="${g.players ?? ''}"></label>
@@ -689,6 +693,10 @@
       case 'reopen':
         if (confirm(`Ergebnis von „${g.name}“ zurücknehmen? Die Punkte werden wieder abgezogen.`)) send('game.reopen', { id });
         break;
+      case 'setup':
+        setupOpen = setupOpen === id ? null : id;
+        renderSetup();
+        break;
       case 'edit':
         openEdits.has(id) ? openEdits.delete(id) : openEdits.add(id);
         li.querySelector('.game__edit').hidden = !openEdits.has(id);
@@ -707,8 +715,30 @@
     e.preventDefault();
     const f = e.target, id = f.closest('.game').dataset.id;
     document.activeElement?.blur();
-    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), players: Number(f.players.value) || null });
+    const ok = await send('game.update', { id, name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, setup: f.setup.value, points: Number(f.points.value), players: Number(f.players.value) || null });
     if (ok) { openEdits.delete(id); renderGames(); }
+  });
+
+  // ---------- Einrichtung als Fenster (gleicher Knopf öffnet und schließt) ----------
+  function renderSetup() {
+    const g = setupOpen && state.games.find((x) => x.id === setupOpen);
+    if (!g || !g.setup) setupOpen = null;   // Spiel gelöscht oder Einrichtung geleert
+    const pop = $('setupPop');
+    pop.hidden = !setupOpen;
+    if (setupOpen) {
+      $('setupPopTitle').textContent = g.name;
+      $('setupPopBody').textContent = g.setup;
+    }
+    // Knöpfe direkt umschalten – die Liste wird evtl. gerade nicht neu gezeichnet (Eingabe aktiv)
+    $('games').querySelectorAll('[data-game="setup"]').forEach((b) => {
+      const on = b.closest('.game').dataset.id === setupOpen;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-expanded', String(on));
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && setupOpen) { setupOpen = null; renderSetup(); }
   });
 
   // ---------- Drag & Drop (Pointer Events: Maus und Finger) ----------
@@ -801,7 +831,7 @@
     e.preventDefault();
     const f = e.target;
     document.activeElement?.blur();
-    const ok = await send('game.add', { name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, points: Number(f.points.value), players: Number(f.players.value) || null });
+    const ok = await send('game.add', { name: f.name.value, description: f.description.value, fastRules: f.fastRules.value, setup: f.setup.value, points: Number(f.points.value), players: Number(f.players.value) || null });
     if (ok) { f.reset(); f.closest('details').open = false; toast('Spiel hinzugefügt', true); }
   });
 

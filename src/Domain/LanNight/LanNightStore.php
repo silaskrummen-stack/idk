@@ -17,6 +17,8 @@ final class LanNightStore
     /** Spiele, deren Punkte aus einem eigenen Segment kommen (Quiz, Guess the Game, Guess the Price) */
     public const SEGMENTS = ['quiz', 'guess', 'price'];
     private const MAX_GAMES = 60;
+    /** Einrichtungs-Anleitung pro Spiel (mehrzeilig, nur für die Spielleitung) */
+    private const SETUP_MAX = 2000;
     private const IMAGE_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
     private const AUDIO_TYPES = ['mp3', 'ogg', 'wav', 'm4a'];
 
@@ -232,6 +234,7 @@ final class LanNightStore
         foreach ($s['games'] as &$g) {
             $g['players'] ??= null;   // Spieler gesamt (beide Teams zusammen), null = alle
             $g['fastRules'] ??= '';   // Regeln für die schnelle Variante (leer = keine)
+            $g['setup'] ??= '';       // Einrichtung für die Spielleitung (nur Admin, leer = keine)
             $g['mode'] ??= 'normal';  // wie es gerade gespielt wird: normal / fast
             // Ältere Spielstände: Segment am Namen erkennen ("Trivia Quiz" → Quiz, …)
             if (!array_key_exists('segment', $g)) {
@@ -334,6 +337,7 @@ final class LanNightStore
                     'name' => $name,
                     'description' => $this->text($in['description'] ?? '', 300),
                     'fastRules' => $this->text($in['fastRules'] ?? '', 300),
+                    'setup' => $this->multiline($in['setup'] ?? '', self::SETUP_MAX),
                     'points' => max(1, (int) ($in['points'] ?? 3)),
                     'time' => $this->time($in['time'] ?? ''),
                     'status' => 'open',
@@ -374,7 +378,7 @@ final class LanNightStore
                     if (isset($games[$key])) {
                         continue;
                     }
-                    $g = $old[$key] ?? ['id' => $this->id(), 'name' => $name, 'description' => '', 'time' => '', 'status' => 'open', 'result' => null];
+                    $g = $old[$key] ?? ['id' => $this->id(), 'name' => $name, 'description' => '', 'fastRules' => '', 'setup' => '', 'time' => '', 'status' => 'open', 'result' => null];
                     $g['points'] = $points;
                     $g['players'] = $players;
                     $g['segment'] = self::segmentOf($name);
@@ -405,6 +409,7 @@ final class LanNightStore
                 $s['games'][$i]['name'] = $this->text($in['name'] ?? '', 50) ?: $s['games'][$i]['name'];
                 $s['games'][$i]['description'] = $this->text($in['description'] ?? '', 300);
                 $s['games'][$i]['fastRules'] = $this->text($in['fastRules'] ?? '', 300);
+                $s['games'][$i]['setup'] = $this->multiline($in['setup'] ?? '', self::SETUP_MAX);
                 $s['games'][$i]['points'] = max(1, (int) ($in['points'] ?? $s['games'][$i]['points']));
                 $s['games'][$i]['time'] = $this->time($in['time'] ?? '');
                 $s['games'][$i]['segment'] = self::segmentOf($s['games'][$i]['name']);
@@ -821,6 +826,15 @@ final class LanNightStore
     private function text(mixed $v, int $max): string
     {
         return mb_substr(trim(preg_replace('/\s+/u', ' ', (string) $v)), 0, $max);
+    }
+
+    /** Wie text(), aber Zeilenumbrüche bleiben erhalten (höchstens eine Leerzeile am Stück) */
+    private function multiline(mixed $v, int $max): string
+    {
+        $lines = array_map(fn ($l) => rtrim(preg_replace('/[^\S\n]+/u', ' ', $l)), preg_split('/\R/u', (string) $v));
+        $text = trim(preg_replace('/\n{3,}/', "\n\n", implode("\n", $lines)));
+
+        return mb_substr($text, 0, $max);
     }
 
     /** Geplanter Start als "HH:MM" (leer = ohne Uhrzeit) */

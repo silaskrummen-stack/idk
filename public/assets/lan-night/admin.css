@@ -981,3 +981,73 @@
     vertical-align: middle;
 }
 
+
+/* ----- Einrichtung pro Spiel: schwebendes Fenster, der Knopf am Spiel öffnet und schließt es ----- */
+.game__setup {
+    margin-left: auto;
+}
+
+.game__setup.is-on {
+    color: var(--lan-bg-deep);
+    background: var(--lan-yellow);
+    border-color: var(--lan-yellow);
+}
+
+.setup-pop {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 25;
+    width: min(440px, calc(100vw - 40px));
+    max-height: min(70vh, 640px);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: var(--lan-bg-raised);
+    border: 1px solid var(--lan-yellow);
+    border-radius: 16px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 202, 34, 0.25);
+    overflow: hidden;
+    animation: setup-pop-in 0.16s ease-out;
+}
+
+.setup-pop__head {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--lan-border);
+    background: var(--lan-bg-raised-2);
+}
+
+.setup-pop__kicker {
+    font: 600 0.72rem var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--lan-yellow);
+}
+
+.setup-pop__title {
+    margin: 2px 0 0;
+    font: 700 1.15rem var(--font-display);
+}
+
+.setup-pop__body {
+    padding: 14px 16px 16px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    user-select: text;
+}
+
+@keyframes setup-pop-in {
+    from { opacity: 0; transform: translateY(10px); }
+}
+
+@media (max-width: 480px) {
+    .setup-pop {
+        right: 10px;
+        left: 10px;
+        bottom: 10px;
+        width: auto;
+        max-height: 55vh;
+    }
+}

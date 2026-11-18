@@ -247,6 +247,8 @@ class LanNightController extends AbstractController
             $state['quiz'] = LanNightQuiz::publicView($state['quiz']);
             $state['guess'] = LanNightGuess::publicView($state['guess'], $this->store->guessCounts($state));
             $state['price'] = LanNightPrice::publicView($state['price'], $this->store->priceImages($state));
+            // Einrichtung (evtl. mit Server-Passwörtern) bleibt bei der Spielleitung
+            $state['games'] = array_map(fn (array $g) => array_diff_key($g, ['setup' => true]), $state['games']);
         }
         $state['cameoCast'] = $this->store->cameoCast();
         $state['serverTime'] = microtime(true);
