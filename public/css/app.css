@@ -1333,6 +1333,17 @@ a {
     height: auto;
     display: block;
 }
+
+.project-modal__video {
+    margin: 0 0 1.5rem;
+}
+
+.project-modal__video figcaption {
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
 /* ===== Project page: featured + compact ===== */
 .project-section {
     max-width: 1080px;

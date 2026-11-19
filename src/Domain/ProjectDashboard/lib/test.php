@@ -251,6 +251,21 @@ return [
                 'text' => 'Die Controller vibrieren abhängig von der Stärke des Aufpralls, und jedes Material hat eigene Geräusche für Glas, Holz, Keramik und Metall. Damit zwanzig zerbrochene Teller nicht zwanzigmal gleich klingen, variieren Tonhöhe und Lautstärke bei jedem Treffer leicht. Gerade dieses Zusammenspiel aus Vibration und Klang macht den Unterschied zwischen einem Effekt und einem Gefühl.',
             ],
             [
+                'type' => 'heading',
+                'text' => 'Erster Prototyp in Aktion',
+            ],
+            [
+                'type' => 'text',
+                'text' => 'Das Video zeigt einen frühen Prototyp aus der Entwicklung: Die Modelle sind noch schlicht und untexturiert, Licht und Effekte vorläufig. Zu sehen ist aber schon der Kern des Projekts, also das Zerschlagen von Möbeln und Einrichtung mit Händen und Werkzeugen, inklusive der Bruchphysik und der Geräusche. Am besten mit Ton ansehen.',
+            ],
+            [
+                'type' => 'video',
+                'src' => '/videos/projects/vr-rageroom-prototyp.mp4',
+                'poster' => '/pictures/projects/vr-rageroom-prototyp-poster.jpg',
+                'alt' => 'Spielszene aus dem ersten Prototyp des VR-Rageroom',
+                'caption' => 'Erster Prototyp, aufgenommen in der VR-Brille (ca. 3 Minuten, mit Ton)',
+            ],
+            [
                 'type' => 'image',
                 'src' => '/pictures/projects/rage.png',
                 'alt' => 'VR-Rageroom in Unity',

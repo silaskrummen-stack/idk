@@ -92,10 +92,18 @@
                         </video>
 
                     {% elseif item.type == 'video' %}
-                        <video controls>
-                            <source src="{{ item.src }}" type="video/mp4">
-                            Dein Browser unterstützt dieses Videoformat nicht.
-                         </video>
+                        {# Abspielbares Video mit Ton und Bedienelementen, optional mit Vorschaubild und Bildunterschrift #}
+                        <figure class="project-modal__video">
+                            <video controls playsinline preload="{{ item.poster is defined ? 'none' : 'metadata' }}"
+                                {% if item.poster is defined %}poster="{{ item.poster }}"{% endif %}
+                                aria-label="{{ item.alt|default('') }}">
+                                <source src="{{ item.src }}" type="video/mp4">
+                                Dein Browser unterstützt dieses Videoformat nicht.
+                            </video>
+                            {% if item.caption is defined %}
+                                <figcaption>{{ item.caption }}</figcaption>
+                            {% endif %}
+                        </figure>
 
                     {% elseif item.type == 'pdf' %}
                         <iframe src="{{ item.src }}"></iframe>
